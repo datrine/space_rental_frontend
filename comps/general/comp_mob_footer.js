@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-evenly",
         backgroundColor: "white",
         top: 'auto',
-        bottom: 0
+        bottom: 0,
+        height:60
     },
 
     btnStacked: {
@@ -38,22 +39,22 @@ let Comp_Mob_Footer = ({ ...propsFromParent }) => {
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
                 <span><FontAwesomeIcon icon={faHome} /></span>
-                <span style={{ fontSize: "10px" }}>Home</span>
+                <span style={{ fontSize: "12px" }}>Home</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
-                <span style={{ fontSize: "10px" }}>Realty</span>
+                <span style={{ fontSize: "12px" }}>Realty</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faPlusCircle} className="fa-3x" /></span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><Dashboard /></span>
-                <span style={{ fontSize: "10px" }}>Dashboard</span>
+                <span style={{ fontSize: "12px" }}>Dashboard</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><AlarmOn /></span>
-                <span style={{ fontSize: "10px" }} >Notification</span>
+                <span style={{ fontSize: "12px" }} >Notification</span>
             </Box>
         </AppBar>
     </>

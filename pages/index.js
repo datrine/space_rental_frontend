@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 //import { Button, Col, Container, Row } from 'react-bootstrap';
-import { HamburgerMenu } from "../comps/general/comp_mobile_menu"
+import { Comp_Mob_Header} from "../comps/general/comp_mob_menu"
+import { Comp_Mob_Footer} from "../comps/general/comp_mob_footer"
 import { PCMenu } from '../comps/general/comp_pc_menu';
 import { Comp_CustomerChatApp } from '../comps/general/comp_chat_app';
 const DynamicPCComp = dynamic(() => Promise.resolve(PCView));
@@ -51,7 +52,8 @@ let PCView = () => {
 
 let MobileView = () => {
     return <>
-    <HamburgerMenu/>
+    <Comp_Mob_Header/>
+    <Comp_Mob_Footer/>
     </>
 }
 

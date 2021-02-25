@@ -42,7 +42,7 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
             <Box component="button" className={classes.btnStacked}>
                 <span><Search  /></span>
             </Box>
-            <Box component="button" className={classes.btnStacked}>
+            <Box component="button" className={classes.btnStacked} >
                 <HamburgerMenu hookChangeExpandedMenu={changeExpandedMenu} expandedProps={expandedMenuState} />
             </Box>
         </AppBar>
