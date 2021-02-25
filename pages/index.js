@@ -1,65 +1,57 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import dynamic from 'next/dynamic'
+//import { Button, Col, Container, Row } from 'react-bootstrap';
+import { HamburgerMenu } from "../comps/general/comp_mobile_menu"
+import { PCMenu } from '../comps/general/comp_pc_menu';
+import { Comp_CustomerChatApp } from '../comps/general/comp_chat_app';
+const DynamicPCComp = dynamic(() => Promise.resolve(PCView));
+const DynamicMobileComp = dynamic(() => Promise.resolve(MobileView));
+
+let screenMgr = () => {
+    if (typeof window !== "undefined") {
+        let screenType;
+        let screenWidth = screen.width
+        if (screenWidth < 992) {
+            screenType = "small";
+            return { screenType }
+        }
+        else if (screenWidth >= 992) {
+            screenType = "large";
+            return { screenType }
+        }
+    }
+}
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  let { screenType } = screenMgr() || {};
+  let indexView = null;
+  switch (screenType) {
+      case "small":
+          indexView = <DynamicMobileComp />
+          break;
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+      case "large":
+          indexView = <DynamicPCComp />
+          break;
+      default:
+          indexView = <>Loading...</>
+          break;
+  }
+  return <>
+      {indexView}
+  </>
 }
+
+let PCView = () => {
+    return <>
+    <PCMenu/>
+    <Comp_CustomerChatApp/>
+    </>
+}
+
+let MobileView = () => {
+    return <>
+    <HamburgerMenu/>
+    </>
+}
+
