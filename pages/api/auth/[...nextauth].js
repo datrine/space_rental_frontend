@@ -16,29 +16,49 @@ const options = {
             },
             authorize: async (credentials) => {
                 // Add logic here to look up the user from the credentials supplied
-                const userFn = async ({ username, userEmailOrName, password }) => {
+                const userFn = async ({ username, emailOrUsername, password, role }) => {
                     // You need to provide your own logic here that takes the credentials
                     // submitted and returns either a object representing a user or value
                     // that is false/null if the credentials are invalid.
                     try {
-                        let res = await fetch(`${process.env.SELF_HOST_URL}/api/login/${userEmailOrName}`, { method: "POST" });
-                        let resJSON = await res.json()
-                        let userCred = { ...credentials, ...resJSON }
-                        return userCred;
+                        let res = await fetch(`${process.env.SELF_HOST_URL}/api/login/`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    identifier: emailOrUsername, password, role
+                                })
+                            });
+                        let { user, jwt, err, errType } = await res.json()
+                        if (err) {
+                            console.log(err)
+                            return { err, errType }
+                        }
+                        if (user) {
+                            let userCred = { ...credentials, ...user, jwt }
+                            //console.log(userCred)
+                            return { user: userCred };
+                        }
                     } catch (error) {
                         throw error;
                     }
                 }
-
                 if (credentials) {
                     // Any object returned will be saved in `user` property of the JWT
                     return new Promise(async (res, rej) => {
                         try {
-                            let json = await userFn(credentials)
-                            if (json.isAccount) {
-                                res(json)
-                            } else {
-                                rej(`${json.callbackUrl}?view=no_account`)
+                            //console.log(credentials)
+                            let { user, err, errType } = await userFn(credentials)
+                            if (user) {
+                                console.log(user)
+                                res(user)
+                            } else if (err) {
+                                console.log(errType)
+                                if (errType === "Parameter_Error") {
+                                    rej(`${credentials.callbackUrl}?view=pass_user_err`)
+                                }
                             }
                         } catch (error) {
                             rej(null)
@@ -71,13 +91,13 @@ const options = {
             }
         },
         redirect: async (url, baseUrl) => {
-           return Promise.resolve(url)
-          /*  return url.startsWith(baseUrl)
-                ? Promise.resolve(url)
-                : Promise.resolve(baseUrl)*/
+            return Promise.resolve(url)
+            /*  return url.startsWith(baseUrl)
+                  ? Promise.resolve(url)
+                  : Promise.resolve(baseUrl)*/
         },
         session: async (session, user) => {
-            session.user=user;
+            session.user = user;
             console.log(session)
             return Promise.resolve(session)
         },
@@ -86,9 +106,9 @@ const options = {
             // Add auth_time to token on signin in
             if (isSignIn) {
                 token.auth_time = Math.floor(Date.now() / 1000);
-                token.username = user.userName
-                let { password,callbackUrl, ...rest } = user;
-                token = { ...token, user: { ...rest } }
+                token.username = user.username
+                let { password, callbackUrl, ...rest } = user;
+                token = { ...token,  ...rest }
             }
             return Promise.resolve(token)
         },

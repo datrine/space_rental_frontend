@@ -6,10 +6,11 @@ import { faBars, faUser } from '@fortawesome/free-solid-svg-icons'
 library.add(faBars)
 import 'w3-css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import Login from "./login"
+import Account from "./account"
 import { signIn, signOut, useSession, getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
-import { socket } from "../utils/chat_client"
+import { manager } from "../utils/chat_client"
+import ChatApp from '../comps/special/chat/comp_chatApp'
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();
@@ -26,7 +27,7 @@ function MyApp({ Component, pageProps }) {
   console.log(`Found match of ${router.pathname} :${pathNeedAuth}`);
   //console.log(session);
   return <>{ /* */pathNeedAuth && !sessionState ?
-    <Login callbackUrl={router.route} /> :
+    <Account callbackUrl={router.route} /> :
     <Provider session={pageProps.session}>
       <Component {...pageProps} />
     </Provider>}</>
@@ -38,7 +39,7 @@ function authList() {
 
 async function mySessionFn(hookChangeSessionState) {
   const session = await getSession()
-  //console.log(session)
+  console.log(session)
   hookChangeSessionState(session)
   /* ... */
 }

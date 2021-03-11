@@ -19,17 +19,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "white",
         top: 'auto',
         bottom: 0,
-        height:60
+        height: 60
     },
 
     btnStacked: {
         display: 'flex',
-        justifyContent:"center",
+        justifyContent: "center",
         flexDirection: "column",
         borderWidth: 0,
         backgroundColor: "transparent",
-        width:50,
-        alignItems:"center"
+        width: 50,
+        alignItems: "center"
     },
 }));
 
@@ -42,15 +42,15 @@ let Comp_Mob_Footer = ({ ...propsFromParent }) => {
                 <span style={{ fontSize: "12px" }}>Home</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
-                <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
-                <span style={{ fontSize: "12px" }}>Realty</span>
+                <span><Dashboard /></span>
+                <span style={{ fontSize: "12px" }}>Dashboard</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faPlusCircle} className="fa-3x" /></span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
-                <span><Dashboard /></span>
-                <span style={{ fontSize: "12px" }}>Dashboard</span>
+                <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
+                <span style={{ fontSize: "12px" }}>Realty</span>
             </Box>
             <Box component="button" className={classes.btnStacked}>
                 <span><AlarmOn /></span>

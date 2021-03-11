@@ -30,14 +30,14 @@ let StartChatBtn = ({ showChatGrid, hookChangeShowChatGridState }) => {
             width: "50px", height: "50px", position: "absolute",
             bottom: "50px", right: "10px"
         }}>
-        <FontAwesomeIcon icon={showChatGrid ? faTimes :faComment } /></button></>
+        <FontAwesomeIcon icon={showChatGrid ? faTimes : faComment} />uuuu</button></>
 }
 
 let ChatGrid = ({ emailProp = "", nameProp = "" }) => {
     let [emailState, changeEmailState] = useState(emailProp)
     let [nameState, changeNameState] = useState(nameProp)
     return <>
-        <div className="col-sm-4" style={{position:"absolute"}}>
+        <div className="col-sm-4" style={{ position: "absolute" }}>
             <input className="form-control" value={nameState} onClick={
                 e => {
                     changeNameState(e.currentTarget.value)

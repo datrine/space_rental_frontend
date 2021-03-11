@@ -1,143 +1,145 @@
 import validator from 'validator';
 import { memoFn } from "./utilFns"
 let registerValidator = async (instance = {
-    userEmail: "", userName: "", userPhone: "", userPass: "", userRePass: "", referral
+    email: "", username: "", phonenum: "", password: "", repass: "", referral
 }) => {
-    let { userEmail, userName, userPass, userPhone, userRePass, referral } = instance
+    let { email, username, password, phonenum, repass: repass, referral } = instance
     console.log(instance)
     let errorList = []
 
-    if (!validator.isLength(userName, { min: 1 })) {
+    if (!validator.isLength(username, { min: 1 })) {
         let errObj = {
             msg: "Username cannot be blank",
             info: "Fill username",
-            prop: "userName",
-            value: userName
+            prop: "username",
+            value: username
         }
         errorList.push(errObj)
     }
 
-    if (!validator.isLength(userName, { min: 4 })) {
+    if (!validator.isLength(username, { min: 4 })) {
         let errObj = {
             msg: "Username length cannot be less than 4",
             info: "Username length must be up to 4.",
-            prop: "userName",
-            value: userName
+            prop: "username",
+            value: username
         }
         errorList.push(errObj)
     }
     else {
         try {
-            let res = await memoFn(fetch, `/api/verify/username?q=${userName}`, {
+            let res = await memoFn(fetch, `/api/verify/username?username=${username}`, {
                 method: "GET"
-            }, userName)
+            }, username)
             let resObj;
             if (("bodyUsed" in res) && (res.bodyUsed === false)) {
-                resObj = await memoFn(userName, await res.json())
+                resObj = await memoFn(username, await res.json())
             }
             else if (("isExistingUsername" in res)) {
-                resObj = await memoFn(userName);
+                resObj = await memoFn(username);
             }
             let { isExistingUsername, err } = resObj
             if (isExistingUsername) {
                 let errObj = {
                     msg: "Username already exists",
                     info: "Ensure username is unique",
-                    prop: "userName",
-                    value: userName,
+                    prop: "username",
+                    value: username,
                 }
                 errorList.push(errObj)
             } else if (err) {
                 let errObj = {
                     msg: err,
                     info: "Retry later please...",
-                    prop: "userName",
-                    value: userName,
+                    prop: "username",
+                    value: username,
                 }
                 errorList.push(errObj)
             }
         } catch (error) {
+            console.log(error)
             let errObj = {
-                msg: error,
+                msg: typeof error==="object"?"Unable to validate username": error,
                 info: "Retry later please...",
-                prop: "userName",
-                value: userName,
+                prop: "username",
+                value: username,
             }
             errorList.push(errObj)
         }
     }
-    if (!validator.isMobilePhone(userPhone, "en-NG")) {
+    if (!validator.isMobilePhone(phonenum, "en-NG")) {
         let errObj = {
             msg: "Phone format is not valid",
             info: "Ensure phone is a valid format",
-            prop: "userPhone",
-            value: userPhone,
+            prop: "phonenum",
+            value: phonenum,
         }
         errorList.push(errObj)
     }
 
-    if (!validator.isEmail(userEmail)) {
+    if (!validator.isEmail(email)) {
         let errObj = {
             msg: "Email is not valid",
             info: "Ensure email is a valid format",
-            prop: "userEmail",
-            value: userEmail,
+            prop: "email",
+            value: email,
         }
         errorList.push(errObj)
     }
-    else if (validator.isEmail(userEmail)) {
+    else if (validator.isEmail(email)) {
         try {
-            let res = await memoFn(fetch, `/api/verify/email?q=${userEmail}`, {
+            let res = await memoFn(fetch, `/api/verify/email?email=${email}`, {
                 method: "GET"
-            }, userEmail)
+            }, email)
             let resObj;
             if (("bodyUsed" in res) && (res.bodyUsed === false)) {
-                resObj = await memoFn(userEmail, await res.json())
+                resObj = await memoFn(email, await res.json())
                 console.log(resObj)
             }
             else if (("isExistingEmail" in res)) {
-                resObj = await memoFn(userEmail);
+                resObj = await memoFn(email);
             }
             let { isExistingEmail, err } = resObj
             if (isExistingEmail) {
                 let errObj = {
                     msg: "Email already exists",
                     info: "Ensure email is unique",
-                    prop: "userEmail",
-                    value: userEmail,
+                    prop: "email",
+                    value: email,
                 }
                 errorList.push(errObj)
             } else if (err) {
                 let errObj = {
                     msg: err,
                     info: "Retry later please...",
-                    prop: "userEmail",
-                    value: userEmail,
+                    prop: "email",
+                    value: email,
                 }
                 errorList.push(errObj)
             }
         } catch (error) {
+            console.log(error)
             let errObj = {
-                msg: error,
+                msg: typeof error==="object"?"Unable to validate email": error,
                 info: "Retry later please...",
-                prop: "userEmail",
-                value: userEmail,
+                prop: "email",
+                value: email,
             }
             errorList.push(errObj)
         }
     }
 
-    if (validator.isAlpha(userPass)) {
+    if (validator.isAlpha(password)) {
         let errObj = {
             msg: "Password not valid without a number or a special character",
             info: "Include a number or a special character",
-            prop: "userPass",
-            value: userPass,
+            prop: "password",
+            value: password,
         }
         errorList.push(errObj)
     }
 
-    let passwordScore = validator.isStrongPassword(userPass,
+    let passwordScore = validator.isStrongPassword(password,
         {
             minLength: 6, minLowercase: 1, minUppercase: 0, minNumbers: 1,
             pointsForContainingNumber: 10,
@@ -148,18 +150,18 @@ let registerValidator = async (instance = {
         let errObj = {
             msg: "Password not strong enough",
             info: "Ensure password length is at least 6 characters and has at least a number",
-            prop: "userPass",
-            value: userPass,
+            prop: "password",
+            value: password,
         }
         errorList.push(errObj)
     }
 
-    if (!validator.equals(userPass, userRePass)) {
+    if (!validator.equals(password, repass)) {
         let errObj = {
             msg: "Passwords don't match",
             info: "",
-            prop: "userPass",
-            value: userPass,
+            prop: "password",
+            value: password,
         }
         errorList.push(errObj)
     }

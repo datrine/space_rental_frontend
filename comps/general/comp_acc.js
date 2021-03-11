@@ -9,6 +9,7 @@ import { Comp_Login } from "./comp_login"
 import { Comp_Mob_Footer } from './comp_mob_footer';
 import { Comp_Mob_Header } from './comp_mob_menu';
 import { Comp_Register } from './comp_register';
+import { Comp_Logout } from './comp_logout';
 
 let Comp_Account = ({ ...propsFromParent }) => {
     return <>
@@ -16,16 +17,16 @@ let Comp_Account = ({ ...propsFromParent }) => {
     </>
 }
 
-function MobileView({ csrfToken, hookChangeRegState, callbackUrl }) {
+function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromParent }) {
     let [session, loading] = useSession()
-    let { query } = useRouter()
+    let { query: { tabValue } } = useRouter()
     let view = null
     if (session) {
         view = <> <p className="">You're already logged in...</p></>
     }
     view = <>
         <Comp_Mob_Header />
-        <AccountView />
+        {session ? <Comp_Logout/> : <AccountView tabValue={tabValue} {...propsFromParent} />}
         <Comp_Mob_Footer />
     </>
 
@@ -34,12 +35,12 @@ function MobileView({ csrfToken, hookChangeRegState, callbackUrl }) {
     </>
 }
 
-function AccountView(params) {
+function AccountView(props) {
     let formik = useFormik({
         email: "",
         lname: "",
     })
-    let [tabValue, changeTabValue] = useState("login")
+    let [tabValue, changeTabValue] = useState(props.tabValue || "login")
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
             <Typography

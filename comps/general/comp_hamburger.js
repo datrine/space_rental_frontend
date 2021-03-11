@@ -5,12 +5,12 @@ import { useEffect, useState } from "react"
 let HamburgerMenu = ({ expandedProps = false, hookChangeExpandedMenu }) => {
     // let [expanded, toggleExpanded] = useState(expandedProps)
     return <>
-        <button className="w3-btn" onClick={
+        <span className="w3-btn" onClick={
             e => {
                 hookChangeExpandedMenu(!expandedProps)
             }
         }>
-            <FontAwesomeIcon icon={expandedProps ? faTimes : faBars} /></button>
+            <FontAwesomeIcon icon={expandedProps ? faTimes : faBars} /></span>
     </>
 }
 
@@ -95,9 +95,9 @@ let listOfMenu = [
     { parentName: "home", displayName: "Account", name: "account", icon: "", isList: true, link: "" },
     { parentName: "home", displayName: "About", name: "about", icon: "", isList: false, link: "" },
     { parentName: "account", displayName: "Sign in", name: "login", icon: "", isList: true },
-    { parentName: "account", displayName: "Sign Up", name: "register", icon: "", isList: false, link: "" },
-    { parentName: "login", displayName: "Admin", name: "admin_login", icon: "", isList: false, link: "" },
-    { parentName: "login", displayName: "User", name: "general_login", icon: "", isList: false, link: "" },
+    { parentName: "account", displayName: "Sign Up", name: "register", icon: "", isList: false, link: "/account?tabValue=register" },
+    { parentName: "login", displayName: "Admin", name: "admin_login", icon: "", isList: false, link: "/account?tabValue=login" },
+    { parentName: "login", displayName: "User", name: "general_login", icon: "", isList: false, link: "/account?tabValue=login" },
 ]
 
 

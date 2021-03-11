@@ -11,9 +11,9 @@ let Comp_Dashboard = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
     }, [])
     let view = null
     if (session) {
-        let view = <> 
-        <div className="">
-            Dashboard for {session.user.username} </div></>
+        let view = <>
+            <div className="">
+                Dashboard for {session.user.username} </div></>
     }
     view = <>
         <div className="">

@@ -17,7 +17,7 @@ export default async function handler(req, res) {
                 prefixUrl: fetchHost,
                 json: {
                     usernameOrEmail
-                },responseType:"json"
+                }, responseType: "json"
             })
             let body = response.body
             console.log(body[0]);

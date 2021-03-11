@@ -1,3 +1,18 @@
+let screenMgr = () => {
+    if (typeof window !== "undefined") {
+        let screenType;
+        let screenWidth = screen.width
+        if (screenWidth < 992) {
+            screenType = "small";
+            return { screenType }
+        }
+        else if (screenWidth >= 992) {
+            screenType = "large";
+            return { screenType }
+        }
+    }
+}
+
 async function middlewareRunner(req, res, middleware) {
     return new Promise((resolve, reject) => {
         //console.log("SAZDSXDXDF");
@@ -37,12 +52,12 @@ let memoFn = (() => {
             Array.prototype.splice.call(args, 0, 1);
             if (args.length > 0) {
                 let obj = { ...args[0] }
-                console.log(args)
+                //console.log(args)
                 cache[memoKey] = obj
-                console.log(cache[memoKey])
+                //console.log(cache[memoKey])
             }
             return cache[memoKey];
         }
     }
 })();
-export { middlewareRunner, memoFn };
+export { middlewareRunner, memoFn,screenMgr };
