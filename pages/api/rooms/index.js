@@ -9,7 +9,7 @@ const cors = Cors({
 export default async function handler(req, res) {
     if (req.method === "GET") {
         try {
-            let { filter} = req.body
+            let { filter="" } = req.body
             //console.log(req.body)
             await middlewareRunner(req, res, cors);
             let response = await axios({
@@ -20,17 +20,18 @@ export default async function handler(req, res) {
                 }
             })
 
-            let rooms  = response.data
-            //console.log(response.data)
-            return res.json({rooms});
+            let rooms = response.data
+            console.log(response.data)
+            return res.json({ rooms });
 
         } catch (error) {
             let errMsg = ""
             let errType = ""
             if (error.response) {
-                let errors = error.response.data;
+                let errors = error.response?.data;
                 errMsg = errors.error
-                if (errors.message) {
+                if (errors?.message) {
+                    console.log( errors.message)
                     errors.message.forEach(msgObj => {
                         msgObj.messages.forEach(errObj => {
                             errMsg += ": " + errObj.message;
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
                 console.log('Error', error.message);
                 errMsg = error.message;
             }
-            return res.json({err: errMsg, errType });
+            return res.json({ err: errMsg, errType });
         }
     }
 }

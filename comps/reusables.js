@@ -1,15 +1,18 @@
 const { Container, Grid, Paper, Button, Input, TextField } = require("@material-ui/core"); import { faArrowCircleRight, faArrowLeft, faBars, faStar, faTimes } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Search, Star, StarHalf } from "@material-ui/icons";
+import Carousel from 'react-bootstrap/Carousel';
 import Image from "next/image"
 import PropTypes from "prop-types"
-import { useState } from "react";
-import View from "./view"
+import { useEffect, useState, Fragment } from "react";
+import View from "./view";
 
-function SearchMiniApp({width="100%", placeholderText = "Search..." }) {
+function SearchMiniApp({ width = "100%", placeholderText = "Search..." }) {
     return <>
-        <Container style={{ borderRadius: "30px", borderWidth: "2px", borderStyle: "solid",
-        paddingTop:10,paddingBottom:10,width,boxShadow:"3px 3px grey" }} >
+        <Container style={{
+            borderRadius: "30px", borderWidth: "2px", borderStyle: "solid",
+            paddingTop: 10, paddingBottom: 10, width, boxShadow: "3px 3px grey"
+        }} >
             <Grid container justify="space-between" alignItems="stretch" >
                 <Grid item xs={10} sm={11} >
                     <TextField fullWidth placeholder={placeholderText}
@@ -25,11 +28,16 @@ function SearchMiniApp({width="100%", placeholderText = "Search..." }) {
     </>
 }
 
-function ItemTemplate({ imgSrc, imgProps: { width = 200, height = 200 } }) {
+function ItemTemplate({ imgSrc = "/room_placeholder.jpeg", imgProps: { width = 200, height = 200 } = {} }) {
     return <>
         <Container>
             <Grid direction="column" alignItems="stretch" justify="center" >
-                <Image width={imgProps.width} height={imgProps.height} src={imgSrc} />
+                {Array.isArray(imgSrc) ? <Carousel>
+                    {imgSrc.map((src) => <Carousel.Item>
+                        <Image width={width} height={height} src={imgSrc} />
+                    </Carousel.Item>)}
+
+                </Carousel> : <Image layout="responsive" width={width} height={height} src={imgSrc} />}
                 <Rating />
             </Grid>
         </Container>
@@ -38,36 +46,61 @@ function ItemTemplate({ imgSrc, imgProps: { width = 200, height = 200 } }) {
 
 function Rating() {
     let [rating, changeRating] = useState(0)
+    let rateBtns = [];
+    for (let btnIndex = 1; btnIndex <= 5; btnIndex++) {
+        rateBtns.push(<StarBtn starValue={btnIndex} ratingProps={rating} hookChangeRating={changeRating} />)
+    }
+    useEffect(() => {
+        console.log(rating)
+    })
     return <>
         <Paper>
-            <Grid>
-                <StarBtn hookChangeRating={changeRating} />
-            </Grid>
+            <Grid justify="space-between"
+            >
+                {rateBtns.map((elem, index) => <Fragment key={index} >{elem}</Fragment>)}
+                {rating === 0 ? <span>Unrated...</span> : null}</Grid>
         </Paper>
     </>
 }
 
-function StarBtn({ hookChangeRating }) {
-    let [clickState, changeClickState] = useState(null)
+function StarBtn({ starValue, ratingProps, hookChangeRating }) {
+    console.log("btnIndex" + starValue)
+    let click = "none"
+    if (ratingProps >= starValue) {
+        click = "full"
+    } else if (ratingProps === (starValue - 0.5)) {
+        click = "half"
+    }
+    else
+        if (ratingProps < (starValue - 1)) {
+            click = "none"
+        }
     return <>
-        <Button onClick={
+        <button className="w3-btn" onClick={
             e => {
-                if (clickState === "none" || (clickState !== "half" && clickState !== "full")) {
-                    changeClickState("half")
+                let rating = ratingProps
+                if (click === "none" || (click !== "half" && click !== "full")) {
+                    rating = (starValue - 1) + 0.5;
+                    hookChangeRating(rating)
                 }
-                else if (clickState === "half") {
-                    changeClickState("full")
+                else if (click === "half") {
+                    rating = starValue;
+                    hookChangeRating(rating)
                 }
-                else if (clickState === "full") {
-                    changeClickState("none")
+                else if (click === "full") {
+                    rating = starValue - 1;
+                    hookChangeRating(rating)
+                    if (ratingProps <= starValue - 1) {
+                    }
                 }
+                console.log(rating)
             }
-        } >
-            {clickState === "none" ? <Star className="w3-white" /> :
-                (clickState === "half" ? <StarHalf className="w3-blue" /> :
-                    clickState === "full" ? <Star className="w3-blue" /> :
-                        <Star className="w3-white" />)}
-        </Button></>
+        } style={{ padding: 0, paddingLeft: 0, paddingRight: 0, marginRight: "10px" }} >
+            {click === "none" ? <Star className="w3-text-grey" /> :
+                (click === "half" ? <StarHalf className="w3-text-blue" /> :
+                    click === "full" ? <Star className="w3-text-blue" /> :
+                        <Star className="w3-text-grey" />)}
+        </button></>
 }
 
 

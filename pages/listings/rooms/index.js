@@ -20,6 +20,7 @@ function MobileView() {
                 <SearchMiniApp />
             </Container>
         </Container>
+        <br/>
         <Listing />
     </>
 }
@@ -33,6 +34,7 @@ function Listing() {
                 });
                 let { rooms, err } = await res.json();
                 if (rooms) {
+                    console.log(rooms)
                     changeRoomsState(rooms)
                 }
             } catch (e) {
@@ -42,7 +44,9 @@ function Listing() {
     }, [])
     return <>
         {
-            roomsState.map(() => <ItemTemplate />)
+            roomsState.map(({ }, index) => <Container key={index} >
+                <ItemTemplate />
+                </Container>)
         }
     </>
 }

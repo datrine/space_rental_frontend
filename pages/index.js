@@ -36,7 +36,7 @@ let MobileView = () => {
     }, [])
     return <>
         {readyState ? <>
-        <Comp_Mob_Header/>
+            <Comp_Mob_Header />
             <IndexBody />
             <Comp_Mob_Footer />
         </> : <SplashScreen />}
@@ -45,36 +45,36 @@ let MobileView = () => {
 
 let IndexBody = () => {
     return <>
-    <Container  className="mt-5" style={{
+        <Container className="mt-5" style={{
             padding: 0,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center", backgroundSize: "cover"
         }}>
-        <Container style={{
-            padding: 0, 
-            height: 700, backgroundImage: "url('hp_share_apart.png')",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center", backgroundSize: "cover"
-        }} >
-            <Container maxWidth="xs" style={{
-                paddingTop: 100, height: 700,
-                backgroundColor: "rgba(0,128,0,0.5)"
+            <Container style={{
+                padding: 0,
+                height: 700, backgroundImage: "url('hp_share_apart.png')",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center", backgroundSize: "cover"
             }} >
-                <h1 className="w3-text-white" style={{
-                    fontSize: "2em",
-                    paddingRight: "10", paddingLeft: "10", textAlign: "center"
-                }} >Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments</h1>
+                <Container maxWidth style={{
+                    paddingTop: 100, height: 700,
+                    backgroundColor: "rgba(0,128,0,0.5)"
+                }} >
+                    <h1 className="w3-text-white" style={{
+                        fontSize: "2em",
+                        paddingRight: "10", paddingLeft: "10", textAlign: "center"
+                    }} >Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments</h1>
+                </Container>
+            </Container>
+            <Container maxWidth className="mb-5 pt-2"  >
+                <h2 style={{ textAlign: "center", width: "80%", marginLeft: "10%" }} >
+                    Find nearby to stay, work, or available space you can invest on.</h2>
+            </Container>
+            <Container maxWidth className="mb-5 pb-5" >
+                <Tiles />
+                <QuickFind />
             </Container>
         </Container>
-        <Container maxWidth className="mb-5 pt-2"  >
-            <h2 style={{ textAlign: "center", width: "80%", marginLeft: "10%" }} >
-                Find nearby to stay, work, or available space you can invest on.</h2>
-        </Container>
-        <Container maxWidth className="mb-5 pb-5" >
-            <Tiles />
-            <QuickFind />
-        </Container>
-</Container>
     </>
 }
 
@@ -102,10 +102,10 @@ let Tiles = () => {
     },]
     return <>
         {listOf.map(({ link, titleOf, textOf, imgSrcOf }, index) =>
-            <a href={link} key={index} style={{textDecoration:"none"}} >
+            <a href={link} key={index} style={{ textDecoration: "none" }} >
                 <Container className="w3-card"
                     style={{
-                        width: "96%", marginLeft: "2%",marginRight:"2%",marginBottom:"15px", borderStyle: "solid",
+                        width: "96%", marginLeft: "2%", marginRight: "2%", marginBottom: "15px", borderStyle: "solid",
                         borderWidth: 1, borderRadius: "20px", boxShadow: "10px 10px grey"
                     }} >
                     <Grid container
@@ -116,7 +116,7 @@ let Tiles = () => {
                         <Grid item xs={10} sm={11} >
                             <h5 style={{ fontWeight: "bold" }}>
                                 {titleOf.length > 44 ? (titleOf.substring(0, 40) + "...") : titleOf}
-                                </h5>
+                            </h5>
                             <p>{textOf}</p>
                         </Grid>
                         <Grid item xs={2} sm={1} direction="column" justify="flex-end" alignItems="center" >
