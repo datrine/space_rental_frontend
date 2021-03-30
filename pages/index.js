@@ -61,7 +61,7 @@ let IndexBody = () => {
                     backgroundColor: "rgba(0,128,0,0.5)"
                 }} >
                     <h1 className="w3-text-white" style={{
-                        fontSize: "2em",
+                        fontSize: "10vw",
                         paddingRight: "10", paddingLeft: "10", textAlign: "center"
                     }} >Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments</h1>
                 </Container>

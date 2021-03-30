@@ -10,7 +10,7 @@ export default function Rooms() {
 
 function MobileView() {
     return <>
-        <Container maxWidth style={{ padding: 0 }} >
+        <Container maxWidth="xs" style={{ padding: 0 }} >
             <Grid justify="space-between" alignItems="center" container
                 style={{ height: "50px", backgroundColor: "green", marginBottom: "10px", }}>
                 <a href="/"> <ArrowBack style={{ color: "white", fontSize: "3em" }} /></a>
@@ -20,7 +20,7 @@ function MobileView() {
                 <SearchMiniApp />
             </Container>
         </Container>
-        <br/>
+        <br />
         <Listing />
     </>
 }
@@ -34,6 +34,7 @@ function Listing() {
                 });
                 let { rooms, err } = await res.json();
                 if (rooms) {
+
                     console.log(rooms)
                     changeRoomsState(rooms)
                 }
@@ -42,11 +43,13 @@ function Listing() {
             }
         })()
     }, [])
-    return <>
-        {
-            roomsState.map(({ }, index) => <Container key={index} >
-                <ItemTemplate />
-                </Container>)
-        }
+    return <> <Container >
+        <Grid container alignItems="flex-start" spacing={2} >
+            {
+                roomsState.map(({room_pics }, index) =>
+                    <Grid key={index} xs={12} item sm={4} md={3} > 
+                    <ItemTemplate imgSrc={room_pics.map(picInfo=>picInfo.url)}  /></Grid>)
+            }  </Grid>
+    </Container>
     </>
 }

@@ -1,6 +1,8 @@
-const { Container, Grid, Paper, Button, Input, TextField } = require("@material-ui/core"); import { faArrowCircleRight, faArrowLeft, faBars, faStar, faTimes } from "@fortawesome/free-solid-svg-icons"
+const { Container, Grid, Paper, Button, Input, TextField } = require("@material-ui/core");
+import { faArrowCircleRight, faArrowLeft, faBars, faHeart as faHeartSolid, faStar, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Search, Star, StarHalf } from "@material-ui/icons";
+import { ArrowUpward, Search, Star, StarHalf } from "@material-ui/icons";
 import Carousel from 'react-bootstrap/Carousel';
 import Image from "next/image"
 import PropTypes from "prop-types"
@@ -10,8 +12,8 @@ import View from "./view";
 function SearchMiniApp({ width = "100%", placeholderText = "Search..." }) {
     return <>
         <Container style={{
-            borderRadius: "30px", borderWidth: "2px", borderStyle: "solid",
-            paddingTop: 10, paddingBottom: 10, width, boxShadow: "3px 3px grey"
+            borderRadius: "30px", borderWidth: "1px", borderStyle: "solid",
+            paddingTop: 5, paddingBottom: 5, width, boxShadow: "3px 3px grey"
         }} >
             <Grid container justify="space-between" alignItems="stretch" >
                 <Grid item xs={10} sm={11} >
@@ -28,22 +30,51 @@ function SearchMiniApp({ width = "100%", placeholderText = "Search..." }) {
     </>
 }
 
-function ItemTemplate({ imgSrc = "/room_placeholder.jpeg", imgProps: { width = 200, height = 200 } = {} }) {
+function ItemTemplate({ imgSrc = "/room_placeholder.jpeg" || [], imgProps: { width = 200, height = 200 } = {} }) {
+    console.log(process.env)
     return <>
-        <Container>
+        <Container style={{
+            borderWidth: 1, borderStyle: "solid",
+            borderColor: "green", borderRadius: "20px", paddingTop: "10px"
+        }}>
             <Grid direction="column" alignItems="stretch" justify="center" >
-                {Array.isArray(imgSrc) ? <Carousel>
+                {Array.isArray(imgSrc) && imgSrc.length > 0 ? <Carousel>
                     {imgSrc.map((src) => <Carousel.Item>
-                        <Image width={width} height={height} src={imgSrc} />
+                        <Image layout="responsive" width={width} height={height}
+                            src={src ? src : "/room_placeholder.jpeg"} />
                     </Carousel.Item>)}
 
-                </Carousel> : <Image layout="responsive" width={width} height={height} src={imgSrc} />}
+                </Carousel> :
+                    <Image layout="responsive" width={width} height={height}
+                        src="/room_placeholder.jpeg" />}
                 <Rating />
+                <Grid container direction="column" >
+                    <span>Co-working desk @ Abuja</span>
+                    <span>₦50 per day</span>
+                </Grid>
             </Grid>
+            <Container style={{ borderTopStyle: "solid", borderTopWidth: "1px" }} >
+                <p style={{ textAlign: "center" }}>
+                    <SaveBtn />
+                </p>
+            </Container>
         </Container>
     </>
 }
-
+function SaveBtn() {
+    let [isClicked, toggleIsClicked] = useState(false)
+    return <>
+        <Button onClick={
+            e => {
+                toggleIsClicked(!isClicked)
+            }
+        } >
+            <FontAwesomeIcon icon={isClicked ? faHeartSolid : faHeartRegular} style={{
+                color: "green", fontSize: "2em"
+            }} />
+        </Button>
+    </>
+}
 function Rating() {
     let [rating, changeRating] = useState(0)
     let rateBtns = [];
@@ -103,7 +134,6 @@ function StarBtn({ starValue, ratingProps, hookChangeRating }) {
         </button></>
 }
 
-
 ItemTemplate.propTypes = {
     imgSrc: PropTypes.string,
     imgProps: PropTypes.shape({
@@ -112,5 +142,12 @@ ItemTemplate.propTypes = {
     })
 }
 
+function ToTheTop() {
+    return <>
+        <Button href="#" style={{}} >
+            <ArrowUpward />
+        </Button>
+    </>
+}
 
 export { ItemTemplate, SearchMiniApp, View }
