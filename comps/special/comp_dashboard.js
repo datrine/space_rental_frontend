@@ -3,12 +3,14 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
-import { Button, Container, Grid, IconButton, Typography } from "@material-ui/core"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Grid, IconButton, Typography } from "@material-ui/core"
 import { ArrowBack, Edit, } from "@material-ui/icons"
 import View from '../view';
 import { Comp_Mob_Header } from "../general/comp_mob_menu"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { LogoSVG } from '../reusables';
 let Comp_Dashboard = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
     let [session, loading] = useSession()
     let view = null
@@ -33,9 +35,9 @@ function MobileView() {
 function ProfileMenu() {
     let [isCollapsed, toggleCollapsed] = useState(true)
     return <>
-        <Container style={{ position: "fixed", top: 0,padding:0 }}>
-            <Grid container style={{padding:0}}>
-                
+        <Container style={{ position: "fixed", top: 0, padding: 0 }}>
+            <Grid container style={{ padding: 0 }}>
+
                 <IconButton size="large" onClick={
                     e => {
                         toggleCollapsed(!isCollapsed)
@@ -44,16 +46,38 @@ function ProfileMenu() {
                     icon={isCollapsed ? faBars : faTimes} /></IconButton>
             </Grid>
         </Container>
+        {isCollapsed ? null : <OpenedMenu />}
     </>
 }
 
-function OpenedMenu(){
-    return<></>
+function OpenedMenu() {
+    return <>
+        <Container style={{ position: "fixed", top: 50, bottom: 0, right: 0, zIndex: 499, backgroundColor: "white" }}>
+            <p style={{ textAlign: "center" }}><Image src={"/logo.png"} width={40} height={40} /></p>
+            <h3 style={{ textAlign: "center" }}>MySpace4You</h3>
+            <><Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <h4>My Accounts</h4>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container direction="column" alignItems="stretch">
+                        <Button>Overview</Button>
+                        <Button>Profile</Button>
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+            </>
+        </Container>
+    </>
 }
 
 function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
     return <>
-        <Container style={{ marginTop: "100px" }}>
+        <Container style={{ marginTop: "70px" }}>
             <Grid container>
                 <Grid item container xs={6} >
                     <h3>Hi {name}</h3>
