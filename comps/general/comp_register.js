@@ -193,7 +193,11 @@ let Comp_Register = ({ ...propsFromParent }) => {
 
 let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)
-    let handleClose = (e) => hookChangeResponseView(null)
+    let handleClose = (e) =>{ 
+        console.log("Closed")
+        hookChangeResponseView(null)
+        window.location="/dashboard";
+    }
     return <>
         <Dialog
             open={open}

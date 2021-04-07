@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
 import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
+import { LogoSVG } from '../reusables';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -38,7 +39,7 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
     return <>
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
-                <span>MySpace4You</span>
+                <span><LogoSVG/></span>
             </Box>
             <SearchBtn />
           {session? <Box component="button" className={classes.btnStacked}>

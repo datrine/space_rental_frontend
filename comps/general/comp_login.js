@@ -86,10 +86,10 @@ let Comp_Login = ({ ...propsFromParent }) => {
                 </p>
             </form>
 
-            <div className="container-fluid mt-2" style={{ maxWidth: "350px" }} >
+            <div className="container-fluid mt-2" style={{ maxWidth: "400px",padding:0 }} >
                 <div
                     style={{
-                        width: "80%", marginLeft: "10%", paddingLeft: "10px",
+                        width: "90%", marginLeft: "10%", paddingLeft: "10px",
                         borderWidth: "2px", borderStyle: "solid"
                     }}>
                     <p>

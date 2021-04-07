@@ -5,7 +5,6 @@ import { Comp_Dashboard } from '../comps/special/comp_dashboard';
 
 let Login = ({ csrfToken, callbackUrl, ...otherProps }) => {
     //console.log("here in login")
-    //console.log(session)
     return <>
         <Comp_Dashboard csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
