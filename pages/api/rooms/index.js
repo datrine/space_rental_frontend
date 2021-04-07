@@ -1,7 +1,7 @@
 import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
-let fetchHost = "http://localhost:1337"
+let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
 });
