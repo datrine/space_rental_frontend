@@ -94,7 +94,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     console.log("registering")
                     return formik.handleSubmit(e)
                 }} >
-                <FormControl>
+                <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.email}
                         placeholder="Email..." fullWidth
                         startAdornment={
@@ -107,7 +107,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     {formik.errors.email ? <span className="w3-text-red" >
                         {formik.errors.email}</span> : null}</p>
 
-                <FormControl>
+                <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.username}
                         placeholder="Username..." fullWidth
                         startAdornment={
@@ -120,7 +120,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     {formik.errors.username ? <span className="w3-text-red" >
                         {formik.errors.username}</span> : null}</p>
 
-                <FormControl>
+                <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.phonenum} fullWidth
                         startAdornment={<InputAdornment position="start">
                             <Phone /></InputAdornment>}
@@ -131,7 +131,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     {formik.errors.phonenum ? <span className="w3-text-red" >
                         {formik.errors.phonenum}</span> : null}</p>
 
-                <FormControl>
+                <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.password} fullWidth
                         startAdornment={<InputAdornment position="start">
                             <button type="button" className="btn p-0" >
@@ -145,7 +145,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     {formik.errors.password ? <span className="w3-text-red" >
                         {formik.errors.password}</span> : null}</p>
 
-                <FormControl>
+                <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.repass} fullWidth
                         startAdornment={<InputAdornment position="start">
                             <button type="button" className="btn p-0" >

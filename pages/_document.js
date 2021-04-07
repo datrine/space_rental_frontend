@@ -8,6 +8,7 @@ export default class MyDocument extends Document {
             <Html lang="en">
                 <Head>
                     {/* PWA primary color */}
+                    <link rel="icon" type="image/svg+xml" href="/myspace_8x8.svg"></link>
                     <link
                         rel="stylesheet"
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

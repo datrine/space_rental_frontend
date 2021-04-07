@@ -1,3 +1,32 @@
+import { object } from "prop-types";
+
+function stateMgr() {
+    let loadingState = {
+        None: 0,
+        Loading: 1,
+        Failed: 2,
+        Loaded: 3,
+        Current: undefined,
+        getLoadingState() {
+            return this.Current;
+        },
+        setLoadingState(state) {
+            for (const key in this) {
+                if (this[key] === state) {
+                    this.Current === this[key];
+                    console.log("Initial current is set to "+this.Current)
+                }
+            }
+        },
+        init() {
+            let { None, setLoadingState } = this
+            setLoadingState(None)
+        }
+    }
+    loadingState.init()
+    return loadingState;
+}
+
 let screenMgr = () => {
     if (typeof window !== "undefined") {
         let screenType;
@@ -42,7 +71,7 @@ let memoFn = (() => {
                 try {
                     return res(fn(...args))
                 } catch (error) {
-                    return rej({err:error})
+                    return rej({ err: error })
                 }
             })
             return cache[memoKey]
@@ -60,4 +89,4 @@ let memoFn = (() => {
         }
     }
 })();
-export { middlewareRunner, memoFn,screenMgr };
+export { middlewareRunner, memoFn, screenMgr ,stateMgr};

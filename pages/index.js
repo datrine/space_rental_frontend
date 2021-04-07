@@ -10,6 +10,7 @@ import { SplashScreen } from '../comps/general/comp_splash_screen';
 import View from '../comps/view';
 import { useEffect, useState } from 'react';
 import { screenMgr } from "../utils/utilFns"
+import { ToTheTop } from '../comps/reusables';
 const DynamicPCComp = dynamic(() => Promise.resolve(PCView));
 const DynamicMobileComp = dynamic(() => Promise.resolve(MobileView));
 
@@ -56,7 +57,7 @@ let IndexBody = () => {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center", backgroundSize: "cover"
             }} >
-                <Container maxWidth style={{
+                <Container maxWidth="xs" style={{
                     paddingTop: 100, height: 700,
                     backgroundColor: "rgba(0,128,0,0.5)"
                 }} >
@@ -66,14 +67,15 @@ let IndexBody = () => {
                     }} >Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments</h1>
                 </Container>
             </Container>
-            <Container maxWidth className="mb-5 pt-2"  >
+            <Container maxWidth="xs" className="mb-5 pt-2"  >
                 <h2 style={{ textAlign: "center", width: "80%", marginLeft: "10%" }} >
                     Find nearby to stay, work, or available space you can invest on.</h2>
             </Container>
-            <Container maxWidth className="mb-5 pb-5" >
+            <Container maxWidth="xs" className="mb-5 pb-5" >
                 <Tiles />
                 <QuickFind />
             </Container>
+       <ToTheTop/>
         </Container>
     </>
 }
@@ -119,7 +121,7 @@ let Tiles = () => {
                             </h5>
                             <p>{textOf}</p>
                         </Grid>
-                        <Grid item xs={2} sm={1} direction="column" justify="flex-end" alignItems="center" >
+                        <Grid item xs={2} sm={1} container direction="column" justify="flex-end" alignItems="center" >
                             <img width={50} height={50} src={imgSrcOf} />
                         </Grid>
                     </Grid>
