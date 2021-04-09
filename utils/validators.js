@@ -49,7 +49,7 @@ let registerValidator = async (instance = {
                 errorList.push(errObj)
             } else if (err) {
                 let errObj = {
-                    msg: err,
+                    msg: "Error: Unable to verify username "+username,
                     info: "Retry later please...",
                     prop: "username",
                     value: username,
@@ -59,7 +59,7 @@ let registerValidator = async (instance = {
         } catch (error) {
             console.log(error)
             let errObj = {
-                msg: typeof error==="object"?"Unable to validate username": error,
+                msg: "Unable to validate username",
                 info: "Retry later please...",
                 prop: "username",
                 value: username,
@@ -99,7 +99,7 @@ let registerValidator = async (instance = {
             else if (("isExistingEmail" in res)) {
                 resObj = await memoFn(email);
             }
-            let { isExistingEmail, err } = resObj
+            let { isExistingEmail, err } = resObj || {}
             if (isExistingEmail) {
                 let errObj = {
                     msg: "Email already exists",
@@ -110,7 +110,7 @@ let registerValidator = async (instance = {
                 errorList.push(errObj)
             } else if (err) {
                 let errObj = {
-                    msg: err,
+                    msg: "Error: Unable to verify email "+email,
                     info: "Retry later please...",
                     prop: "email",
                     value: email,
@@ -120,7 +120,7 @@ let registerValidator = async (instance = {
         } catch (error) {
             console.log(error)
             let errObj = {
-                msg: typeof error==="object"?"Unable to validate email": error,
+                msg: typeof error === "object" ? "Unable to validate email" : error,
                 info: "Retry later please...",
                 prop: "email",
                 value: email,

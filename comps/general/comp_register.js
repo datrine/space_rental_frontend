@@ -53,6 +53,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         errors[errorObj.prop] = errorObj.msg;
                     }
                 }
+                console.log(errors)
                 res(errors)
             })
         },
@@ -104,8 +105,8 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {formik.errors.email ? <span className="w3-text-red" >
-                        {formik.errors.email}</span> : null}</p>
+                    {formik?.errors?.email ? <span className="w3-text-red" >
+                        {formik?.errors?.email}</span> : null}</p>
 
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.username}
@@ -117,8 +118,8 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {formik.errors.username ? <span className="w3-text-red" >
-                        {formik.errors.username}</span> : null}</p>
+                    {formik?.errors?.username ? <span className="w3-text-red" >
+                        {formik?.errors?.username}</span> : null}</p>
 
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.phonenum} fullWidth
@@ -128,8 +129,8 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {formik.errors.phonenum ? <span className="w3-text-red" >
-                        {formik.errors.phonenum}</span> : null}</p>
+                    {formik?.errors?.phonenum ? <span className="w3-text-red" >
+                        {formik?.errors?.phonenum}</span> : null}</p>
 
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.password} fullWidth
@@ -142,7 +143,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {formik.errors.password ? <span className="w3-text-red" >
+                    {formik?.errors?.password ? <span className="w3-text-red" >
                         {formik.errors.password}</span> : null}</p>
 
                 <FormControl fullWidth>
@@ -154,7 +155,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {formik.errors.repass ? <span className="w3-text-red">
+                    {formik?.errors?.repass ? <span className="w3-text-red">
                         {formik.errors.repass}</span> : null}</p>
 
                 <p style={{ width: "100%", textAlign: "center" }}>
@@ -193,10 +194,10 @@ let Comp_Register = ({ ...propsFromParent }) => {
 
 let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)
-    let handleClose = (e) =>{ 
+    let handleClose = (e) => {
         console.log("Closed")
         hookChangeResponseView(null)
-        window.location="/dashboard";
+        window.location = "/dashboard";
     }
     return <>
         <Dialog

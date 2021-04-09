@@ -58,7 +58,13 @@ async function middlewareRunner(req, res, middleware) {
 
 let memoFn = (() => {
     let cache = {}
+    let timeId=0;
     return async (...args) => {
+    clearTimeout(timeId)
+     timeId= setTimeout(()=>{
+        cache={}
+        console.log("Cache cleared...")
+    },40000)
         if (typeof args[0] === "function") {
             let fn = args[0]
             let memoKey = args[args.length - 1]
@@ -67,13 +73,20 @@ let memoFn = (() => {
             }
             Array.prototype.splice.call(args, 0, 1);
             Array.prototype.splice.call(args, args.length - 1, 1);
-            cache[memoKey] = await new Promise((res, rej) => {
+            cache[memoKey] = await new Promise(async(res, rej) => {
                 try {
-                    return res(fn(...args))
+                    let result=await fn(...args)
+                    console.log("result")
+                    console.log(result)
+                    console.log("result")
+                    return res(result)
                 } catch (error) {
                     return rej({ err: error })
                 }
             })
+            console.log("cache[memoKey]")
+            console.log(cache[memoKey])
+            console.log("cache[memoKey]")
             return cache[memoKey]
         }
         else {
@@ -81,9 +94,7 @@ let memoFn = (() => {
             Array.prototype.splice.call(args, 0, 1);
             if (args.length > 0) {
                 let obj = { ...args[0] }
-                //console.log(args)
                 cache[memoKey] = obj
-                //console.log(cache[memoKey])
             }
             return cache[memoKey];
         }

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Grid, IconButton, Typography } from "@material-ui/core"
-import { ArrowBack, Edit, } from "@material-ui/icons"
+import { ArrowBack, Chat, Edit, Person, } from "@material-ui/icons"
 import View from '../view';
 import { Comp_Mob_Header } from "../general/comp_mob_menu"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -52,24 +52,43 @@ function ProfileMenu() {
 
 function OpenedMenu() {
     return <>
-        <Container style={{ position: "fixed", top: 50, bottom: 0, right: 0, zIndex: 499, backgroundColor: "white" }}>
+        <Container style={{
+            padding: 0, position: "fixed", top: 50, bottom: 0, right: 0,
+            zIndex: 499, backgroundColor: "white"
+        }}>
             <p style={{ textAlign: "center" }}><Image src={"/logo.png"} width={40} height={40} /></p>
-            <h3 style={{ textAlign: "center" }}>MySpace4You</h3>
-            <><Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <h4>My Accounts</h4>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container direction="column" alignItems="stretch">
-                        <Button>Overview</Button>
-                        <Button>Profile</Button>
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
+            <h3 style={{ textAlign: "center" }}><a href="/"
+                style={{ textDecoration: "none", color: "green", fontStyle: "VAGRounded BT" }}>MySpace4You</a></h3>
+            <>
+                <Container style={{  padding: 0 }}>
+                    <Accordion style={{ paddingLeft: 10}} >
+                        <AccordionSummary style={{ padding: 0 }}
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Grid container>
+                                <Grid item container xs={2}>
+                                    <Person />
+                                </Grid>
+                                <Grid item container xs={10}>My Account</Grid>
+                            </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container direction="column" alignItems="stretch">
+                                <Button>Overview</Button>
+                                <Button>Profile</Button>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                </Container>
+                <Container style={{ padding: 10 }}>
+                    <Grid container>
+                        <Grid item container xs={2}>
+                            <Chat />
+                        </Grid>
+                        <Grid item container xs={10}><h4>My Chats</h4></Grid>
+                    </Grid></Container>
             </>
         </Container>
     </>

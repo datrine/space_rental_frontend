@@ -26,7 +26,7 @@ function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromPa
     }
     view = <>
         <Comp_Mob_Header />
-        {session ? <Comp_Logout/> : <AccountView tabValue={tabValue} {...propsFromParent} />}
+        {session ? <Comp_Logout /> : <AccountView tabValue={tabValue} {...propsFromParent} />}
         <Comp_Mob_Footer />
     </>
 
@@ -36,22 +36,15 @@ function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromPa
 }
 
 function AccountView(props) {
-    let formik = useFormik({
-        email: "",
-        lname: "",
-    })
     let [tabValue, changeTabValue] = useState(props.tabValue || "login")
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
-            <Typography
-                style={{ textAlign: "center" }}>
-                <Typography component="label" variant="h3"
-                    style={{
-                        borderBottomStyle: "solid", borderBottomWidth: "3px",
-                        textAlign: "center", paddingBottom: "10px"
-                    }}>
-                    MySpace4You
-                        </Typography>
+            <Typography component="label" variant="h3"
+                style={{
+                    borderBottomStyle: "solid", borderBottomWidth: "3px",
+                    textAlign: "center", paddingBottom: "10px"
+                }}>
+                <a>MySpace4You</a>
             </Typography>
             <br />
 

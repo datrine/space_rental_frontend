@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
@@ -35,16 +36,17 @@ const useStyles = makeStyles((theme) => ({
 let Comp_Mob_Header = ({ ...propsFromParent }) => {
     let classes = useStyles();
     let [expandedMenuState, changeExpandedMenu] = useState(false)
-    let [session,loading]= useSession()
+    let [session, loading] = useSession()
     return <>
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
-                <span><LogoSVG/></span>
-            </Box>
+                <Image src="/logo.png" height={30} width={30} /></Box>
             <SearchBtn />
-          {session? <Box component="button" className={classes.btnStacked}>
-                <Link href="/account"><AccountCircle/></Link>
-            </Box>:null} 
+            <Box component="button" className={classes.btnStacked}>
+                {session ? <Link href="/account"><AccountCircle style={{ color: "green" }} />
+                </Link> : 
+                <Link href="/account"><AccountCircle style={{ color: "grey" }} /></Link>
+                }  </Box>
             <Box component="button" className={classes.btnStacked} >
                 <HamburgerMenu hookChangeExpandedMenu={changeExpandedMenu} expandedProps={expandedMenuState} />
             </Box>
