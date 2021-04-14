@@ -24,17 +24,17 @@ function MyApp({ Component, pageProps }) {
     let foundArray = router.pathname.match(pathRegex) || []
     return foundArray.length > 0;
   })
-  console.log(`Found match of ${router.pathname} :${pathNeedAuth}`);
   //console.log(session);
-  return <>{ /* */pathNeedAuth && !sessionState ?
-    <Account callbackUrl={router.route} /> :
+  return <>
     <Provider session={pageProps.session}>
-      <Component {...pageProps} />
-    </Provider>}</>
+      { /* */pathNeedAuth && !sessionState ?
+        <Account callbackUrl={router.asPath} /> : <Component {...pageProps} />
+      } 
+       </Provider></>
 }
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats"]
 }
 
 async function mySessionFn(hookChangeSessionState) {

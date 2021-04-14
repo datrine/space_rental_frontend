@@ -1,3 +1,4 @@
+import { getSession, useSession } from "next-auth/client";
 import { object } from "prop-types";
 
 function stateMgr() {
@@ -14,7 +15,7 @@ function stateMgr() {
             for (const key in this) {
                 if (this[key] === state) {
                     this.Current === this[key];
-                    console.log("Initial current is set to "+this.Current)
+                    console.log("Initial current is set to " + this.Current)
                 }
             }
         },
@@ -58,13 +59,13 @@ async function middlewareRunner(req, res, middleware) {
 
 let memoFn = (() => {
     let cache = {}
-    let timeId=0;
+    let timeId = 0;
     return async (...args) => {
-    clearTimeout(timeId)
-     timeId= setTimeout(()=>{
-        cache={}
-        console.log("Cache cleared...")
-    },40000)
+        clearTimeout(timeId)
+        timeId = setTimeout(() => {
+            cache = {}
+            console.log("Cache cleared...")
+        }, 40000)
         if (typeof args[0] === "function") {
             let fn = args[0]
             let memoKey = args[args.length - 1]
@@ -73,9 +74,9 @@ let memoFn = (() => {
             }
             Array.prototype.splice.call(args, 0, 1);
             Array.prototype.splice.call(args, args.length - 1, 1);
-            cache[memoKey] = await new Promise(async(res, rej) => {
+            cache[memoKey] = await new Promise(async (res, rej) => {
                 try {
-                    let result=await fn(...args)
+                    let result = await fn(...args)
                     console.log("result")
                     console.log(result)
                     console.log("result")
@@ -100,4 +101,51 @@ let memoFn = (() => {
         }
     }
 })();
-export { middlewareRunner, memoFn, screenMgr ,stateMgr};
+/**
+ * 
+ * @param {Object} opts
+ * @param {string} opts.nameOfColumnOnDb
+ * @param {File} opts.files
+ * @param {FormData} opts.formData
+ */
+let procMulFiles = (opts = { nameOfColumnOnDb, files, formData }) => {
+    if (typeof files === "object") {
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i]
+            procSingleFile({ file, nameOfColumnOnDb, formData })
+        }
+    }
+    return opts.formData
+}
+
+/**
+ * 
+ * @param {Object} opts
+ * @param {string} opts.nameOfColumnOnDb
+ * @param {File} opts.file
+ * @param {FormData} opts.formData
+ */
+let procSingleFile = ({ nameOfColumnOnDb, file, formData }) => {
+    formData.append(`files.${nameOfColumnOnDb}`, file, file.name);
+}
+let uploader = async ({ url, formData, data = {} }) => {
+    try {
+        let session = await getSession()
+        formData.append('data', JSON.stringify(data));
+        let res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${session.user.jwt}`
+            },
+            body: formData
+        });
+        let data = await res.json()
+        console.log(data)
+        return { data }
+    } catch (err) {
+        console.log(err)
+        return { err }
+    }
+
+}
+export { middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, procSingleFile, uploader };

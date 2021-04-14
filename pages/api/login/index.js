@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             let { identifier, password, role } = req.body
-            //console.log(req.body)
+            console.log(req.body)
             await middlewareRunner(req, res, cors);
             let response = await axios({
                 url: `${process.env.CMS_URL}/auth/local`,
@@ -45,11 +45,11 @@ export default async function handler(req, res) {
                     });
                 }
             } else if (error.request) {
-                console.log(error.request);
+                console.log("error.request");
                 errMsg = "Unable to get response";
                 errType = "Network"
             } else {
-                console.log('Error', error.message);
+                //console.log('Error', error.message);
                 errMsg = error.message;
             }
             return res.json({ isAccount: false, err: errMsg, errType });

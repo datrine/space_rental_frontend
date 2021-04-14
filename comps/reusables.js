@@ -9,6 +9,7 @@ import PropTypes from "prop-types"
 import { useEffect, useState, Fragment } from "react";
 import View from "./view";
 import { useSpring, animated } from 'react-spring'
+import { useSession } from "next-auth/client";
 
 function SearchMiniApp({ width = "100%", placeholderText = "Search..." }) {
     return <>
@@ -57,7 +58,7 @@ function ItemTemplate({ id, imgSrc = "/room_placeholder.jpeg" || [], imgProps: {
             <Container style={{ borderTopStyle: "solid", borderTopWidth: "1px" }} >
                 <p style={{ textAlign: "center" }}>
                     <SaveBtn />
-                    <a href={`/listings/rooms/${id}`} ><Info/></a>
+                    <a href={`/listings/rooms/${id}`} ><Info /></a>
                 </p>
             </Container>
         </Container>
@@ -78,6 +79,7 @@ function SaveBtn() {
         </Button>
     </>
 }
+
 function Rating() {
     let [rating, changeRating] = useState(0)
     let rateBtns = [];
@@ -181,7 +183,7 @@ function Loading({ state }) {
         view = <animated.div style={animProps} > <Container name="" fullWidth style={{
             backgroundColor: "rgba(0,0,0,0.5)"
         }} >
-            <Grid container justify="center" alignItems="center" style={{ height: "100vh" }} >
+            <Grid container justify="center" alignItems="center" style={{ height: "100%" }} >
                 <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
 
             </Grid>
@@ -202,4 +204,16 @@ function Loading({ state }) {
     </>
 }
 
-export { ItemTemplate, SearchMiniApp, View, LogoSVG, ToTheTop, Loading, }
+function SessionState({ placeholder, }) {
+    let [session, loading] = useSession()
+    if (session) {
+        return <>
+            {children}
+        </>
+    }
+    return <>
+        {placeholder ? placeholder : null}
+    </>
+}
+
+export { ItemTemplate, SearchMiniApp, View, LogoSVG, ToTheTop, Loading, SessionState }

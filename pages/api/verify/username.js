@@ -13,10 +13,10 @@ export default async function handler(req, res) {
                 query: { username }
             } = req;
             await middlewareRunner(req, res, cors);
-            console.log("hereeeyy")
-            console.log(username)
+            //console.log("hereeeyy")
+            //console.log(username)
             let response = await axios.get(`${fetchHost}/users?username_eq=${username}`);
-            console.log(response.data)
+            //console.log(response.data)
             if (response.data.length>0) {
                 return res.json({ isExistingUsername:true });
             } else {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
             }
         } catch (error) {
             res.statusCode = 401;
-            console.log(error)
+            //console.log(error)
             return res.json({ isExistingUsername: false, err: error });
         }
     }

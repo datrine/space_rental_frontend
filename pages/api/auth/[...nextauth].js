@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import knex from "../../../utils/conn"
+import Url from "url"
 
 const options = {
     // Configure one or more authentication providers
@@ -49,18 +50,28 @@ const options = {
                     // Any object returned will be saved in `user` property of the JWT
                     return new Promise(async (res, rej) => {
                         try {
-                            //console.log(credentials)
+                            const myUrl = new URL(credentials.callbackUrl,process.env.SELF_HOST_URL)
+                            myUrl.searchParams.delete("view")
+                            credentials.callbackUrl = myUrl.href
+                            console.log(credentials.callbackUrl)
                             let { user, err, errType } = await userFn(credentials)
                             if (user) {
-                                console.log(user)
                                 res(user)
                             } else if (err) {
                                 console.log(errType)
                                 if (errType === "Parameter_Error") {
-                                    rej(`${credentials.callbackUrl}?view=pass_user_err`)
+                                    const myUrl = new URL(credentials.callbackUrl)
+                                    myUrl.searchParams.set("view", "pass_user_err")
+                                    rej(myUrl.href)
+                                }
+                                if (errType === "Network") {
+                                    const myUrl = new URL(credentials.callbackUrl)
+                                    myUrl.searchParams.set("view", "network_err")
+                                    rej(myUrl.href)
                                 }
                             }
                         } catch (error) {
+                            console.log(error)
                             rej(null)
                         }
                     })
@@ -98,7 +109,7 @@ const options = {
         },
         session: async (session, user) => {
             session.user = user;
-            console.log(session)
+            //console.log(session)
             return Promise.resolve(session)
         },
         jwt: async (token, user, account, profile, isNewUser) => {
@@ -108,7 +119,7 @@ const options = {
                 token.auth_time = Math.floor(Date.now() / 1000);
                 token.username = user.username
                 let { password, callbackUrl, ...rest } = user;
-                token = { ...token,  ...rest }
+                token = { ...token, ...rest }
             }
             return Promise.resolve(token)
         },

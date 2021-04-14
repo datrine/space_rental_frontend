@@ -3,14 +3,18 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Grid, IconButton, Typography } from "@material-ui/core"
-import { ArrowBack, Chat, Edit, Person, } from "@material-ui/icons"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Dialog, DialogTitle, Grid, IconButton, Input, InputAdornment, Typography } from "@material-ui/core"
+import { Announcement, ArrowBack, Chat, Edit, Label, Person, PowerOff, Settings, } from "@material-ui/icons"
 import View from '../view';
-import { Comp_Mob_Header } from "../general/comp_mob_menu"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { LogoSVG } from '../reusables';
+import { Loading, LogoSVG, SessionState } from '../reusables';
+import { procSingleFile, uploader, stateMgr } from '../../utils/utilFns';
+import {OpenedMenu} from "./dashboard/opened_menu"
+
+let states = stateMgr()
+
 let Comp_Dashboard = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
     let [session, loading] = useSession()
     let view = null
@@ -38,7 +42,7 @@ function ProfileMenu() {
         <Container style={{ position: "fixed", top: 0, padding: 0 }}>
             <Grid container style={{ padding: 0 }}>
 
-                <IconButton size="large" onClick={
+                <IconButton onClick={
                     e => {
                         toggleCollapsed(!isCollapsed)
                     }
@@ -50,63 +54,63 @@ function ProfileMenu() {
     </>
 }
 
-function OpenedMenu() {
-    return <>
-        <Container style={{
-            padding: 0, position: "fixed", top: 50, bottom: 0, right: 0,
-            zIndex: 499, backgroundColor: "white"
-        }}>
-            <p style={{ textAlign: "center" }}><Image src={"/logo.png"} width={40} height={40} /></p>
-            <h3 style={{ textAlign: "center" }}><a href="/"
-                style={{ textDecoration: "none", color: "green", fontStyle: "VAGRounded BT" }}>MySpace4You</a></h3>
-            <>
-                <Container style={{  padding: 0 }}>
-                    <Accordion style={{ paddingLeft: 10}} >
-                        <AccordionSummary style={{ padding: 0 }}
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Grid container>
-                                <Grid item container xs={2}>
-                                    <Person />
-                                </Grid>
-                                <Grid item container xs={10}>My Account</Grid>
-                            </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Grid container direction="column" alignItems="stretch">
-                                <Button>Overview</Button>
-                                <Button>Profile</Button>
-                            </Grid>
-                        </AccordionDetails>
-                    </Accordion>
-                </Container>
-                <Container style={{ padding: 10 }}>
-                    <Grid container>
-                        <Grid item container xs={2}>
-                            <Chat />
-                        </Grid>
-                        <Grid item container xs={10}><h4>My Chats</h4></Grid>
-                    </Grid></Container>
-            </>
-        </Container>
-    </>
-}
-
 function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
+    let [session, loading] = useSession()
+    let [loadingState, changeLoadingState] = useState(states.None)
+    let [showFull, toggleShowFull] = useState(false)
+    /**
+     * @type {File} profImgState
+     */
+    let [profImgState, changeProfImgState] = useState(null)
+    console.log(session)
+    if (session) {
+        //changeLoadingState(states.Loaded)
+        return <>
+            <Container style={{ marginTop: "50px" }}>
+                <Grid container>
+                    <Grid item container xs={6} >
+                        <h3>Hi {session.user.username}</h3>
+                    </Grid>
+                    <Grid justify="flex-end" item container xs={6}>
+                        <Image onClick={
+                            e => {
+                                toggleShowFull(true)
+                            }
+                        } src={profImgUrl} width={70} height={70} />
+                    </Grid>
+                </Grid>
+            </Container>
+            <Dialog open={showFull} onClose={
+                () => {
+                    toggleShowFull(false)
+                }
+            } >
+                <DialogTitle>Profile Picture</DialogTitle>
+                <Container>
+                    <Grid direction="column" container >
+                        <Image src={profImgUrl} width={250} height={250} />
+                        <label> <Input type="file" onChange={
+                            async e => {
+                                let files = e.target.files
+                                let formData = new FormData()
+                                procSingleFile({ file: files[0], formData, nameOfColumnOnDb: "prof_pic" })
+                                let { data, err } = await uploader({
+                                    url: `${process.env.NEXT_PUBLIC_CMS_URL}/users/${session.user.id}`,
+                                    formData
+                                })
+                            }
+                        } style={{ display: "none" }} />  <IconButton
+                            aria-label="toggle password visibility"
+                        >
+                                <FontAwesomeIcon icon={faImage} />
+                            </IconButton>Change Image</label>
+                    </Grid>
+                </Container>
+            </Dialog>
+        </>
+    }
     return <>
-        <Container style={{ marginTop: "70px" }}>
-            <Grid container>
-                <Grid item container xs={6} >
-                    <h3>Hi {name}</h3>
-                </Grid>
-                <Grid item container xs={6}>
-                    <Image
-                        layout="responsive" src={profImgUrl} width={70} height={70} />
-                </Grid>
-            </Grid>
-        </Container>
+        <Loading state={loadingState} />
     </>
 }
 

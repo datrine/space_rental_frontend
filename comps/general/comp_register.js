@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Email, Label, PersonAdd, Phone, Visibility } from '@material-ui/icons';
 import validator from 'validator';
 import { fetchError, registerValidator } from '../../utils/validators';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -34,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 
 let Comp_Register = ({ ...propsFromParent }) => {
     let classes = useStyles()
-
     let formik = useFormik({
         initialValues: {
             email: "",
@@ -160,7 +160,8 @@ let Comp_Register = ({ ...propsFromParent }) => {
 
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={!formik.isValid} type="submit" variant="contained"
-                        color="primary" > Register</Button>
+                        color="primary" >{formik.isSubmitting?<FontAwesomeIcon
+                         spin icon={faSpinner} />:"Register"} </Button>
                 </p>
             </form>
             <div className="container-fluid mt-2">

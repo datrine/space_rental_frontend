@@ -13,9 +13,9 @@ export default async function handler(req, res) {
                 query: { email }
             } = req;
             await middlewareRunner(req, res, cors);
-            console.log("hereyy")
+            // console.log("hereyy")
             let response = await axios.get(`${fetchHost}/users?email_eq=${email}`);
-            console.log(response.data)
+           // console.log(response.data)
             if (response.data.length > 0) {
                 return res.json({ isExistingEmail: true });
             } else {

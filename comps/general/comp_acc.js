@@ -26,7 +26,9 @@ function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromPa
     }
     view = <>
         <Comp_Mob_Header />
-        {session ? <Comp_Logout /> : <AccountView tabValue={tabValue} {...propsFromParent} />}
+        {session ?
+         <Comp_Logout /> : <AccountView callbackUrl={callbackUrl} tabValue={tabValue}
+          {...propsFromParent} />}
         <Comp_Mob_Footer />
     </>
 
@@ -35,7 +37,7 @@ function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromPa
     </>
 }
 
-function AccountView(props) {
+function AccountView({callbackUrl,...props}) {
     let [tabValue, changeTabValue] = useState(props.tabValue || "login")
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
@@ -57,7 +59,7 @@ function AccountView(props) {
                 <Tab label="Register" value="register" />
             </Tabs>
             <TabPanel value={tabValue} index="login" >
-                <div className="container-fluid" ><Comp_Login /></div>
+                <div className="container-fluid" ><Comp_Login callbackUrl={callbackUrl} /></div>
             </TabPanel>
             <TabPanel value={tabValue} index="register" >
                 <div className="container-fluid mb-5" ><Comp_Register /></div>

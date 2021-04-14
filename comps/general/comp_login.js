@@ -2,11 +2,13 @@ import Link from 'next/link';
 import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
-import { AppBar, Container, Tab, Typography, Tabs, TextField, makeStyles, Box, FormControl, Input, InputAdornment, Button, Grid } from '@material-ui/core';
+import { AppBar, Container, Tab, Typography, Tabs, TextField, makeStyles, Box, FormControl, Input, InputAdornment, Button, Grid, IconButton } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { TabPanel } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Email, Person, Visibility } from '@material-ui/icons';
+import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -28,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-let Comp_Login = ({ ...propsFromParent }) => {
+let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
     let classes = useStyles()
-    let router=useRouter()
-   // console.log(router.query)
-    let {view}=router.query
+    let router = useRouter()
+    // console.log(router.query)
+    let { view } = router.query
     let formik = useFormik({
         initialValues: {
             emailOrUsername: "",
@@ -41,11 +43,15 @@ let Comp_Login = ({ ...propsFromParent }) => {
         onSubmit: (values, actions) => {
             (async () => {
                 let { emailOrUsername, password } = values
-                await signIn("credentials", { emailOrUsername, password, callbackUrl: "/dashboard" })
+                console.log("lllll")
+                await signIn("credentials", {
+                    emailOrUsername,
+                    password,
+                    callbackUrl: callbackUrl ? callbackUrl : "/dashboard"
+                })
             })()
         }
     })
-
     return <>
         <Container>
             <form className="container-fluid mt-3" onSubmit={
@@ -64,7 +70,7 @@ let Comp_Login = ({ ...propsFromParent }) => {
                         } name="emailOrUsername"
                         className={classes.textField} />
                 </FormControl>
-              
+
 
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.password} fullWidth
@@ -77,16 +83,19 @@ let Comp_Login = ({ ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
                 <p>
-                    {view==="pass_user_err" ? <span className="w3-text-red" >
+                    {view === "pass_user_err" ? <span className="w3-text-red" >
                         Username or password error</span> : null}</p>
+                <p> {view === "network_err" ? <span className="w3-text-red" >
+                    Network error</span> : null}</p>
 
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={!formik.isValid} size="large" type="submit" variant="contained"
-                        color="primary" > Login</Button>
+                        color="primary" >
+                        {formik.isSubmitting ? <FontAwesomeIcon spin icon={faSpinner} /> : "Login"} </Button>
                 </p>
             </form>
 
-            <div className="container-fluid mt-2" style={{ maxWidth: "400px",padding:0 }} >
+            <div className="container-fluid mt-2" style={{ maxWidth: "400px", padding: 0 }} >
                 <div
                     style={{
                         width: "90%", marginLeft: "10%", paddingLeft: "10px",
@@ -97,15 +106,17 @@ let Comp_Login = ({ ...propsFromParent }) => {
                             width: "40px", height: "40px",
                             borderRadius: "50%", backgroundColor: "#ededed"
                         }}>
+                            <FontAwesomeIcon icon={faGoogle} />
                         </button>
                         <span style={{ fontSize: "20px" }} className="ml-2"> Google sign in</span>
                     </p>
                     <p>
-                        <button className="btn" style={{
+                        <IconButton style={{
                             width: "40px", height: "40px",
-                            borderRadius: "50%", backgroundColor: "#ededed"
+                            borderRadius: "50%", backgroundColor: "white", color: "blue"
                         }}>
-                        </button>
+                            <FontAwesomeIcon size="2x" icon={faFacebook} />
+                        </IconButton>
                         <span style={{ fontSize: "20px" }} className="ml-2"> Facebook sign in</span>
                     </p>
                 </div>
