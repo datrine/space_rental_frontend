@@ -12,6 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Loading, LogoSVG, SessionState } from '../reusables';
 import { procSingleFile, uploader, stateMgr } from '../../utils/utilFns';
 import {OpenedMenu} from "./dashboard/opened_menu"
+import { ProfileMenu } from './dashboard/resuables';
 
 let states = stateMgr()
 
@@ -36,23 +37,6 @@ function MobileView() {
     </>
 }
 
-function ProfileMenu() {
-    let [isCollapsed, toggleCollapsed] = useState(true)
-    return <>
-        <Container style={{ position: "fixed", top: 0, padding: 0 }}>
-            <Grid container style={{ padding: 0 }}>
-
-                <IconButton onClick={
-                    e => {
-                        toggleCollapsed(!isCollapsed)
-                    }
-                }><FontAwesomeIcon style={{ color: isCollapsed ? "black" : "red" }}
-                    icon={isCollapsed ? faBars : faTimes} /></IconButton>
-            </Grid>
-        </Container>
-        {isCollapsed ? null : <OpenedMenu />}
-    </>
-}
 
 function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
     let [session, loading] = useSession()
