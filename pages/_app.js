@@ -2,15 +2,15 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { useRouter } from "next/router"
 config.autoAddCss = false
-import { faBars, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faBars,  } from '@fortawesome/free-solid-svg-icons'
 library.add(faBars)
 import 'w3-css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Account from "./account"
-import { signIn, signOut, useSession, getSession, Provider } from "next-auth/client";
+import {  getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
-import { manager } from "../utils/chat_client"
-import ChatApp from '../comps/special/chat/comp_chatApp'
+import 'react-day-picker/lib/style.css';
+
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();
@@ -29,8 +29,8 @@ function MyApp({ Component, pageProps }) {
     <Provider session={pageProps.session}>
       { /* */pathNeedAuth && !sessionState ?
         <Account callbackUrl={router.asPath} /> : <Component {...pageProps} />
-      } 
-       </Provider></>
+      }
+    </Provider></>
 }
 
 function authList() {

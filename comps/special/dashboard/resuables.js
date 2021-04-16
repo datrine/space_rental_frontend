@@ -9,7 +9,7 @@ import { OpenedMenu } from "./opened_menu"
 function ProfileMenu() {
     let [isCollapsed, toggleCollapsed] = useState(true)
     return <>
-        <Container style={{ position: "fixed", top: 0, padding: 0 }}>
+        <Container style={{ position: "fixed", top: 0, padding: 0,zIndex:500,backgroundColor:"white" }}>
             <Grid container style={{ padding: 0 }}>
                 <Grid xs={2} item container >
                     <IconButton onClick={
