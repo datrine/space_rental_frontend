@@ -1,4 +1,4 @@
-const { Container, Grid, Paper, Button, Input, TextField } = require("@material-ui/core");
+const { Container, Grid, Paper, Button, Input, TextField, makeStyles, FormControl, Select, MenuItem } = require("@material-ui/core");
 import { faArrowCircleRight, faArrowLeft, faBars, faHeart as faHeartSolid, faStar, faTimes } from "@fortawesome/free-solid-svg-icons"
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -216,4 +216,101 @@ function SessionState({ placeholder, }) {
     </>
 }
 
-export { ItemTemplate, SearchMiniApp, View, LogoSVG, ToTheTop, Loading, SessionState }
+const useStyles = makeStyles((theme) => ({
+    container: {
+    },
+    form: {
+        marginTop: "30px"
+    },
+    textField: {
+        marginBottom: "5px",
+        paddingLeft: "5px",
+        borderWidth: 0.5,
+        borderBottomStyle: "solid",
+        //borderRadius: "5px"
+    },
+    textArea: {
+        marginBottom: "5px",
+        paddingLeft: "5px",
+        borderWidth: 1,
+        borderStyle: "solid",
+        //borderRadius: "5px"
+    },
+    formDiv: {
+        width: "100%",
+        marginBottom: "25px",
+        marginLeft: "10%",
+    },
+}));
+
+/**
+ * 
+ * @param {Object} props
+ * @param {String} props.labelTitle
+ * @param {String} props.valueProps
+ * @param {(e:InputEvent)=>{}} props.handleChangeProps
+ * @param {[{value:String|Number,text:""}]} props.selectMenuArr
+ * @param {React.CSSProperties} props.stylesProps
+ * @param {Boolean} props.required
+ * @returns 
+ */
+function MySelect(props = {
+    labelTitle: "", valueProps, selectMenuArr, required, stylesProps: undefined,
+    handleChangeProps: (e) => {
+    }
+}) {
+    let { labelTitle, valueProps, selectMenuArr, stylesProps, handleChangeProps } = props
+    let classes = useStyles()
+    return <>
+        <FormControl fullWidth style={{ marginBottom: "30px" }}>
+            <h5 style={{ color: "black", }}>{labelTitle}</h5>
+            <Select
+                value={valueProps}
+                onChange={handleChangeProps}
+                displayEmpty
+                className={classes.textField}
+                inputProps={{ 'aria-label': 'Without label' }}
+
+                style={stylesProps}
+
+            >
+                {selectMenuArr.map(({ value, text }, index) => <MenuItem
+                    key={index} value={value} >{text}</MenuItem>)}
+            </Select></FormControl>
+    </>
+}
+
+/**
+ * 
+ * @param {Object} props
+ * @param {String} props.labelTitle
+ * @param {String} props.valueProps
+ * @param {String} props.type
+ * @param {(e:InputEvent)=>{}} props.handleChangeProps
+ * @param {[{value:String|Number,text:""}]} props.selectMenuArr
+ * @param {React.CSSProperties} props.stylesProps
+ * @param {Boolean} props.required
+ * @returns 
+ */
+function MyInput(props = {
+    labelTitle: "", valueProps, type, selectMenuArr, required, stylesProps: undefined,
+    handleChangeProps: (e) => {
+    }
+}) {
+    let { labelTitle, valueProps, selectMenuArr, stylesProps, type, handleChangeProps } = props
+    let classes = useStyles()
+    return <>
+
+        <FormControl fullWidth style={{ marginBottom: "30px" }}>
+            <h5 style={{ color: "black", }}>{labelTitle}</h5>
+            <Input onChange={handleChangeProps} value={valueProps}
+                name="email" type={type}
+                className={classes.textField} />
+        </FormControl>
+    </>
+}
+
+export {
+    ItemTemplate, SearchMiniApp, View, LogoSVG, ToTheTop, Loading,
+    SessionState, MySelect, MyInput
+}

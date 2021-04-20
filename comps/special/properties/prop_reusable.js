@@ -5,6 +5,7 @@ import { CheckBox } from "@material-ui/icons";
 import Image from "next/image";
 import React, { useState } from "react";
 import DayPicker, { DateUtils } from 'react-day-picker';
+import { MyInput, MySelect } from "../../reusables";
 
 
 function AddImageView(params) {
@@ -66,73 +67,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-/**
- * 
- * @param {Object} props
- * @param {String} props.labelTitle
- * @param {String} props.valueProps
- * @param {(e:InputEvent)=>{}} props.handleChangeProps
- * @param {[{value:String|Number,text:""}]} props.selectMenuArr
- * @param {React.CSSProperties} props.stylesProps
- * @param {Boolean} props.required
- * @returns 
- */
-function MySelect(props = {
-    labelTitle: "", valueProps, selectMenuArr, required, stylesProps: undefined,
-    handleChangeProps: (e) => {
-    }
-}) {
-    let { labelTitle, valueProps, selectMenuArr, stylesProps, handleChangeProps } = props
-    let classes = useStyles()
-    return <>
-        <FormControl fullWidth style={{ marginBottom: "30px" }}>
-            <h5 style={{ color: "black", }}>{labelTitle}</h5>
-            <Select
-                value={valueProps}
-                onChange={handleChangeProps}
-                displayEmpty
-                className={classes.textField}
-                inputProps={{ 'aria-label': 'Without label' }}
-
-                style={stylesProps}
-
-            >
-                {selectMenuArr.map(({ value, text }, index) => <MenuItem
-                    key={index} value={value} >{text}</MenuItem>)}
-            </Select></FormControl>
-    </>
-}
-
-/**
- * 
- * @param {Object} props
- * @param {String} props.labelTitle
- * @param {String} props.valueProps
- * @param {String} props.type
- * @param {(e:InputEvent)=>{}} props.handleChangeProps
- * @param {[{value:String|Number,text:""}]} props.selectMenuArr
- * @param {React.CSSProperties} props.stylesProps
- * @param {Boolean} props.required
- * @returns 
- */
-function MyInput(props = {
-    labelTitle: "", valueProps, type, selectMenuArr, required, stylesProps: undefined,
-    handleChangeProps: (e) => {
-    }
-}) {
-    let { labelTitle, valueProps, selectMenuArr, stylesProps, type, handleChangeProps } = props
-    let classes = useStyles()
-    return <>
-
-        <FormControl fullWidth style={{ marginBottom: "30px" }}>
-            <h5 style={{ color: "black", }}>{labelTitle}</h5>
-            <Input onChange={handleChangeProps} value={valueProps}
-                name="email" type={type}
-                className={classes.textField} />
-        </FormControl>
-    </>
-}
-
 function LocationDiv(params) {
     return <>
         <Container style={{ padding: 0, marginTop: "20px", }} >
@@ -159,7 +93,7 @@ function BuildingAddress({ handleChange, valueProp }) {
 function BuildingCity({ handleChange, valueProp }) {
     let [buildingCityState, changeCityBuildingState] = useState("")
     return <>
-        <MyInput labelTitle="Select category of space" valueProps={buildingCityState}
+        <MySelect labelTitle="Select category of space" valueProps={buildingCityState}
             selectMenuArr={[
                 { value: "apartment", text: "Apartment" },
                 { value: "flat", text: "Flats" },
@@ -174,7 +108,7 @@ function BuildingCity({ handleChange, valueProp }) {
 function BuildingArea({ handleChange, valueProp }) {
     let [buildingCityState, changeCityBuildingState] = useState("")
     return <>
-        <MyInput labelTitle="Select category of space" valueProps={buildingCityState}
+        <MySelect labelTitle="Select category of space" valueProps={buildingCityState}
             selectMenuArr={[
                 { value: "apartment", text: "Apartment" },
                 { value: "flat", text: "Flats" },
@@ -248,7 +182,7 @@ function RangeOfSpace({ handleSelect, valueProp }) {
 
 function DatesSelectFormat({ dateFormatProps, changeDateFormatProps }) {
     return <>
-        <MyInput labelTitle="Select Date Format" valueProps={dateFormatProps} selectMenuArr={[
+        <MySelect labelTitle="Select Date Format" valueProps={dateFormatProps} selectMenuArr={[
             { value: "asRange", text: "Select as Range of Dates" },
             { value: "asSingle", text: "Select as Single Date" },
         ]} handleChangeProps={
@@ -262,7 +196,7 @@ function DatesSelectFormat({ dateFormatProps, changeDateFormatProps }) {
 function LengthOfStay(params) {
     let [houseTypeState, changeHouseTypeState] = useState("")
     return <>
-        <MyInput labelTitle="Type of house" valueProps={houseTypeState} selectMenuArr={[
+        <MySelect labelTitle="Type of house" valueProps={houseTypeState} selectMenuArr={[
             { value: "apartment", text: "Apartment" },
             { value: "flat", text: "Flats" },
         ]} handleChangeProps={
@@ -276,7 +210,7 @@ function LengthOfStay(params) {
 function TimeOfStay(params) {
     let [houseTypeState, changeHouseTypeState] = useState("")
     return <>
-        <MyInput labelTitle="Type of house" valueProps={houseTypeState} selectMenuArr={[
+        <MySelect labelTitle="Type of house" valueProps={houseTypeState} selectMenuArr={[
             { value: "apartment", text: "Apartment" },
             { value: "flat", text: "Flats" },
         ]} handleChangeProps={
@@ -350,33 +284,37 @@ function SpaceAmenities(params) {
     return <>
         <Container>
             <h5>Select Amenity</h5>
-            <div>
-                <span><Checkbox
+            <Grid container >
+                <Grid item container xs={6}><Checkbox
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
-                /> Shared Living Room</span>
-              <span><Checkbox
-                    defaultChecked
-                    color="primary"
+                /> Shared Living Room</Grid>
+             
+             <Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
-                /> Water</span>  
-                <span><Checkbox
-                      defaultChecked
-                      color="primary"
-                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                  /> Electricity</span>  
-                <Checkbox
-                    defaultChecked
-                    color="default"
-                    inputProps={{ 'aria-label': 'checkbox with default color' }}
-                />
-            </div>
+                /> Shared Living Room</Grid>
+
+
+<Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                /> Running Water</Grid>
+
+<Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                /> Shared Living Room</Grid>
+            </Grid>
         </Container>
     </>
 }
 
 export {
-    AddImageView, MyInput, MySelect, LocationDiv,
+    AddImageView, LocationDiv,
     SpaceAvailabilityDiv, SpaceChargesDiv, SpaceAmenityDiv
 }

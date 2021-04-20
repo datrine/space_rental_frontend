@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Loading, LogoSVG, SessionState } from '../reusables';
-import { procSingleFile, uploader, stateMgr } from '../../utils/utilFns';
+import { uploader, stateMgr } from '../../utils/utilFns';
 import {OpenedMenu} from "./dashboard/opened_menu"
 import { ProfileMenu } from './dashboard/resuables';
 
@@ -50,7 +50,7 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
     if (session) {
         //changeLoadingState(states.Loaded)
         return <>
-            <Container style={{ marginTop: "50px" }}>
+            <Container style={{ marginTop: "70px" }}>
                 <Grid container>
                     <Grid item container xs={6} >
                         <h3>Hi {session.user.username}</h3>
@@ -77,11 +77,6 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
                             async e => {
                                 let files = e.target.files
                                 let formData = new FormData()
-                                procSingleFile({ file: files[0], formData, nameOfColumnOnDb: "prof_pic" })
-                                let { data, err } = await uploader({
-                                    url: `${process.env.NEXT_PUBLIC_CMS_URL}/users/${session.user.id}`,
-                                    formData
-                                })
                             }
                         } style={{ display: "none" }} />  <IconButton
                             aria-label="toggle password visibility"
@@ -98,9 +93,12 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
     </>
 }
 
-function MyProfile({ userProp = {} }) {
+function MyProfile({}) {
+    let [session, loading] = useSession()
+    if (session) {
+        
     let { name = "Olusola", email = "whoiswho@who.ghh", gender = "Male",
-        profImgUrl = "/prof_pic.png" } = userProp
+         prof_pic = "/prof_pic.png" } = session.user
     return <>
         <Container style={{ marginTop: "30px" }}>
             <Grid container direction="row" justify="space-between" alignItems="center" container
@@ -117,21 +115,26 @@ function MyProfile({ userProp = {} }) {
                 }} >
                 <h4 style={{ fontWeight: "bold" }}>{name}</h4>
                 <h5>{email}</h5>
-                <h4>{gender}</h4>
-                <h4>Realtor</h4>
-                <h4 style={{ color: "green" }}>Change password</h4>
+                <h5>{gender}</h5>
+                <h5>Realtor</h5>
+                <h5 style={{ color: "green" }}>Change password</h5>
             </Grid>
         </Container>
     </>
+    }
+return<>
+<p style={{textAlign:'center'}} >Loading Bio...</p>
+</>
 }
 
+
 function MyChats({ userProp = {} }) {
-    let { name = "Olusola", email = "whoiswho@who.ghh", profImgUrl = "/prof_pic.png" } = userProp
+    
     return <>
         <Container style={{ marginTop: "40px" }}>
             <Grid container direction="row" justify="space-between" alignItems="center" container
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
-                <h3>My Chats</h3>
+                <h3><a href="/chats" >My Chats</a></h3>
                 <IconButton>
                     <Image src={"/dashboard/bx_bx-message-dots.png"} width={30} height={30} />
                 </IconButton>

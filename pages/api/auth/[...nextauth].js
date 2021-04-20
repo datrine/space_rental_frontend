@@ -17,30 +17,48 @@ const options = {
             },
             authorize: async (credentials) => {
                 // Add logic here to look up the user from the credentials supplied
-                const userFn = async ({ username, emailOrUsername, password, role }) => {
+                const userFn = async ({ strapiToken, strapiProfileId, username, emailOrUsername, password, role }) => {
                     // You need to provide your own logic here that takes the credentials
                     // submitted and returns either a object representing a user or value
                     // that is false/null if the credentials are invalid.
                     try {
-                        let res = await fetch(`${process.env.SELF_HOST_URL}/api/login/`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    identifier: emailOrUsername, password, role
-                                })
-                            });
+                        let url = "";
+                        let res;
+                        if (emailOrUsername && password) {
+                            url = `${process.env.SELF_HOST_URL}/api/login/`;
+                            res = await fetch(url,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        identifier: emailOrUsername, password, role
+                                    })
+                                });
+                        }
+                        //
+                        else if (strapiToken && strapiProfileId) {
+                            url = `${process.env.SELF_HOST_URL}/api/refreshUser/`;
+                            res = await fetch(url,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        strapiToken, strapiProfileId
+                                    })
+                                });
+                        }
                         let { user, jwt, err, errType } = await res.json()
                         if (err) {
                             console.log(err)
                             return { err, errType }
                         }
                         if (user) {
-                            let userCred = { ...credentials, ...user, jwt }
-                            //console.log(userCred)
-                            return { user: userCred };
+                            user = { ...credentials, ...user, jwt }
+                            return { user };
                         }
                     } catch (error) {
                         throw error;
@@ -50,12 +68,14 @@ const options = {
                     // Any object returned will be saved in `user` property of the JWT
                     return new Promise(async (res, rej) => {
                         try {
-                            const myUrl = new URL(credentials.callbackUrl,process.env.SELF_HOST_URL)
+                            const myUrl = new URL(credentials.callbackUrl, process.env.SELF_HOST_URL)
                             myUrl.searchParams.delete("view")
                             credentials.callbackUrl = myUrl.href
-                            console.log(credentials.callbackUrl)
                             let { user, err, errType } = await userFn(credentials)
                             if (user) {
+                                if (!user.jwt) user.jwt = credentials.strapiToken
+                                delete credentials.strapiToken
+                                delete credentials.strapiProfileId
                                 res(user)
                             } else if (err) {
                                 console.log(errType)
@@ -109,6 +129,7 @@ const options = {
         },
         session: async (session, user) => {
             session.user = user;
+            session.user.image = user.prof_pic?.format?.small?.url
             //console.log(session)
             return Promise.resolve(session)
         },
@@ -117,7 +138,7 @@ const options = {
             // Add auth_time to token on signin in
             if (isSignIn) {
                 token.auth_time = Math.floor(Date.now() / 1000);
-                token.username = user.username
+                token.username = user.username;
                 let { password, callbackUrl, ...rest } = user;
                 token = { ...token, ...rest }
             }

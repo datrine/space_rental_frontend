@@ -91,13 +91,15 @@ let MenuList = ({ list, hookChangeMenuHead, hookChangeMenuHeadObj }) => {
 
 let listOfMenu = [
     { name: "home", displayName: "Home" },
-    { parentName: "home", displayName: "Home", name: "home", icon: "", isList: false, link: "" },
-    { parentName: "home", displayName: "Account", name: "account", icon: "", isList: true, link: "" },
-    { parentName: "home", displayName: "About", name: "about", icon: "", isList: false, link: "" },
-    { parentName: "account", displayName: "Sign in", name: "login", icon: "", isList: true },
-    { parentName: "account", displayName: "Sign Up", name: "register", icon: "", isList: false, link: "/account?tabValue=register" },
-    { parentName: "login", displayName: "Admin", name: "admin_login", icon: "", isList: false, link: "/account?tabValue=login" },
-    { parentName: "login", displayName: "User", name: "general_login", icon: "", isList: false, link: "/account?tabValue=login" },
+    { parentName: "home", displayName: "Home", name: "home", icon: "", isList: false, link: "/" },
+    //{ parentName: "home", displayName: "Account", name: "account", icon: "", isList: true, link: "" },
+    { parentName: "home", displayName: "Account", name: "account", icon: "", isList: false, link: "/account" },
+    { parentName: "home", displayName: "About", name: "about", icon: "", isList: false, link: "/about" },
+    //{ parentName: "account", displayName: "Sign in", name: "login", icon: "", isList: true },
+    //{ parentName: "account", displayName: "Sign out", name: "logout", icon: "", isList: false },
+    //{ parentName: "account", displayName: "Sign Up", name: "register", icon: "", isList: false, link: "/account?tabValue=register" },
+    //{ parentName: "login", displayName: "Admin", name: "admin_login", icon: "", isList: false, link: "/account?tabValue=login" },
+    //{ parentName: "login", displayName: "User", name: "general_login", icon: "", isList: false, link: "/account?tabValue=login" },
 ]
 
 

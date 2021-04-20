@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, FormControl, FormControlLabel, Grid, Input, InputAdornment, makeStyles } from "@material-ui/core";
 import { useFormik } from "formik";
 import { useState } from "react";
+import { MySelect } from "../../reusables";
 import View from "../../view";
 import { ProfileMenu } from "../dashboard/resuables";
-import { AddImageView, LocationDiv, MySelect, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv } from "./prop_reusable";
+import { AddImageView, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv } from "./prop_reusable";
 
 function RoomProps(params) {
     return <>
@@ -112,9 +113,9 @@ function RoomForm(params) {
                     <Grid item container xs={5}><SittingNumber /></Grid>
                 </Grid>
                 <LocationDiv />
-                <SpaceAvailabilityDiv/>
-                <SpaceAmenityDiv/>
-                <SpaceChargesDiv/>
+                <SpaceAvailabilityDiv />
+                <SpaceAmenityDiv />
+                <SpaceChargesDiv />
             </Container>
         </form>
     </>

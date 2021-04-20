@@ -121,19 +121,31 @@ let procMulFiles = (opts = { nameOfColumnOnDb, files, formData }) => {
 /**
  * 
  * @param {Object} opts
- * @param {string} opts.nameOfColumnOnDb
- * @param {File} opts.file
- * @param {FormData} opts.formData
+ * @param {string} opts.field The field of the entry which the file(s) will be precisely linked to.
+ * @param {FileList} opts.files
+ * @param {string?} opts.url The url to send to
+ * @param {string?} opts.path (optional).The folder where the file(s) will be uploaded to 
+ * @param {number} opts.refId The ID of the entry which the file(s) will be linked to.
+ * @param {string} opts.ref The name of the model which the file(s) will be linked to.
+ * @param {string?} opts.source (optional): The name of the plugin where the model is located.
  */
-let procSingleFile = ({ nameOfColumnOnDb, file, formData }) => {
-    formData.append(`files.${nameOfColumnOnDb}`, file, file.name);
-}
-let uploader = async ({ url, formData, data = {} }) => {
+let uploader = async (opts = { files, formData, field, path, url, ref, refId, source: "upload" }) => {
     try {
-        let session = await getSession()
-        formData.append('data', JSON.stringify(data));
+        let url = opts.url ? opts.url : `${process.env.NEXT_PUBLIC_CMS_URL}/upload`
+        let session = await getSession();
+        let formData = new FormData()
+        for (let index = 0; index < opts.files.length; index++) {
+            const file = opts.files[index];
+            formData.append("files", file, file.name)
+        }
+        formData.set("field", opts.field)
+        formData.set("ref", opts.ref)
+        formData.set("refId", opts.refId)
+        //formData.set("path", opts.path)
+        formData.set("source", opts.source)
         let res = await fetch(url, {
-            method: "PUT",
+            method: "POST",
+            mode: "cors",
             headers: {
                 "Authorization": `Bearer ${session.user.jwt}`
             },
@@ -148,4 +160,32 @@ let uploader = async ({ url, formData, data = {} }) => {
     }
 
 }
-export { middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, procSingleFile, uploader };
+
+let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
+    try {
+        let { url, model, entryId, dataReq } = opts
+        console.log(dataReq)
+        if (!url && !model) {
+            throw "Either a model or a url";
+        }
+        if (model) url = `${process.env.NEXT_PUBLIC_CMS_URL}/${model}/${entryId}`
+        let session = await getSession();
+        let res = await fetch(url, {
+            method: "PUT",
+            mode: "cors",
+            headers: {
+                "Authorization": `Bearer ${session.user.jwt}`,
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(dataReq) 
+        })
+        let dataRes = await res.json()
+        console.log(dataRes)
+        return { data: dataRes }
+    } catch (error) {
+        console.log(error)
+        return { err: error }
+    }
+}
+
+export { middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader, generalPutAPI };

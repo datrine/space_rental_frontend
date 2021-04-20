@@ -23,8 +23,8 @@ export default async function handler(req, res) {
             //console.log(body[0]);
             //console.log(Array.isArray(body));
             if (Array.isArray(body)) {
-                //console.log(body);
                 if (body.length > 0) {
+                    
                     return res.json({ isAccount: true, ...body[0] });
                 } else {
                     res.json({ isAccount: false })

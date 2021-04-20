@@ -13,12 +13,12 @@ export default async function handler(req, res) {
             //console.log(typeof body)
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${fetchHost}/users`,
+                url: `${fetchHost}/userprofiles`,
                 method: "post",
                 data: body
             })
             //console.log(response)
-            let { data: user, jwt } = response
+            let {  user, jwt } = response
             return res.json({ user, jwt });
         } catch (error) {
             console.table(error?.response?.data?.message[0]?.messages)
