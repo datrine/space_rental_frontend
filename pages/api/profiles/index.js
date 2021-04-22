@@ -9,22 +9,24 @@ const cors = Cors({
 export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
-            let { strapiToken, strapiProfileId } = req.body
-            console.log(req.body)
+            let { body } = req
+            let { identifier, password, role } = body
+            console.log(body)
             await middlewareRunner(req, res, cors);
-            let url=`${process.env.CMS_URL}/userprofiles/${strapiProfileId}`;
-            let response = await fetch(url, {
-                method: "get",
-                mode:"cors",
+            let response = await axios({
+                url: `${process.env.CMS_URL}/userprofiles/`,
+                method: "post",
                 headers: {
-                    "Authorization": `Bearer ${strapiToken}`
+                    "Content-Type": "application/json"
+                },
+                data: {
+                    identifier, password, role
                 }
             })
+            console.log(response.data)
+            let {  user, jwt } = response.data
 
-            let data =await response.json()
-            let user = data
-            return res.json({ user });
-
+            return res.json({ user, jwt });
         } catch (error) {
             let errMsg = ""
             let errType = ""

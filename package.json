@@ -58,6 +58,7 @@
     "strapi-provider-upload-aws-s3": "^3.5.3",
     "uuid": "^8.3.2",
     "validator": "^13.5.2",
-    "w3-css": "^4.1.0"
+    "w3-css": "^4.1.0",
+    "web-vitals": "^1.1.1"
   }
 }

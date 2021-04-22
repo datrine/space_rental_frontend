@@ -248,6 +248,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {Object} props
  * @param {String} props.labelTitle
  * @param {String} props.valueProps
+ * @param {String} props.nameProps
  * @param {(e:InputEvent)=>{}} props.handleChangeProps
  * @param {[{value:String|Number,text:""}]} props.selectMenuArr
  * @param {React.CSSProperties} props.stylesProps
@@ -255,22 +256,25 @@ const useStyles = makeStyles((theme) => ({
  * @returns 
  */
 function MySelect(props = {
-    labelTitle: "", valueProps, selectMenuArr, required, stylesProps: undefined,
+    labelTitle: "", valueProps, selectMenuArr, nameProps, required, stylesProps: undefined,
     handleChangeProps: (e) => {
     }
 }) {
-    let { labelTitle, valueProps, selectMenuArr, stylesProps, handleChangeProps } = props
+    let { labelTitle, valueProps, nameProps, selectMenuArr, stylesProps, handleChangeProps } = props
     let classes = useStyles()
+    console.log(nameProps)
     return <>
         <FormControl fullWidth style={{ marginBottom: "30px" }}>
             <h5 style={{ color: "black", }}>{labelTitle}</h5>
-            <Select
+            <Select id={nameProps}
                 value={valueProps}
-                onChange={handleChangeProps}
+                onChange={e=>{
+                    console.log(e.target.value)
+                    return handleChangeProps(e)
+                }}
                 displayEmpty
                 className={classes.textField}
-                inputProps={{ 'aria-label': 'Without label' }}
-
+                inputProps={{ 'aria-label': 'Without label'}}
                 style={stylesProps}
 
             >
@@ -286,6 +290,7 @@ function MySelect(props = {
  * @param {String} props.labelTitle
  * @param {String} props.valueProps
  * @param {String} props.type
+ * @param {String} props.placeholder
  * @param {(e:InputEvent)=>{}} props.handleChangeProps
  * @param {[{value:String|Number,text:""}]} props.selectMenuArr
  * @param {React.CSSProperties} props.stylesProps
@@ -293,17 +298,17 @@ function MySelect(props = {
  * @returns 
  */
 function MyInput(props = {
-    labelTitle: "", valueProps, type, selectMenuArr, required, stylesProps: undefined,
+    labelTitle: "", valueProps,placeholder, type, selectMenuArr, required, stylesProps: undefined,
     handleChangeProps: (e) => {
     }
 }) {
-    let { labelTitle, valueProps, selectMenuArr, stylesProps, type, handleChangeProps } = props
+    let { labelTitle, valueProps,placeholder, selectMenuArr, stylesProps, type, handleChangeProps } = props
     let classes = useStyles()
     return <>
 
         <FormControl fullWidth style={{ marginBottom: "30px" }}>
             <h5 style={{ color: "black", }}>{labelTitle}</h5>
-            <Input onChange={handleChangeProps} value={valueProps}
+            <Input onChange={handleChangeProps} value={valueProps} placeholder={placeholder}
                 name="email" type={type}
                 className={classes.textField} />
         </FormControl>

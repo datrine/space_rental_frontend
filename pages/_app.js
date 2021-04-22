@@ -10,7 +10,12 @@ import Account from "./account"
 import {  getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
 import 'react-day-picker/lib/style.css';
+import startAnalytics from '../utils/analytics'
 
+export function reportWebVitals(metric) {
+  console.log(metric)
+  startAnalytics(metric)
+}
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();

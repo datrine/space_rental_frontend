@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import DayPicker, { DateUtils } from 'react-day-picker';
 import { MyInput, MySelect } from "../../reusables";
+import GenderSelect from "../profile/gender";
 
 
 function AddImageView(params) {
@@ -290,21 +291,21 @@ function SpaceAmenities(params) {
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                 /> Shared Living Room</Grid>
-             
-             <Grid item container xs={6}><Checkbox
+
+                <Grid item container xs={6}><Checkbox
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                 /> Shared Living Room</Grid>
 
 
-<Grid item container xs={6}><Checkbox
+                <Grid item container xs={6}><Checkbox
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                 /> Running Water</Grid>
 
-<Grid item container xs={6}><Checkbox
+                <Grid item container xs={6}><Checkbox
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -314,7 +315,94 @@ function SpaceAmenities(params) {
     </>
 }
 
+function FlatmateDiv(params) {
+    let flatmates = [{ name: "" }]
+    let [flatmatesState, changeFlatmateState] = useState(flatmates)
+    return <>
+        <Container style={{ padding: 0, marginTop: "20px", }} >
+            <h4 className="w3-padding"
+                style={{ backgroundColor: "#60941a", color: "white", marginBottom: 0 }} >Flatmate(s) Details</h4>
+            <Container style={{ borderWidth: 1, borderStyle: "solid", borderColor: "#60941a" }}>
+                {flatmatesState.map(({ }, index) => <Flatmate key={index} />)}
+                <p style={{ marginTop: "10px" }}>
+                    <Button onClick={
+                        e => {
+                            let fms = [...flatmates]
+                            let obj = { name: "", date: Date.now() }
+                            fms.push(obj)
+                            console.log(fms)
+                            changeFlatmateState([...fms])
+                        }
+                    } style={{ backgroundColor: "#60941a" }}>Add Flatmate</Button></p>
+            </Container>
+        </Container>
+    </>
+}
+
+function Flatmate(params) {
+    return <>
+        <Container style={{ borderStyle: "solid", borderWidth: 1, borderColor: "#60941a", marginTop: 10 }} >
+            <MyInput placeholder="Flatmate name" />
+            <MyInput placeholder="Flatmate Occupation" />
+            <GenderSelect />
+        </Container>
+    </>
+}
+
+function SpaceRulesDiv(params) {
+    return <>
+        <Container style={{ padding: 0, marginTop: "20px" }} >
+            <h4 className="w3-padding"
+                style={{ backgroundColor: "#60941a", color: "white", marginBottom: 0 }} >Space Rules</h4>
+            <Container style={{
+                borderWidth: 1, borderStyle: "solid", borderColor: "#60941a",
+                paddingTop: 20
+            }}>
+                <SpaceRules />
+            </Container>
+        </Container>
+    </>
+}
+
+function SpaceRules(params) {
+    const [checked, setChecked] = React.useState(true);
+    const handleChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
+    return <>
+        <Container>
+            <h5>Select Amenity</h5>
+            <Grid container >
+                <Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                /> Smoking allowed</Grid>
+
+                <Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />Pet allowed</Grid>
+
+
+                <Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />Referee required</Grid>
+
+                <Grid item container xs={6}><Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                /> Couple accepted</Grid>
+            </Grid>
+        </Container>
+    </>
+}
+
 export {
     AddImageView, LocationDiv,
-    SpaceAvailabilityDiv, SpaceChargesDiv, SpaceAmenityDiv
+    SpaceAvailabilityDiv, SpaceChargesDiv, SpaceAmenityDiv, FlatmateDiv, SpaceRulesDiv
 }

@@ -16,6 +16,7 @@ const options = {
                 password: { label: "Password", type: "password" }
             },
             authorize: async (credentials) => {
+                console.log(credentials)
                 // Add logic here to look up the user from the credentials supplied
                 const userFn = async ({ strapiToken, strapiProfileId, username, emailOrUsername, password, role }) => {
                     // You need to provide your own logic here that takes the credentials

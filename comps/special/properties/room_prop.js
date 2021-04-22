@@ -1,12 +1,12 @@
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, FormControl, FormControlLabel, Grid, Input, InputAdornment, makeStyles } from "@material-ui/core";
+import { Button, Container, FormControl, FormControlLabel, Grid, Input, InputAdornment, makeStyles } from "@material-ui/core";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { MySelect } from "../../reusables";
 import View from "../../view";
 import { ProfileMenu } from "../dashboard/resuables";
-import { AddImageView, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv } from "./prop_reusable";
+import { AddImageView, FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv, SpaceRulesDiv } from "./prop_reusable";
 
 function RoomProps(params) {
     return <>
@@ -116,6 +116,9 @@ function RoomForm(params) {
                 <SpaceAvailabilityDiv />
                 <SpaceAmenityDiv />
                 <SpaceChargesDiv />
+                <FlatmateDiv/>
+                <SpaceRulesDiv/>
+                <p><Button>Post  Ad</Button></p>
             </Container>
         </form>
     </>

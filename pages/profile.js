@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { Comp_Profile } from '../comps/special/profile';
+import { Comp_Profile } from '../comps/special/profile/index';
 
 let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
     //console.log("here in login")

@@ -11,7 +11,7 @@ import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-ic
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Loading, LogoSVG, SessionState } from '../reusables';
 import { uploader, stateMgr } from '../../utils/utilFns';
-import {OpenedMenu} from "./dashboard/opened_menu"
+import { OpenedMenu } from "./dashboard/opened_menu"
 import { ProfileMenu } from './dashboard/resuables';
 
 let states = stateMgr()
@@ -38,16 +38,15 @@ function MobileView() {
 }
 
 
-function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
+function HiWelcomer({ }) {
     let [session, loading] = useSession()
     let [loadingState, changeLoadingState] = useState(states.None)
     let [showFull, toggleShowFull] = useState(false)
     /**
      * @type {File} profImgState
      */
-    let [profImgState, changeProfImgState] = useState(null)
-    console.log(session)
     if (session) {
+        let prof_pic = session.user.prof_pic.formats.large.url || "/prof_pic.png"
         //changeLoadingState(states.Loaded)
         return <>
             <Container style={{ marginTop: "70px" }}>
@@ -56,11 +55,11 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
                         <h3>Hi {session.user.username}</h3>
                     </Grid>
                     <Grid justify="flex-end" item container xs={6}>
-                        <Image onClick={
+                        <img onClick={
                             e => {
                                 toggleShowFull(true)
                             }
-                        } src={profImgUrl} width={70} height={70} />
+                        } src={prof_pic} width={70} height={70} style={{ borderRadius: "50%" }} />
                     </Grid>
                 </Grid>
             </Container>
@@ -71,18 +70,8 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
             } >
                 <DialogTitle>Profile Picture</DialogTitle>
                 <Container>
-                    <Grid direction="column" container >
-                        <Image src={profImgUrl} width={250} height={250} />
-                        <label> <Input type="file" onChange={
-                            async e => {
-                                let files = e.target.files
-                                let formData = new FormData()
-                            }
-                        } style={{ display: "none" }} />  <IconButton
-                            aria-label="toggle password visibility"
-                        >
-                                <FontAwesomeIcon icon={faImage} />
-                            </IconButton>Change Image</label>
+                    <Grid justify="center" container style={{ paddingBottom: "10px" }} >
+                        <img src={prof_pic} width={250} height={250} style={{ borderRadius: "50%" }} />
                     </Grid>
                 </Container>
             </Dialog>
@@ -93,43 +82,46 @@ function HiWelcomer({ name = "Olusola", profImgUrl = "/prof_pic.png" }) {
     </>
 }
 
-function MyProfile({}) {
+function MyProfile({ }) {
     let [session, loading] = useSession()
     if (session) {
-        
-    let { name = "Olusola", email = "whoiswho@who.ghh", gender = "Male",
-         prof_pic = "/prof_pic.png" } = session.user
-    return <>
-        <Container style={{ marginTop: "30px" }}>
-            <Grid container direction="row" justify="space-between" alignItems="center" container
-                style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
-                <h3>My Profile</h3>
-                <IconButton>
-                    <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
-                </IconButton>
-            </Grid>
-            <Grid direction="column" container
-                style={{
-                    padding: 10, borderWidth: 1, borderStyle: "solid",
-                    borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px"
-                }} >
-                <h4 style={{ fontWeight: "bold" }}>{name}</h4>
-                <h5>{email}</h5>
-                <h5>{gender}</h5>
-                <h5>Realtor</h5>
-                <h5 style={{ color: "green" }}>Change password</h5>
-            </Grid>
-        </Container>
-    </>
+
+        let { f_name, l_name, email, gender, occupation } = session.user
+        return <>
+            <Container style={{ marginTop: "30px" }}>
+                <Grid container direction="row" justify="space-between" alignItems="center" container
+                    style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
+                    <h3>My Profile</h3>
+                    <IconButton>
+                        <a href="/profile" >
+                            <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
+                        </a>
+                    </IconButton>
+                </Grid>
+                <Grid direction="column" container
+                    style={{
+                        padding: 10, borderWidth: 1, borderStyle: "solid",
+                        borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px"
+                    }} >
+                    <h4 style={{}}>{f_name ? f_name : l_name ?
+                        l_name : <span style={{ fontStyle: "italic" }}>Full name: Edit your profile</span>}</h4>
+                    <h5>{email}</h5>
+                    <h5>{gender}</h5>
+                    <h5>{occupation || <span style={{ fontStyle: "italic" }} >
+                        Occupation: edit your profile</span>}</h5>
+                    <h5 style={{ color: "green" }}>Change password</h5>
+                </Grid>
+            </Container>
+        </>
     }
-return<>
-<p style={{textAlign:'center'}} >Loading Bio...</p>
-</>
+    return <>
+        <p style={{ textAlign: 'center' }} >Loading Bio...</p>
+    </>
 }
 
 
 function MyChats({ userProp = {} }) {
-    
+
     return <>
         <Container style={{ marginTop: "40px" }}>
             <Grid container direction="row" justify="space-between" alignItems="center" container

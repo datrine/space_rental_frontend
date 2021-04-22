@@ -44,7 +44,7 @@ function OpenedMenu() {
 
                 <Container>
                     <Accordion square={true} style={{ marginTop: 10 }} >
-                        <AccordionSummary style={{padding:0}}
+                        <AccordionSummary style={{ padding: 0 }}
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header">
@@ -57,18 +57,20 @@ function OpenedMenu() {
                         </AccordionSummary>
                         <AccordionDetails style={{ borderStyle: "none", borderRightStyle: "none" }}>
                             <Grid container direction="column" alignItems="stretch">
-                            <Grid container>
-                                <Grid item container xs={2}>
-                                    <Image src="/dashboard/localfeeds.svg" height={30} width={30} />
+                                <Grid container>
+                                    <Grid item container xs={2}>
+                                        <Image src="/dashboard/localfeeds.svg" height={30} width={30} />
+                                    </Grid>
+                                    <br/>
+                                    <Grid item container xs={10}>
+                                        <h5 ><a href="/postads">Local Feeds</a></h5></Grid>
                                 </Grid>
-                                <Grid item container xs={10}><h5 >Local Feeds</h5></Grid>
-                            </Grid>
-                            <Grid container>
-                                <Grid item container xs={2}>
-                                    <Image src="/dashboard/savedads.svg" height={30} width={30} />
+                                <Grid container>
+                                    <Grid item container xs={2}>
+                                        <Image src="/dashboard/savedads.svg" height={30} width={30} />
+                                    </Grid>
+                                    <Grid item container xs={10}><h5>Saved Ads</h5></Grid>
                                 </Grid>
-                                <Grid item container xs={10}><h5>Saved Ads</h5></Grid>
-                            </Grid>
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
@@ -83,9 +85,9 @@ function OpenedMenu() {
                     </Grid>
                 </Container>
 
-                <Container style={{ padding: 20 , paddingTop: 5, paddingBottom: 5}}>
-                    <Grid container style={{paddingTop:0,marginTop:0}}>
-                        <Grid item container xs={2} style={{paddingTop:0,marginTop:0}}>
+                <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
                             <Announcement />
                         </Grid>
                         <Grid item container xs={10}><h4>Referrals</h4></Grid>
@@ -93,8 +95,8 @@ function OpenedMenu() {
                 </Container>
 
                 <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
-                    <Grid container style={{paddingTop:0,marginTop:0}}>
-                        <Grid item container xs={2} style={{paddingTop:0,marginTop:0}}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
                             <Settings />
                         </Grid>
                         <Grid item container xs={10}><h4>Settings</h4></Grid>
@@ -102,8 +104,8 @@ function OpenedMenu() {
                 </Container>
 
                 <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
-                    <Grid container style={{paddingTop:0,marginTop:0}}>
-                        <Grid item container xs={2} style={{paddingTop:0,marginTop:0}}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
                             <Home />
                         </Grid>
                         <Grid item container xs={10}><h4><a href="/" >Home</a></h4></Grid>
@@ -111,17 +113,17 @@ function OpenedMenu() {
                 </Container>
 
                 <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
-                    <Grid container style={{paddingTop:0,marginTop:0}}>
-                        <Grid item container xs={2}style={{paddingTop:0,marginTop:0}}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
                             <Help />
                         </Grid>
                         <Grid item container xs={10}><h4>Get help</h4></Grid>
                     </Grid>
                 </Container>
 
-                <Container style={{ padding: 20, paddingTop: 5 , paddingBottom: 5}}>
-                    <Grid container style={{paddingTop:0,marginTop:0}}>
-                        <Grid item container xs={2}style={{paddingTop:0,marginTop:0}}>
+                <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
                             <PowerOffRounded />
                         </Grid>
                         <Grid item container xs={10}>

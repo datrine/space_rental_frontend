@@ -7,24 +7,22 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
-    if (req.method === "POST") {
+    if (req.method === "PUT") {
         try {
-            let { strapiToken, strapiProfileId } = req.body
-            console.log(req.body)
+            let { id } = req.query
+            let data = req.body
+            console.log(data)
             await middlewareRunner(req, res, cors);
-            let url=`${process.env.CMS_URL}/userprofiles/${strapiProfileId}`;
-            let response = await fetch(url, {
-                method: "get",
-                mode:"cors",
+            let response = await axios({
+                url: `${process.env.CMS_URL}/userprofiles/${id}`,
+                method: "PUT",
                 headers: {
-                    "Authorization": `Bearer ${strapiToken}`
-                }
+                    "Content-Type": "application/json"
+                },
+                data
             })
-
-            let data =await response.json()
-            let user = data
+            let user = response.data
             return res.json({ user });
-
         } catch (error) {
             let errMsg = ""
             let errType = ""
@@ -49,7 +47,7 @@ export default async function handler(req, res) {
                 //console.log('Error', error.message);
                 errMsg = error.message;
             }
-            return res.json({ isAccount: false, err: errMsg, errType });
+            return res.json({err: errMsg, errType });
         }
     }
 }

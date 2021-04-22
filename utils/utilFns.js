@@ -1,4 +1,4 @@
-import { getSession, useSession } from "next-auth/client";
+import { getSession, signIn, useSession } from "next-auth/client";
 import { object } from "prop-types";
 
 function stateMgr() {
@@ -175,9 +175,9 @@ let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
             mode: "cors",
             headers: {
                 "Authorization": `Bearer ${session.user.jwt}`,
-                "Content-Type":"application/json"
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify(dataReq) 
+            body: JSON.stringify(dataReq)
         })
         let dataRes = await res.json()
         console.log(dataRes)
@@ -188,4 +188,16 @@ let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
     }
 }
 
-export { middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader, generalPutAPI };
+let autoSignIn = async () => {
+    let {user} = await getSession()
+    return await signIn("credentials", {
+        strapiToken: user.jwt,
+        strapiProfileId: user.profileId,
+        callbackUrl: "/profile",
+    })
+}
+
+export {
+    middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
+    generalPutAPI, autoSignIn
+};
