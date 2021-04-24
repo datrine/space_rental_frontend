@@ -9,9 +9,10 @@ let Room = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <RoomProps csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
-Room.getInitialProps = async (context) => {
+let getStaticProps = async (context) => {
     return {
         csrfToken: await csrfToken(context)
     }
 }
 export default Room;
+export {getStaticProps}

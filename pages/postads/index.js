@@ -9,9 +9,10 @@ let PostAds = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <PropIndex csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
-PostAds.getInitialProps = async (context) => {
+let getInitialProps = async (context) => {
     return {
         csrfToken: await csrfToken(context)
     }
 }
 export default PostAds;
+export {getStaticProps}
