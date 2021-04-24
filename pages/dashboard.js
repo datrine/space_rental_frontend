@@ -11,7 +11,7 @@ let Dashboard = ({ csrfToken, callbackUrl, ...otherProps }) => {
 }
 let getStaticProps = async (context) => {
     return {
-        csrfToken: await csrfToken(context)
+        props: { csrfToken: await csrfToken(context)}
     }
 }
 export default Dashboard;
