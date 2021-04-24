@@ -11,10 +11,12 @@ import GenderSelect from "../profile/gender";
 
 
 function AddImageView(params) {
+    let [imgUrlObj, changeImgUrlObj] = useState([{}])
     return <>
         <Container>
             <Grid justify="center" container >
-                <Image width={300} height={300} src="/camera_placeholder.jpg" />
+                {imgUrlObj.length > 0 ? <Caroo /> :
+                    <Image width={300} height={300} src="/camera_placeholder.jpg" />}
             </Grid>
         </Container>
         <Container style={{ width: 300, marginTop: 20 }} >
@@ -28,6 +30,7 @@ function AddImageView(params) {
         </Container>
     </>
 }
+
 function Caroo({ imgUrls = [] }) {
     return <>
         <Carousel>
@@ -37,9 +40,43 @@ function Caroo({ imgUrls = [] }) {
         </Carousel>
     </>
 }
+
 function AddBtn(params) {
+
     return <>
-        <button className="w3-btn" style={{
+        <button onClick={
+
+            async e => {
+                try {
+                    let files = e.target.files
+                    let { data: dataUploaded, err } = await uploader({
+                        files,
+                        ref: "file",
+                        refId: user.userId,
+                        field: "prof_pic",
+                        source: "upload",
+                    })
+                    if (dataUploaded) {
+                        console.log("syssgaysaygasy")
+                        let { data, err } = await generalPutAPI({
+                            model: "userprofiles",
+                            entryId: user.profileId,
+                            dataReq: { prof_pic: dataUploaded[0] }
+                        })
+                        if (data) {
+                            await signIn("credentials", {
+                                strapiToken: user.jwt,
+                                strapiProfileId: user.profileId,
+                                callbackUrl: "/profile",
+                            })
+                        }
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        } className="w3-btn" style={{
             backgroundColor: "rgba(189, 195, 199, 1)",
         }}>
             <FontAwesomeIcon size="1x" icon={faPlus}
@@ -231,7 +268,6 @@ function TimeOfStay(params) {
         } />
     </>
 }
-
 
 function SpaceChargesDiv(params) {
     return <>

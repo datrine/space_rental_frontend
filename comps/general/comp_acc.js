@@ -20,24 +20,19 @@ let Comp_Account = ({ ...propsFromParent }) => {
 function MobileView({ csrfToken, hookChangeRegState, callbackUrl, ...propsFromParent }) {
     let [session, loading] = useSession()
     let { query: { tabValue } } = useRouter()
-    let view = null
     if (session) {
-        view = <> <p className="">You're already logged in...</p></>
-    }
-    view = <>
+    return <>
         <Comp_Mob_Header />
         {session ?
-         <Comp_Logout /> : <AccountView callbackUrl={callbackUrl} tabValue={tabValue}
-          {...propsFromParent} />}
+            <Comp_Logout /> : <AccountView callbackUrl={callbackUrl} tabValue={tabValue}
+                {...propsFromParent} />}
         <Comp_Mob_Footer />
     </>
-
-    return <>
-        {view}
-    </>
+    }
+        return <> <p className="">Loading...</p></>
 }
 
-function AccountView({callbackUrl,...props}) {
+function AccountView({ callbackUrl, ...props }) {
     let [tabValue, changeTabValue] = useState(props.tabValue || "login")
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
