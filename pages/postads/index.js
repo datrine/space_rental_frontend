@@ -15,4 +15,4 @@ let getStaticProps = async (context) => {
     }
 }
 export default PostAds;
-export {getStaticProps}
+export { getStaticProps }
