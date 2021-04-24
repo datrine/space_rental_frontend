@@ -11,6 +11,7 @@ import View from '../comps/view';
 import { useEffect, useState } from 'react';
 import { screenMgr } from "../utils/utilFns"
 import { ToTheTop } from '../comps/reusables';
+import { useRef } from 'react';
 const DynamicPCComp = dynamic(() => Promise.resolve(PCView));
 const DynamicMobileComp = dynamic(() => Promise.resolve(MobileView));
 
@@ -30,6 +31,7 @@ let PCView = () => {
 
 let MobileView = () => {
     let [readyState, changeReadyState] = useState(false)
+    let [showFooterState, changeShowFooterState] = useState(true)
     useEffect(() => {
         setTimeout(() => {
             changeReadyState(true)
@@ -37,9 +39,21 @@ let MobileView = () => {
     }, [])
     return <>
         {readyState ? <>
-            <Comp_Mob_Header />
-            <IndexBody />
-            <Comp_Mob_Footer />
+            <Container onFocus={
+                e => {
+                    if(e.target.type==="text"||e.target.type==="number"){
+                    changeShowFooterState(false)
+                }
+                }
+            } onBlur={
+                e => {
+                    changeShowFooterState(true)
+                }
+            } style={{ padding: 0 }} >
+                <Comp_Mob_Header />
+                <IndexBody />
+                <Comp_Mob_Footer showMenu={showFooterState} />
+            </Container>
         </> : <SplashScreen />}
     </>
 }
@@ -75,7 +89,7 @@ let IndexBody = () => {
                 <Tiles />
                 <QuickFind />
             </Container>
-       <ToTheTop/>
+            <ToTheTop />
         </Container>
     </>
 }

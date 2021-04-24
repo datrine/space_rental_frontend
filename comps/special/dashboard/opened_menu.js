@@ -61,7 +61,7 @@ function OpenedMenu() {
                                     <Grid item container xs={2}>
                                         <Image src="/dashboard/localfeeds.svg" height={30} width={30} />
                                     </Grid>
-                                    <br/>
+                                    <br />
                                     <Grid item container xs={10}>
                                         <h5 ><a href="/postads">Local Feeds</a></h5></Grid>
                                 </Grid>

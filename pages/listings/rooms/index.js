@@ -10,18 +10,32 @@ export default function Rooms() {
 }
 
 function MobileView() {
+    let [showFooterState, changeShowFooterState] = useState(true)
     return <>
-        <Container maxWidth="xs" style={{ padding: 0 }} >
-            <Grid justify="space-between" alignItems="center" container
-                style={{ height: "50px", backgroundColor: "green", marginBottom: "10px", }}>
-                <a href="/"> <ArrowBack style={{ color: "white", fontSize: "3em" }} /></a>
+        <Container maxWidth="xs" style={{ padding: 0 }} onFocus={
+            e => {
+                if (e.target.type === "text" || e.target.type === "number") {
+                    changeShowFooterState(false)
+                }
+            }
+        } onBlur={
+            e => {
+                changeShowFooterState(true)
+            }
+        }  >
+            <Container maxWidth="xs" style={{ padding: 0 }}>
+                <Grid justify="space-between" alignItems="center" container
+                    style={{ height: "50px", backgroundColor: "green", marginBottom: "10px", }}>
+                    <a href="/"> <ArrowBack style={{ color: "white", fontSize: "3em" }} /></a>
 
-            </Grid>
-            <Container >
-                <SearchMiniApp />
+                </Grid>
+                <Container >
+                    <SearchMiniApp />
+                </Container>
             </Container>
+            <br />
+            <RoomListing />
+            <Comp_Mob_Footer showMenu={showFooterState} />
         </Container>
-        <br />
-        <RoomListing />
     </>
 }

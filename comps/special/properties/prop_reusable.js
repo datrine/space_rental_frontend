@@ -2,6 +2,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, Grid, IconButton, Input, InputLabel, makeStyles, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
 import { CheckBox } from "@material-ui/icons";
+import { Carousel } from "react-bootstrap";
 import Image from "next/image";
 import React, { useState } from "react";
 import DayPicker, { DateUtils } from 'react-day-picker';
@@ -27,7 +28,15 @@ function AddImageView(params) {
         </Container>
     </>
 }
-
+function Caroo({ imgUrls = [] }) {
+    return <>
+        <Carousel>
+            {imgUrls.map(({ url }, index) => <Carousel.Item key={index} >
+                <Image width={300} height={300} src={url} />
+            </Carousel.Item>)}
+        </Carousel>
+    </>
+}
 function AddBtn(params) {
     return <>
         <button className="w3-btn" style={{
@@ -68,14 +77,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function LocationDiv(params) {
+function LocationDiv({ }) {
     return <>
         <Container style={{ padding: 0, marginTop: "20px", }} >
             <h4 className="w3-padding" style={{ backgroundColor: "#60941a", color: "white", marginBottom: 0 }} >Location</h4>
             <Container style={{ borderWidth: 1, borderStyle: "solid", borderColor: "#60941a" }}>
                 <BuildingCity />
                 <BuildingArea />
-                <BuildingAddress /></Container>
+                <BuildingAddress />
+            </Container>
         </Container>
     </>
 }

@@ -152,8 +152,6 @@ function ToTheTop() {
     let html = document.documentElement
     let height = Math.max(body.scrollHeight, body.offsetHeight,
         html.clientHeight, html.scrollHeight, html.offsetHeight);
-    console.log(window.screen)
-    console.log(height)
     return <>
         <a href="#">
             <button className="" style={{

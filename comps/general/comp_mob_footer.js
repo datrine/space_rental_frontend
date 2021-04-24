@@ -10,6 +10,7 @@ import { TabPanel } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AlarmOn, Dashboard } from '@material-ui/icons';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -33,18 +34,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-let Comp_Mob_Footer = ({ ...propsFromParent }) => {
+let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
     let classes = useStyles();
     return <>
-        <AppBar className={classes.appBar} position="fixed">
+        <AppBar className={classes.appBar} position="fixed"
+            style={{ display: showMenu ? "flex" : "none" }} >
             <Box component="button" className={classes.btnStacked} >
                 <span><FontAwesomeIcon icon={faHome} /></span>
                 <span style={{ fontSize: "12px" }}>Home</span>
             </Box>
-            <Box component="button" className={classes.btnStacked}>
+            <Link href="/dashboard"><Box component="button" className={classes.btnStacked}>
                 <span><Dashboard /></span>
                 <span style={{ fontSize: "12px" }}>Dashboard</span>
-            </Box>
+            </Box></Link>
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faPlusCircle} className="fa-3x" /></span>
             </Box>

@@ -118,7 +118,8 @@ function RoomForm(params) {
                 <SpaceChargesDiv />
                 <FlatmateDiv/>
                 <SpaceRulesDiv/>
-                <p><Button>Post  Ad</Button></p>
+                <p style={{marginTop:"10px"}}>
+                    <Button style={{color:"white",backgroundColor:"#60941a"}} >Post  Ad</Button></p>
             </Container>
         </form>
     </>
