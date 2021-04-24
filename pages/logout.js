@@ -13,9 +13,4 @@ let Login = ({ csrfToken, callbackUrl }) => {
        </div>
     </>
 }
-Login.getInitialProps = async (context) => {
-    return {
-        csrfToken: await csrfToken(context)
-    }
-}
 export default Login;

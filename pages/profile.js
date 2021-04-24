@@ -9,9 +9,5 @@ let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <Comp_Profile csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
-Profile.getInitialProps = async (context) => {
-    return {
-        csrfToken: await csrfToken(context)
-    }
-}
+
 export default Profile;
