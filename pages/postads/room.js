@@ -15,4 +15,4 @@ let getStaticProps = async (context) => {
     }
 }
 export default Room;
-export {getStaticProps}
+export { getStaticProps }
