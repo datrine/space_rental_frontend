@@ -10,10 +10,4 @@ let Account = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <Comp_Account csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
-export async function getStaticProps(context) {
-    return {
-        props: { csrfToken: await csrfToken(context) }
-    }
-}
 export default Account;
-export { getStaticProps }
