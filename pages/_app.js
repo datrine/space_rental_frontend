@@ -2,20 +2,21 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { useRouter } from "next/router"
 config.autoAddCss = false
-import { faBars,  } from '@fortawesome/free-solid-svg-icons'
+import { faBars, } from '@fortawesome/free-solid-svg-icons'
 library.add(faBars)
 import 'w3-css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Account from "./account"
-import {  getSession, Provider } from "next-auth/client";
+import { getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
 import 'react-day-picker/lib/style.css';
 import startAnalytics from '../utils/analytics'
 
 export function reportWebVitals(metric) {
-  console.log(metric)
+  //console.log(metric)
   startAnalytics(metric)
 }
+
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();
@@ -31,12 +32,15 @@ function MyApp({ Component, pageProps }) {
   })
   //console.log(session);
   return <>
-    <Provider session={pageProps.session}>
-      { /* */pathNeedAuth && !sessionState ?
-        <Account callbackUrl={router.asPath} /> : <Component {...pageProps} />
-      }
-    </Provider></>
+    {pathNeedAuth && !sessionState ?
+      <Account callbackUrl={router.asPath} /> :
+      <Provider session={sessionState}>
+        <Component {...pageProps} />
+      </Provider>
+    }
+  </>
 }
+
 
 function authList() {
   return ["/admin", "/dashboard", "/wallet", "/profile", "/chats"]
