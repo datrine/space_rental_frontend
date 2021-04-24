@@ -9,9 +9,10 @@ let Dashboard = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <Comp_Dashboard csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
-Dashboard.getInitialProps = async (context) => {
+let getStaticProps = async (context) => {
     return {
         csrfToken: await csrfToken(context)
     }
 }
 export default Dashboard;
+export {getStaticProps}
