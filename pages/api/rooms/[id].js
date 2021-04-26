@@ -7,79 +7,28 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
-    //get a (filtered) list of rooms
     if (req.method === "GET") {
         try {
-            let { filter="" } = req.body
-            //console.log(req.body)
+            let { id } = req.query
+            let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/rooms?${filter}`,
-                method: "get",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-
-            let rooms = response.data
-            console.log(response.data)
-            return res.json({ rooms });
-
-        } catch (error) {
-            let errMsg = ""
-            let errType = ""
-            if (error.response) {
-                let errors = error.response?.data;
-                errMsg = errors.error
-                if (errors?.message) {
-                    console.log( errors.message)
-                    errors.message.forEach(msgObj => {
-                        msgObj.messages.forEach(errObj => {
-                            errMsg += ": " + errObj.message;
-                            if (errObj.message.includes("password")) {
-                                errType = "Parameter_Error"
-                            }
-                        });
-                    });
-                }
-            } else if (error.request) {
-                console.log(error.request);
-                errMsg = "Unable to get response";
-                errType = "Network"
-            } else {
-                console.log('Error', error.message);
-                errMsg = error.message;
-            }
-            return res.json({ err: errMsg, errType });
-        }
-    }
-    //create a room ad
-    if (req.method === "POST") {
-        try {
-            let { data} = req.body
-            //console.log(req.body)
-            await middlewareRunner(req, res, cors);
-            let response = await axios({
-                url: `${process.env.CMS_URL}/rooms?${filter}`,
-                method: "post",
+                url: `${process.env.CMS_URL}/renters/${id}`,
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 data
             })
-
-            let rooms = response.data
-            console.log(response.data)
-            return res.json({ rooms });
-
+            let user = response.data
+            return res.json({ user });
         } catch (error) {
             let errMsg = ""
             let errType = ""
             if (error.response) {
-                let errors = error.response?.data;
+                let errors = error.response.data;
                 errMsg = errors.error
-                if (errors?.message) {
-                    console.log( errors.message)
+                if (errors.message) {
                     errors.message.forEach(msgObj => {
                         msgObj.messages.forEach(errObj => {
                             errMsg += ": " + errObj.message;
@@ -90,11 +39,53 @@ export default async function handler(req, res) {
                     });
                 }
             } else if (error.request) {
-                console.log(error.request);
+                console.log("error.request");
                 errMsg = "Unable to get response";
                 errType = "Network"
             } else {
-                console.log('Error', error.message);
+                //console.log('Error', error.message);
+                errMsg = error.message;
+            }
+            return res.json({ err: errMsg, errType });
+        }
+    }
+    else if (req.method === "PUT") {
+        try {
+            let { id } = req.query
+            let data = req.body
+            await middlewareRunner(req, res, cors);
+            let response = await axios({
+                url: `${process.env.CMS_URL}/renters/${id}`,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data
+            })
+            let user = response.data
+            return res.json({ user });
+        } catch (error) {
+            let errMsg = ""
+            let errType = ""
+            if (error.response) {
+                let errors = error.response.data;
+                errMsg = errors.error
+                if (errors.message) {
+                    errors.message.forEach(msgObj => {
+                        msgObj.messages.forEach(errObj => {
+                            errMsg += ": " + errObj.message;
+                            if (errObj.message.includes("password")) {
+                                errType = "Parameter_Error"
+                            }
+                        });
+                    });
+                }
+            } else if (error.request) {
+                console.log("error.request");
+                errMsg = "Unable to get response";
+                errType = "Network"
+            } else {
+                //console.log('Error', error.message);
                 errMsg = error.message;
             }
             return res.json({ err: errMsg, errType });

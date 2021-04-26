@@ -42,7 +42,6 @@ function RoomDetails(params) {
                     color: "white", backgroundColor: "#60941a",
                     paddingTop: "5px", paddingLeft: "5px"
                 }}>Room Detail</h3>
-                <AddImageView />
                 <RoomForm />
             </Container>
         </Container>
@@ -96,6 +95,7 @@ function RoomForm(params) {
     })
     return <>
         <form>
+                <AddImageView />
             <Container style={{ marginTop: "20px" }}>
                 <HouseType />
                 <SpaceCategory />

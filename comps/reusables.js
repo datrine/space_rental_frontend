@@ -260,7 +260,6 @@ function MySelect(props = {
 }) {
     let { labelTitle, valueProps, nameProps, selectMenuArr, stylesProps, handleChangeProps } = props
     let classes = useStyles()
-    console.log(nameProps)
     return <>
         <FormControl fullWidth style={{ marginBottom: "30px" }}>
             <h5 style={{ color: "black", }}>{labelTitle}</h5>

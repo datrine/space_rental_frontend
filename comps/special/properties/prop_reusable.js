@@ -8,82 +8,76 @@ import React, { useState } from "react";
 import DayPicker, { DateUtils } from 'react-day-picker';
 import { MyInput, MySelect } from "../../reusables";
 import GenderSelect from "../profile/gender";
+import { useEffect } from "react";
+import { getImgUrl, uploader } from "../../../utils/utilFns";
+import { nanoid } from 'nanoid'
 
-
-function AddImageView(params) {
-    let [imgUrlObj, changeImgUrlObj] = useState([{}])
+function AddImageView({urlsProps=[]}) {
+    let [urlsState, changeUrlsState] = useState(urlsProps)
     return <>
         <Container>
             <Grid justify="center" container >
-                {imgUrlObj.length > 0 ? <Caroo /> :
+                {urlsState.length > 0 ? <Caroo imgObjUrls={urlsState} /> :
                     <Image width={300} height={300} src="/camera_placeholder.jpg" />}
             </Grid>
         </Container>
         <Container style={{ width: 300, marginTop: 20 }} >
             <Grid justify="space-evenly" container >
-                <AddBtn />
-                <AddBtn />
-                <AddBtn />
-                <AddBtn />
-                <AddBtn />
+                <AddBtn changeImgUrlObj={changeUrlsState} index={0} urls={urlsState} />
+                <AddBtn changeImgUrlObj={changeUrlsState} index={1} urls={urlsState} />
+                <AddBtn changeImgUrlObj={changeUrlsState} index={2} urls={urlsState} />
+                <AddBtn changeImgUrlObj={changeUrlsState} index={3} urls={urlsState} />
+                <AddBtn changeImgUrlObj={changeUrlsState} index={4} urls={urlsState} />
             </Grid>
         </Container>
     </>
 }
 
-function Caroo({ imgUrls = [] }) {
+function Caroo({ imgObjUrls = [] }) {
     return <>
         <Carousel>
-            {imgUrls.map(({ url }, index) => <Carousel.Item key={index} >
-                <Image width={300} height={300} src={url} />
-            </Carousel.Item>)}
+            {imgObjUrls.map((imgObj, index) => imgObj ? <Carousel.Item key={index} >
+                <img width={300} height={300} src={getImgUrl(imgObj)} />
+            </Carousel.Item> : null)}
         </Carousel>
     </>
 }
 
-function AddBtn(params) {
-
+function AddBtn({ changeImgUrlObj, index, urls }) {
+    let [isPic, changeIsPic] = useState(urls[index] ? true : false)
     return <>
-        <button onClick={
-
-            async e => {
-                try {
-                    let files = e.target.files
-                    let { data: dataUploaded, err } = await uploader({
-                        files,
-                        ref: "file",
-                        refId: user.userId,
-                        field: "prof_pic",
-                        source: "upload",
-                    })
-                    if (dataUploaded) {
-                        console.log("syssgaysaygasy")
-                        let { data, err } = await generalPutAPI({
-                            model: "userprofiles",
-                            entryId: user.profileId,
-                            dataReq: { prof_pic: dataUploaded[0] }
-                        })
-                        if (data) {
-                            await signIn("credentials", {
-                                strapiToken: user.jwt,
-                                strapiProfileId: user.profileId,
-                                callbackUrl: "/profile",
-                            })
-                        }
-                    }
-
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        } className="w3-btn" style={{
-            backgroundColor: "rgba(189, 195, 199, 1)",
+        <label className="w3-btn" style={{
+            backgroundColor: isPic ? "#60941a" : "rgba(189, 195, 199, 1)",
         }}>
-            <FontAwesomeIcon size="1x" icon={faPlus}
-                style={{
-                    color: "#60941a",
-                }} />
-        </button>
+            <Input type="file" onChange={
+                async e => {
+                    try {
+                        let files = e.target.files
+                        let { data: dataUploaded, err } = await uploader({
+                            files,
+                            ref: "file",
+                            refId: index,
+                            field: "room_pics",
+                            source: "upload",
+                        })
+                        if (dataUploaded) {
+                            urls[index] = dataUploaded[0]
+                            changeIsPic(true)
+                            changeImgUrlObj([...urls])
+                        }
+
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            } style={{ display: "none" }} />
+            <span>
+                <FontAwesomeIcon size="1x" icon={faPlus}
+                    style={{
+                        color: isPic ? "white" : "#60941a",
+                    }} />
+            </span>
+        </label>
     </>
 }
 

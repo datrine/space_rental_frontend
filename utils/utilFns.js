@@ -77,17 +77,11 @@ let memoFn = (() => {
             cache[memoKey] = await new Promise(async (res, rej) => {
                 try {
                     let result = await fn(...args)
-                    console.log("result")
-                    console.log(result)
-                    console.log("result")
                     return res(result)
                 } catch (error) {
                     return rej({ err: error })
                 }
             })
-            console.log("cache[memoKey]")
-            console.log(cache[memoKey])
-            console.log("cache[memoKey]")
             return cache[memoKey]
         }
         else {
@@ -153,6 +147,9 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
         });
         let data = await res.json()
         console.log(data)
+        if (res.status >= 400) {
+            throw data
+        }
         return { data }
     } catch (err) {
         console.log(err)
@@ -188,16 +185,39 @@ let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
     }
 }
 
-let autoSignIn = async () => {
-    let {user} = await getSession()
+let autoSignIn = async ({ callbackUrl }) => {
+    let { user } = await getSession()
+
     return await signIn("credentials", {
         strapiToken: user.jwt,
         strapiProfileId: user.profileId,
-        callbackUrl: "/profile",
+        callbackUrl: callbackUrl ? callbackUrl : "/dashboard",
     })
+}
+
+let imgObjProcessor = (obj = {}, format) => {
+    if (format) {
+        if (obj.formats) {
+            if (format === "large") {
+                return obj.formats["large"]
+            }
+            if (format === "medium") {
+                return obj.formats["medium"]
+            }
+            if (format === "small") {
+                return obj.formats["small"]
+            }
+        }
+    }
+    return obj;
+}
+
+let getImgUrl = (obj, format) => {
+    let imgObj = imgObjProcessor(obj, format);
+    return imgObj.url;
 }
 
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
-    generalPutAPI, autoSignIn
+    generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl
 };

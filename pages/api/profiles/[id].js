@@ -22,6 +22,7 @@ export default async function handler(req, res) {
                 data
             })
             let user = response.data
+            console.log()
             return res.json({ user });
         } catch (error) {
             let errMsg = ""
