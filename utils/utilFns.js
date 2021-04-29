@@ -1,5 +1,7 @@
 import { getSession, signIn, useSession } from "next-auth/client";
+import { DateTime, Interval } from "luxon"
 import { object } from "prop-types";
+import { DateUtils } from "react-day-picker";
 
 function stateMgr() {
     let loadingState = {
@@ -217,7 +219,47 @@ let getImgUrl = (obj, format) => {
     return imgObj.url;
 }
 
+
+let buildDateInfo = ({ dateMode, dateSingles, dateRange }) => {
+    if (dateMode === "asRange") {
+        return { dateMode, dateRange }
+    } else if (dateMode === "asSingles") {
+        return { dateMode, dateSingles }
+    }
+}
+let daysSorter = (dayToSortA, dayToSortB) => {
+    if (DateUtils.isDayBefore(dayToSortA, dayToSortB)) {
+        return -1
+    }
+    else if (DateUtils.isSameDay(dayToSortA, dayToSortB)) {
+        return 0
+    }
+    else if (DateUtils.isDayAfter(dayToSortA, dayToSortB)) {
+        return 1
+    }
+}
+
+let listOfDatesBetween = ({ from, to }) => {
+    if (!(to instanceof DateTime)) {
+        to=DateTime.fromJSDate(to)
+    }
+    if (!(from instanceof DateTime)) {
+        from=DateTime.fromJSDate(from)
+    }
+    let days = []
+    let dayPlus = from
+    let dayPluser = 0
+    let daysBetwen =
+        Interval.fromDateTimes(from, to).count("days");
+    while (daysBetwen > dayPluser) {
+        let newDay = dayPlus.plus({ day: dayPluser }).toJSDate()
+        days.push(newDay)
+        dayPluser++
+    }
+    return days
+}
+
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
-    generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl
+    generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,listOfDatesBetween
 };

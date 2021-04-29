@@ -13,7 +13,7 @@ export default async function handler(req, res) {
             let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/renters/${id}`,
+                url: `${process.env.CMS_URL}/rooms/${id}`,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -55,15 +55,15 @@ export default async function handler(req, res) {
             let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/renters/${id}`,
+                url: `${process.env.CMS_URL}/rooms/${id}`,
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
+            let room = response.data
+            return res.json({ room });
         } catch (error) {
             let errMsg = ""
             let errType = ""

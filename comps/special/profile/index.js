@@ -50,6 +50,7 @@ function MobileView() {
 
 let ProfileForm = ({ ...propsFromParent }) => {
     let [session, loading] = useSession()
+        let [responseView, changeResponseView] = useState(null)
     if (session) {
         let user = session.user
         let formik = useFormik({
@@ -105,7 +106,6 @@ let ProfileForm = ({ ...propsFromParent }) => {
                 })()
             }
         })
-        let [responseView, changeResponseView] = useState(null)
         let handleSuccess = (user) => {
             let view = <SuccessReg hookChangeResponseView={changeResponseView} />
             changeResponseView(view)

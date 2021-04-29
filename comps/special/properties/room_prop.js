@@ -1,13 +1,29 @@
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Container, FormControl, FormControlLabel, Grid, Input, InputAdornment, makeStyles } from "@material-ui/core";
+import {
+    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Input, InputAdornment,
+    makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow
+} from "@material-ui/core";
 import { useFormik } from "formik";
-import { useState } from "react";
-import { MySelect } from "../../reusables";
+import React from "react";
+import { useEffect, useState } from "react";
+import { FailReg, MySelect, SuccessReg } from "../../reusables";
 import View from "../../view";
 import { ProfileMenu } from "../dashboard/resuables";
+import { useStyles } from "../profile/styles";
 import { AddImageView, FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv, SpaceRulesDiv } from "./prop_reusable";
-
+import { RoomForm } from "./roomform";
+import AlignItemsList from "./roomlist";
+import CustomPaginationActionsTable from "./tables";
+let roomData = {
+    spaceInfo:{},
+    flatmateInfo:{},
+    spaceRules:[],
+    locationInfo:{},
+    room_pics:[],
+    spaceAvailabiltyInfo:{},
+}
+export const RoomContext = React.createContext(roomData)
 function RoomProps(params) {
     return <>
         <View mobileView={<MobileView />} />
@@ -16,9 +32,10 @@ function RoomProps(params) {
 
 function MobileView() {
     return <>
-        <ProfileMenu />
-        <Banner />
-        <RoomDetails />
+            <ProfileMenu />
+            <Banner />
+            <ControlPanel />
+            <RoomDetails />
     </>
 }
 
@@ -33,7 +50,31 @@ function Banner() {
     </>
 }
 
-function RoomDetails(params) {
+function ControlPanel(params) {
+    let [templateState, changeTemplateState] = useState("create")
+    let [openRoomListDialog, changeRoomListDialog] = useState(false)
+    useEffect(() => {
+        if (templateState === "edit") {
+            changeRoomListDialog(true)
+        }
+    }, [templateState])
+    return <>
+        <Container>
+            <SetRoomTemplateMode roomTemplate={templateState}
+                hookChangeTemplateState={changeTemplateState} />
+            {templateState === "edit" ? <Button onClick={e => {
+                if (templateState !== "edit") {
+                    changeTemplateState("edit")
+                } else {
+                    changeRoomListDialog(true)
+                }
+            }}  >Show Room List</Button> : null}
+        </Container>
+        <RoomList openRoomListDialog={openRoomListDialog} hookRoomListDialog={changeRoomListDialog} />
+    </>
+}
+
+function RoomDetails({ roomInfo, changeRoomInfo }) {
     return <>
         <Container style={{ marginTop: "20px" }}>
             <Container
@@ -42,192 +83,66 @@ function RoomDetails(params) {
                     color: "white", backgroundColor: "#60941a",
                     paddingTop: "5px", paddingLeft: "5px"
                 }}>Room Detail</h3>
+
                 <RoomForm />
             </Container>
         </Container>
     </>
 }
 
-function RoomForm(params) {
-    let formik = useFormik({
-        initialValues: {
-            typeOfHouse: "",
-            spaceCat: "",
-            spaceCond: "",
-            numOfBedroom: 1,
-            numBathroom: 1,
-            numKitchen: 1,
-            numSittingroom: 1,
-        },
-        validate: (values) => {
-            return new Promise(async (res, rej) => {
-                let errors = {}
-                let valObj = await registerValidator(values)
-                let { valid, errorList, instance } = valObj
-                if (!valid) {
-                    for (const errorObj of errorList) {
-                        errors[errorObj.prop] = errorObj.msg;
-                    }
-                }
-                console.log(errors)
-                res(errors)
-            })
-        },
-        onSubmit: (values, actions) => {
-            (async () => {
-                let res = await fetch("/api/rooms", {
-                    method: "POST",
-                    body: JSON.stringify(values)
-                });
-                if (res.ok) {
-                    let data = await res.json();
-                    let { err, user, jwt } = data;
-                    if (err) {
-                        handleFail(err)
-                    }
-                    if (user) {
-                        handleSuccess(user);
-                    }
+function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
 
-                }
-            })()
-        }
-    })
-    return <>
-        <form>
-                <AddImageView />
-            <Container style={{ marginTop: "20px" }}>
-                <HouseType />
-                <SpaceCategory />
-                <SpaceCondition />
-                <Grid spacing={2} container>
-                    <Grid item container xs={5}>
-                        <BedroomNumber />
-                    </Grid>
-                    <Grid item container xs={5}>
-                        <KitchenNumber />
-                    </Grid>
-                    <Grid item container xs={5}>
-                        <SittingNumber />
-                    </Grid>
-                    <Grid item container xs={5}><SittingNumber /></Grid>
-                </Grid>
-                <LocationDiv />
-                <SpaceAvailabilityDiv />
-                <SpaceAmenityDiv />
-                <SpaceChargesDiv />
-                <FlatmateDiv/>
-                <SpaceRulesDiv/>
-                <p style={{marginTop:"10px"}}>
-                    <Button style={{color:"white",backgroundColor:"#60941a"}} >Post  Ad</Button></p>
-            </Container>
-        </form>
-    </>
-}
-
-function HouseType(params) {
-    let [houseTypeState, changeHouseTypeState] = useState("")
-    return <>
-        <MySelect labelTitle="Type of house" valueProps={houseTypeState} selectMenuArr={[
-            { value: "apartment", text: "Apartment" },
-            { value: "flat", text: "Flats" },
-        ]} handleChangeProps={
-            e => {
-                changeHouseTypeState(e.target.value)
-            }
-        } />
-    </>
-}
-
-function SpaceCategory(params) {
-    let [spaceCategoryState, changeSpaceCategoryState] = useState("")
-    return <>
-        <MySelect labelTitle="Select category of space" valueProps={spaceCategoryState} selectMenuArr={[
-            { value: "apartment", text: "Apartment" },
-            { value: "flat", text: "Flats" },
-        ]} handleChangeProps={
-            e => {
-                changeSpaceCategoryState(e.target.value)
-            }
-        } />
-    </>
-}
-
-function SpaceCondition(params) {
-    let [spaceCategoryState, changeSpaceCategoryState] = useState("")
-    return <>
-        <MySelect labelTitle="Select category of space" valueProps={spaceCategoryState} selectMenuArr={[
-            { value: "apartment", text: "Apartment" },
-            { value: "flat", text: "Flats" },
-        ]} handleChangeProps={
-            e => {
-                changeSpaceCategoryState(e.target.value)
-            }
-        } />
-    </>
-}
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-    },
-    form: {
-        marginTop: "30px"
-    },
-    textField: {
-        marginBottom: "5px",
-        paddingLeft: "5px",
-        borderWidth: 1,
-        borderStyle: "solid",
-        borderRadius: "5px"
-    },
-    formDiv: {
-        width: "100%",
-        marginBottom: "25px",
-        marginLeft: "10%",
-    },
-}));
-
-function BedroomNumber({ valueProp = 1, handleChange }) {
     let classes = useStyles()
+    let templates = [
+        { value: "create", text: "Create" },
+        { value: "edit", text: "Edit" },
+    ]
     return <>
-        <FormControl fullWidth>
-            <Input onChange={handleChange} value={valueProp}
-                name="email"
-                className={classes.textField} />
-        </FormControl>
+        <Container style={{ marginBottom: "10px", display: "inline-block" }}>
+            <h5 style={{ color: "black", }}>Select Mode</h5>
+            <Select
+                displayEmpty
+                className={classes.textField}
+                inputProps={{
+                    'aria-label': 'Without label',
+                    onChange: e => {
+                        hookChangeTemplateState(e.target.value)
+                        //handleChangeProps(e)
+                    }, value: roomTemplate, name: "roomtemplate"
+                }}
+            >
+                {templates.map(({ value, text }, index) => <MenuItem
+                    key={index} value={value} >{text}</MenuItem>)}
+            </Select>
+        </Container>
+
     </>
+
 }
 
-function KitchenNumber({ valueProp = 1, handleChange }) {
-    let classes = useStyles()
+let RoomList = ({ openRoomListDialog, hookRoomListDialog }) => {
+    let handleClose = (e) => {
+        console.log("ijuijjioj")
+        hookRoomListDialog(false)
+    }
     return <>
-        <FormControl fullWidth>
-            <Input onChange={handleChange} value={valueProp}
-                name="email"
-                className={classes.textField} />
-        </FormControl>
-    </>
-}
-
-function SittingNumber({ valueProp = 1, handleChange }) {
-    let classes = useStyles()
-    return <>
-        <FormControl fullWidth>
-            <Input onChange={handleChange} value={valueProp}
-                name="email"
-                className={classes.textField} />
-        </FormControl>
-    </>
-}
-
-function BathroomNumber({ valueProp = 1, handleChange }) {
-    let classes = useStyles()
-    return <>
-        <FormControl fullWidth>
-            <Input onChange={handleChange} value={valueProp}
-                name="email"
-                className={classes.textField} />
-        </FormControl>
+        <Dialog
+            open={openRoomListDialog}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">Rooms</DialogTitle>
+            <DialogContent>
+                <Container style={{ padding: 0 }} >
+                    <AlignItemsList />
+                </Container>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    Ok
+          </Button>
+            </DialogActions>
+        </Dialog>
     </>
 }
 

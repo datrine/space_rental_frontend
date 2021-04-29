@@ -1,3 +1,5 @@
+import _ from "lodash"
+import { DateTime, Interval } from "luxon"
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, Grid, IconButton, Input, InputLabel, makeStyles, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
@@ -9,10 +11,13 @@ import DayPicker, { DateUtils } from 'react-day-picker';
 import { MyInput, MySelect } from "../../reusables";
 import GenderSelect from "../profile/gender";
 import { useEffect } from "react";
-import { getImgUrl, uploader } from "../../../utils/utilFns";
+import { buildDateInfo, daysSorter, getImgUrl, listOfDatesBetween, uploader } from "../../../utils/utilFns";
 import { nanoid } from 'nanoid'
+import { RoomContext } from "./room_prop";
+import { useContext } from "react";
+import { intervalToDuration } from "date-fns";
 
-function AddImageView({urlsProps=[]}) {
+function AddImageView({ urlsProps = [], onSuccess = () => { }, onFail = () => { } }) {
     let [urlsState, changeUrlsState] = useState(urlsProps)
     return <>
         <Container>
@@ -162,10 +167,14 @@ function BuildingArea({ handleChange, valueProp }) {
     </>
 }
 
-function SpaceAvailabilityDiv(params) {
+function SpaceAvailabilityDiv() {
     return <>
         <Container style={{ padding: 0, marginTop: "20px" }} >
-            <h4 className="w3-padding" style={{ backgroundColor: "#60941a", color: "white", marginBottom: 0 }} >Space</h4>
+            <h4 className="w3-padding"
+                style={{
+                    backgroundColor: "#60941a",
+                    color: "white", marginBottom: 0
+                }} >Space Availability</h4>
             <Container style={{ borderWidth: 1, borderStyle: "solid", borderColor: "#60941a" }}>
                 <RangeOfSpace />
                 <TimeOfStay />
@@ -176,48 +185,81 @@ function SpaceAvailabilityDiv(params) {
 }
 
 function RangeOfSpace({ handleSelect, valueProp }) {
-    let highlighted = {
+    let ctx = useContext(RoomContext)
+    let spaceAvailabiltyInfo = ctx.spaceAvailabiltyInfo
+    let datesInfo = spaceAvailabiltyInfo?.datesInfo
+    let dateMode = datesInfo?.dateMode || "asRange"
+    let dateRange = (datesInfo && dateMode === "asRange") ? datesInfo.dateRange : {
+        from: new Date(),
         to: new Date(),
-        from: new Date()
     }
-    let [dateFormatState, changeDateFormatState] = useState("asRange")
-    let daysSelected = dateFormatState ? [new Date()] : highlighted
-    let [daysSelectedState, changeDaysSelected] = useState({ daysSelected })
+    let daysSelected = (datesInfo && dateMode === "asSingles") ? datesInfo.dateSingles : [new Date()]
+
+    let [dateModeState, changeDateModeState] = useState(dateMode)
+    let [dateRangeState, changeDateRangeState] = useState(dateRange)
+    //let [dateSinglesState, changeDateSinglesState] = useState(dateSingles)
+    let [daysSelectedState, changeDaysSelected] = useState(daysSelected)
+    useEffect(() => {
+        spaceAvailabiltyInfo.datesInfo = buildDateInfo({
+            dateMode: dateModeState,
+            dateRange: dateRangeState, dateSingles: daysSelectedState
+        })
+        console.log(ctx)
+    })
+    useEffect(() => {
+        if (dateModeState === "asRange") {
+            if (daysSelectedState.length > 0) {
+                let sortedDates = [...daysSelectedState.sort(daysSorter)]
+                let newRange = { from: sortedDates[0], to: sortedDates[sortedDates.length - 1] }
+                let days=listOfDatesBetween(dateRangeState)
+                changeDateRangeState(newRange)
+                changeDaysSelected(days)
+            }
+        }
+    }, [dateModeState])
     return (
         <Container>
-            <DatesSelectFormat dateFormatProps={dateFormatState}
-                changeDateFormatProps={changeDateFormatState} />
+            <DatesSelectFormat dateFormatProps={dateModeState}
+                changeDateFormatProps={changeDateModeState} />
             <DayPicker onDayClick={
                 (day, { selected, disabled }) => {
-                    let days = daysSelectedState.daysSelected
+                    let days = daysSelectedState
                     if (disabled) {
                         return
-                    }
-                    if (selected) {
-                        let indexOfDate = days.findIndex(dayInArray =>
-                            DateUtils.isSameDay(dayInArray, day))
-                        days.splice(indexOfDate, 1)
-                        return changeDaysSelected({ daysSelected: days })
                     }
                     //don't select a past day
                     if (DateUtils.isPastDay(day)) {
                         return
                     }
-                    days.push(day)
-                    days.sort((dayToSortA, dayToSortB) => {
-                        if (DateUtils.isDayBefore(dayToSortA, dayToSortB)) {
-                            return -1
+                    if (dateModeState === "asSingles") {
+                        if (selected) {
+                            let indexOfDate = days.findIndex(dayInArray =>
+                                DateUtils.isSameDay(dayInArray, day))
+                            days.splice(indexOfDate, 1)
+                            return changeDaysSelected([...days])
                         }
-                        else if (DateUtils.isSameDay(dayToSortA, dayToSortB)) {
-                            return 0
+                        days.push(day)
+                        days.sort(daysSorter)
+                    }
+                    else if (dateModeState === "asRange") {
+                        days = []
+                        if (DateUtils.isDayBefore(day, dateRangeState.from)) {
+                            dateRangeState.from = day;
                         }
-                        else if (DateUtils.isDayAfter(dayToSortA, dayToSortB)) {
-                            return 1
+                        else if (DateUtils.isDayBetween(day, dateRangeState.from, dateRangeState.to)) {
+                            dateRangeState.from = day;
                         }
-                    })
-                    changeDaysSelected({ daysSelected: days })
+                        else if (DateUtils.isDayAfter(day, dateRangeState.to)) {
+                            dateRangeState.to = day;
+                        }
+                        days=listOfDatesBetween(dateRangeState)
+                        changeDateRangeState({ ...dateRangeState })
+                        //days=  _.uniq(days)
+                        //days.push(highlighted.to)
+                    }
+                    changeDaysSelected([...days])
                 }
-            } selectedDays={daysSelectedState.daysSelected} fromMonth={new Date()} />
+            } selectedDays={daysSelectedState} fromMonth={new Date()} />
         </Container>
     );
 }
@@ -226,7 +268,7 @@ function DatesSelectFormat({ dateFormatProps, changeDateFormatProps }) {
     return <>
         <MySelect labelTitle="Select Date Format" valueProps={dateFormatProps} selectMenuArr={[
             { value: "asRange", text: "Select as Range of Dates" },
-            { value: "asSingle", text: "Select as Single Date" },
+            { value: "asSingles", text: "Select as Single Dates" },
         ]} handleChangeProps={
             e => {
                 changeDateFormatProps(e.target.value)
