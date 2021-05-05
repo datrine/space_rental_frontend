@@ -1,7 +1,8 @@
 import { getSession, signIn, useSession } from "next-auth/client";
 import { DateTime, Interval } from "luxon"
-import { object } from "prop-types";
+import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
+import { uniqueId } from "lodash";
 
 function stateMgr() {
     let loadingState = {
@@ -220,13 +221,22 @@ let getImgUrl = (obj, format) => {
 }
 
 
-let buildDateInfo = ({ dateMode, dateSingles, dateRange }) => {
+let buildDateInfo = ({ dateMode, singleDatesStrings, dateRange }) => {
     if (dateMode === "asRange") {
         return { dateMode, dateRange }
     } else if (dateMode === "asSingles") {
-        return { dateMode, dateSingles }
+        return { dateMode, singleDatesStrings }
     }
 }
+
+let maxLengthOfStay = ({ dateMode, singleDatesStrings, dateRange }) => {
+    if (dateMode === "asRange") {
+        return listOfDatesBetween(dateRange).length
+    } else if (dateMode === "asSingles") {
+        return singleDatesStrings.length
+    }
+}
+
 let daysSorter = (dayToSortA, dayToSortB) => {
     if (DateUtils.isDayBefore(dayToSortA, dayToSortB)) {
         return -1
@@ -241,10 +251,10 @@ let daysSorter = (dayToSortA, dayToSortB) => {
 
 let listOfDatesBetween = ({ from, to }) => {
     if (!(to instanceof DateTime)) {
-        to=DateTime.fromJSDate(to)
+        to = DateTime.fromJSDate(to)
     }
     if (!(from instanceof DateTime)) {
-        from=DateTime.fromJSDate(from)
+        from = DateTime.fromJSDate(from)
     }
     let days = []
     let dayPlus = from
@@ -256,10 +266,34 @@ let listOfDatesBetween = ({ from, to }) => {
         days.push(newDay)
         dayPluser++
     }
+    console.log(days.length)
     return days
+}
+let datesFromStrings = (array = []) => array.map((ds) => {
+    return new Date(ds)
+})
+
+let stringsFromDates = (array = [new Date()]) => array.map((date) => date.toDateString())
+
+let rangeFromDates = (days = []) => {
+    days = days.sort(daysSorter);
+    console.log(days)
+    return { from: days[0], to: days[days.length - 1] }
+}
+
+let IdObj = (obj) => {
+    if (typeof obj !== "object") {
+        throw `${obj} must be an object`
+    }
+    if (!obj["id"]) {
+        obj["id"] = uniqueId()
+    }
+    console.log(obj["id"])
+    return obj
 }
 
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
-    generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,listOfDatesBetween
+    generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,
+    listOfDatesBetween, datesFromStrings, stringsFromDates, maxLengthOfStay, IdObj, rangeFromDates
 };

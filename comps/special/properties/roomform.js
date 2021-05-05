@@ -2,76 +2,79 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Input, InputAdornment,
-    makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow
+    makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow, TextField
 } from "@material-ui/core";
+import { CheckCircle } from "@material-ui/icons";
 import Image from "next/image";
 import React from "react";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
-import { getImgUrl, uploader } from "../../../utils/utilFns";
+//import { getImgUrl, uploader } from "../../../utils/utilFns";
 import { FailReg, MySelect, SuccessReg } from "../../reusables";
-import { FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv, SpaceRulesDiv } from "./prop_reusable";
-import { RoomContext } from "./room_prop";
+import {
+    FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv,
+    SpaceRulesDiv, AddImageView
+} from "./prop_reusable";
+import { RoomContext, roomDataDefault } from "./room_prop";
 
 function RoomForm({ roomInfo, changeRoomInfo }) {
     let [responseView, changeResponseView] = useState(null)
+    let ctx = useContext(RoomContext)
     let handleSuccess = (user) => {
-        let view = <SuccessReg hookChangeResponseView={changeResponseView} />
+        let view = <SuccessSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
         changeResponseView(view)
     }
     let handleFail = (err) => {
-        let view = <FailReg hookChangeResponseView={changeResponseView} />
+        let view = <FailSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
         changeResponseView(view)
     }
     return <>
-        <form onSubmit={async e => {
-            e.preventDefault()
-            let values = {
-                room_pics: room_picsState,
-                flatmateInfo: flatmateInfoState,
-                spaceInfo: spaceInfoState,
-                spaceRules: spaceRulesState,
-                locationInfo: locationInfoState,
-            }
-            let res;
-            //no room info exists for current room=>mode:edit
-            if (roomInfo) {
-                res = await fetch(`/api/rooms/${roomInfo.id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(values)
-                });
-            }
-            //no room info exists for current room=>mode:create
-            else {
-                res = await fetch("/api/rooms", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(values)
-                });
-            }
+        <form onSubmit={
+            async e => {
+                e.preventDefault()
+                let values = {
+                    ...ctx
+                }
+                console.log(values)
+                let res;
+                //no room info exists for current room=>mode:edit
+                if (roomInfo) {
+                    res = await fetch(`/api/rooms/${roomInfo.id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(values)
+                    });
+                }
+                //no room info exists for current room=>mode:create
+                else {
+                    res = await fetch("/api/rooms", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(values)
+                    });
+                }
 
-            if (res.ok) {
-                let data = await res.json();
-                let { err, room, jwt } = data;
-                if (err) {
-                    console.log(err)
-                    handleFail(err)
+                if (res.ok) {
+                    let data = await res.json();
+                    let { err, room, jwt } = data;
+                    if (err) {
+                        console.log(err)
+                        handleFail(err)
+                    }
+                    if (room) {
+                        console.log(room)
+                        handleSuccess(room);
+                    }
                 }
-                if (room) {
-                    console.log(room)
-                    changeRoomInfo(room)
-                    handleSuccess(room);
-                }
-            }
-        }} >
+            }} >
             <AddImageView />
             <Container style={{ marginTop: "20px" }}>
+                <NameOfRoom />
                 <HouseType />
                 <SpaceCategory />
                 <SpaceCondition />
@@ -99,28 +102,25 @@ function RoomForm({ roomInfo, changeRoomInfo }) {
                     <Button type="submit" style={{ color: "white", backgroundColor: "#60941a" }} >Post  Ad</Button></p>
             </Container>
         </form>
+        {responseView}
     </>
 }
 
 function HouseType({ }) {
-    let ctx = useContext(RoomContext)
-    let locationInfo = ctx.locationInfo
-    let [houseTypeState, changeHouseTypeState] = useState(locationInfo.houseType || "")
     let selectMenuArr = [
         { value: "apartment", text: "Apartment" },
         { value: "flat", text: "Flats" },
     ]
     return <>
-        <RoomContext.Provider value={locationInfo} >
-            <FormControl fullWidth style={{ marginBottom: "30px" }}>
+        <RoomContext.Consumer>
+            {({ roomData, changeRoomContext }) => <FormControl fullWidth style={{ marginBottom: "30px" }}>
                 <h5 style={{ color: "black", }}>Type of house</h5>
                 <Select
-                    value={houseTypeState}
+                    value={roomData.spaceInfo.houseType}
                     onChange={e => {
                         let houseType = e.target.value
-                        locationInfo.houseType = houseType
-                        changeHouseTypeState(houseType)
-                        //console.log(ctx) 
+                        roomData.spaceInfo.houseType = houseType
+                        changeRoomContext({ ...roomData })
                     }}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
@@ -136,48 +136,45 @@ function HouseType({ }) {
                     {selectMenuArr.map(({ value, text }, index) => <MenuItem
                         key={index} value={value} >{text}</MenuItem>)}
                 </Select></FormControl>
-
-        </RoomContext.Provider>
+            }
+        </RoomContext.Consumer>
     </>
 }
 
 function SpaceCategory(params) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
-    let [spaceCategoryState, changeSpaceCategoryState] = useState("")
+    let { roomData, changeRoomContext } = ctx
+    let spaceInfo = roomData.spaceInfo
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <MySelect labelTitle="Select category of space" valueProps={spaceCategoryState} selectMenuArr={[
-                { value: "apartment", text: "Apartment" },
-                { value: "flat", text: "Flats" },
-            ]} handleChangeProps={
-                e => {
-                    let newValue = e.target.value
-                    spaceInfo.spaceCategory = newValue
-                    console.log(ctx)
-                    changeSpaceCategoryState(newValue)
-                }
-            } /></RoomContext.Provider>
+        <MySelect labelTitle="Select category of space" valueProps={spaceInfo.spaceCategory} selectMenuArr={[
+            { value: "apartment", text: "Apartment" },
+            { value: "flat", text: "Flats" },
+        ]} handleChangeProps={
+            e => {
+                let newValue = e.target.value
+                spaceInfo.spaceCategory = newValue
+                changeRoomContext({ ...roomData, spaceInfo })
+            }
+        } />
     </>
 }
 
 function SpaceCondition(params) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
-    let [spaceCategoryState, changeSpaceCategoryState] = useState("")
+    let { roomData, changeRoomContext } = ctx
+    let { spaceInfo } = roomData
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <MySelect labelTitle="Select condition of space"
-                valueProps={spaceCategoryState} selectMenuArr={[
-                    { value: "apartment", text: "Apartment" },
-                    { value: "flat", text: "Flats" },
-                ]} handleChangeProps={
-                    e => {
-                        let houseType = e.target.value
-                        locationInfo.houseType = houseType
-                        changeSpaceCategoryState(houseType)
-                    }
-                } /></RoomContext.Provider>
+        <MySelect labelTitle="Select condition of space"
+            valueProps={spaceInfo.spaceCondition} selectMenuArr={[
+                { value: "apartment", text: "Apartment" },
+                { value: "flat", text: "Flats" },
+            ]} handleChangeProps={
+                e => {
+                    let houseType = e.target.value
+                    spaceInfo.spaceCondition = houseType
+                    changeRoomContext({ ...roomData, spaceInfo })
+                }
+            } />
     </>
 }
 
@@ -201,161 +198,156 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function NameOfRoom({ }) {
+    let classes = useStyles()
+    let ctx = useContext(RoomContext);
+    let { roomData, changeRoomContext } = ctx
+    let handleChange = (e) => {
+        roomData.nameOfSpace = e.target.value
+        changeRoomContext({ ...roomData })
+    }
+    return <>
+        <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
+            <TextField fullWidth multiline={true} onChange={handleChange}
+                name="name" placeholder="Name the space"
+                className={classes.textField} />
+        </FormControl>
+    </>
+}
+
 function BedroomNumber({ }) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
+    let { roomData, changeRoomContext } = ctx
+    let { spaceInfo } = roomData
     let classes = useStyles()
-    let [bedroomNumberState, changeBedroomNumberState] = useState("")
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <FormControl fullWidth>
-                <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
-                <Input onChange={e => {
-                    let bedroomNumber = e.target.value
-                    spaceInfo.bedroomNumber = bedroomNumber
-                    changeBedroomNumberState(bedroomNumber)
-                }} value={bedroomNumberState}
-                    placeholder="No of bedroom" type="number"
-                    className={classes.textField} />
-            </FormControl>
-        </RoomContext.Provider>
+        <FormControl fullWidth>
+            <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
+            <Input onChange={e => {
+                let bedroomNumber = e.target.value
+                spaceInfo.bedroomNumber = bedroomNumber
+                changeRoomContext({ ...roomData, spaceInfo })
+            }} value={spaceInfo.bedroomNumber}
+                placeholder="No of bedroom" type="number"
+                className={classes.textField} />
+        </FormControl>
     </>
 }
 
 function KitchenNumber({ }) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
+    let { roomData, changeRoomContext } = ctx
+    let spaceInfo = roomData.spaceInfo
     let classes = useStyles()
-    let [kitchenNumberState, changeKitchenNumberState] = useState("")
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <FormControl fullWidth>
-                <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
-                <Input onChange={e => {
-                    let kitchenNumber = e.target.value
-                    spaceInfo.kitchenNumber = kitchenNumber
-                    changeKitchenNumberState(kitchenNumber)
-                }} value={kitchenNumberState}
-                    placeholder="No of kitchen" type="number"
-                    className={classes.textField} />
-            </FormControl>
-        </RoomContext.Provider>
+        <FormControl fullWidth>
+            <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
+            <Input onChange={e => {
+                let kitchenNumber = e.target.value
+                spaceInfo.kitchenNumber = kitchenNumber
+                changeRoomContext({ ...roomData, spaceInfo })
+            }} value={spaceInfo.kitchenNumber}
+                placeholder="No of kitchen" type="number"
+                className={classes.textField} />
+        </FormControl>
     </>
 }
 
 function SittingNumber({ }) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
+    let { roomData, changeRoomContext } = ctx
+    let spaceInfo = roomData.spaceInfo
     let classes = useStyles()
-    let [sittingNumberState, changeSittingNumberState] = useState("")
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <FormControl fullWidth>
-                <p>Parlour <strong style={{ color: "red" }} > *</strong></p>
-                <Input onChange={e => {
-                    let sittingNumber = e.target.value
-                    spaceInfo.sittingNumber = sittingNumber
-                    changeSittingNumberState(sittingNumber)
-                }} value={sittingNumberState}
-                    placeholder="No of parlour" type="number"
-                    className={classes.textField} />
-            </FormControl>
-        </RoomContext.Provider>
+        <FormControl fullWidth>
+            <p>Parlour <strong style={{ color: "red" }} > *</strong></p>
+            <Input onChange={e => {
+                let sittingNumber = e.target.value
+                spaceInfo.sittingNumber = sittingNumber
+                changeRoomContext({ ...roomData, spaceInfo })
+            }} value={spaceInfo.sittingNumber}
+                placeholder="No of parlour" type="number"
+                className={classes.textField} />
+        </FormControl>
+
     </>
 }
 
 function BathroomNumber({ }) {
     let ctx = useContext(RoomContext)
-    let spaceInfo = ctx.spaceInfo
+    let { roomData, changeRoomContext } = ctx
+    let { spaceInfo } = roomData
     let classes = useStyles()
-    let [bathroomNumberState, changeBathroomNumberState] = useState("")
     return <>
-        <RoomContext.Provider value={spaceInfo} >
-            <FormControl fullWidth>
-                <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
-                <Input onChange={e => {
-                    let bathroomNumber = e.target.value
-                    spaceInfo.bathroomNumber = bathroomNumber
-                    changeBathroomNumberState(bathroomNumber)
-                }} value={bathroomNumberState}
-                    placeholder="No of bathroom" type="number"
-                    className={classes.textField} />
-            </FormControl>
-        </RoomContext.Provider>
+        <FormControl fullWidth>
+            <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
+            <Input onChange={e => {
+                let bathroomNumber = e.target.value
+                spaceInfo.bathroomNumber = bathroomNumber
+                changeRoomContext({ ...ctx })
+            }} value={spaceInfo.bathroomNumber}
+                placeholder="No of bathroom" type="number"
+                className={classes.textField} />
+        </FormControl>
     </>
 }
 
-function AddImageView({ }) {
+let SuccessSavedRoom = ({ openDialog, hookChangeResponseView }) => {
+    let [open, setOpen] = useState(openDialog)
     let ctx = useContext(RoomContext)
-    let room_pics = ctx.room_pics
-    let [urlsState, changeUrlsState] = useState(room_pics)
-    console.log(ctx)
+    let handleClose = (e) => {
+        ctx.changeRoomContext({ ...roomDataDefault })
+        hookChangeResponseView(null)
+    }
     return <>
-        <RoomContext.Provider value={room_pics} >
-            <Container>
-                <Grid justify="center" container >
-                    {urlsState.length > 0 ? <Caroo imgObjUrls={urlsState} /> :
-                        <Image width={300} height={300} src="/camera_placeholder.jpg" />}
-                </Grid>
-            </Container>
-            <Container style={{ width: 300, marginTop: 20 }} >
-                <Grid justify="space-evenly" container >
-                    <AddBtn changeImgUrlObj={changeUrlsState} index={0} urls={urlsState} />
-                    <AddBtn changeImgUrlObj={changeUrlsState} index={1} urls={urlsState} />
-                    <AddBtn changeImgUrlObj={changeUrlsState} index={2} urls={urlsState} />
-                    <AddBtn changeImgUrlObj={changeUrlsState} index={3} urls={urlsState} />
-                    <AddBtn changeImgUrlObj={changeUrlsState} index={4} urls={urlsState} />
-                </Grid>
-            </Container>
-        </RoomContext.Provider>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">Room Ad Success</DialogTitle>
+            <DialogContent>
+                <Container >
+                    <h3 style={{ textAlign: "center" }} >Successful!</h3>
+                    <h3 style={{ textAlign: "center" }} >
+                        <CheckCircle fontSize="large" style={{ color: "green" }} />
+                    </h3>
+                    <h4 style={{ textAlign: "center" }}>A Room Ad Has Been Successfully Added</h4>
+                </Container>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    Ok
+          </Button>
+            </DialogActions>
+        </Dialog>
     </>
 }
 
-function Caroo({ imgObjUrls = [] }) {
+let FailSavedRoom = ({ openDialog, hookChangeResponseView }) => {
+    let [open, setOpen] = useState(openDialog)
+    let handleClose = (e) => hookChangeResponseView(null)
     return <>
-        <Carousel>
-            {imgObjUrls.map((imgObj, index) => imgObj ? <Carousel.Item key={index} >
-                <img width={300} height={300} src={getImgUrl(imgObj)} />
-            </Carousel.Item> : null)}
-        </Carousel>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">Room Ad Creation Error</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Unable to register. Please reload page.
+          </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    Close
+          </Button>
+            </DialogActions>
+        </Dialog>
     </>
 }
 
-function AddBtn({ changeImgUrlObj, index, urls }) {
-    let [isPic, changeIsPic] = useState(urls[index] ? true : false)
-    return <>
-        <label className="w3-btn" style={{
-            backgroundColor: isPic ? "#60941a" : "rgba(189, 195, 199, 1)",
-        }}>
-            <Input type="file" onChange={
-                async e => {
-                    try {
-                        let files = e.target.files
-                        let { data: dataUploaded, err } = await uploader({
-                            files,
-                            ref: "file",
-                            refId: index,
-                            field: "room_pics",
-                            source: "upload",
-                        })
-                        if (dataUploaded) {
-                            urls[index] = dataUploaded[0]
-                            changeIsPic(true)
-                            changeImgUrlObj([...urls])
-                        }
-
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-            } style={{ display: "none" }} />
-            <span>
-                <FontAwesomeIcon size="1x" icon={faPlus}
-                    style={{
-                        color: isPic ? "white" : "#60941a",
-                    }} />
-            </span>
-        </label>
-    </>
-}
 export { RoomForm }

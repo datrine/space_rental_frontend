@@ -12,7 +12,7 @@ export default function GenderSelect({ genderProps, handleChangeProps }) {
         { value: "nonbinary", text: "Non Binary" },
     ]
     return <>
-        <FormControl fullWidth style={{ marginBottom: "30px" }}>
+        <FormControl fullWidth style={{ marginBottom: "10px" }}>
             <h5 style={{ color: "black", textAlign:"center"}}>Select Gender</h5>
             <Select
                 displayEmpty
@@ -22,7 +22,7 @@ export default function GenderSelect({ genderProps, handleChangeProps }) {
                     onChange: e => {
                         changeGenderState(e.target.value)
                         handleChangeProps(e)
-                    }, value: genderProps, name: "gender"
+                    }, value: genderState, name: "gender"
                 }}
             >
                 {genders.map(({ value, text }, index) => <MenuItem

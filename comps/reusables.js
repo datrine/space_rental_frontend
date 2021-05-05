@@ -174,29 +174,44 @@ function LogoSVG({ roofColor = "white", bodyColor = "white" }) {
 
 function Loading({ state }) {
     let view = null
-    const animProps = useSpring({ opacity: 1, from: { opacity: 0 } })
+    const animProps = useSpring({ opacity: 1, from: { opacity: 0 } });
+    
+    switch (state) {
+        //if state===Loading
+        case 1:
+            view = <animated.div style={animProps} > <Container name="" fullWidth style={{
+                backgroundColor: "rgba(0,0,0,0.5)"
+            }} >
+                <Grid container justify="center" alignItems="center" style={{ height: "100%" }} >
+                    <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
 
-    //if state===Loading
-    if (state === 1) {
-        view = <animated.div style={animProps} > <Container name="" fullWidth style={{
-            backgroundColor: "rgba(0,0,0,0.5)"
-        }} >
-            <Grid container justify="center" alignItems="center" style={{ height: "100%" }} >
-                <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
+                </Grid>
+            </Container>
+            </animated.div>
+            break;
+        case 2:
+            view = <Container fullWidth style={{
+                backgroundColor: "rgba(0,0,0,0.8)"
+            }} >
+                <Grid container justify="center" alignItems="center" style={{ height: "100vh" }}>
+                    <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
+                </Grid>
+            </Container>
+            break;
+        //same as state==Loading
+        default:
+            view = <animated.div style={animProps} > <Container name="" fullWidth style={{
+                backgroundColor: "rgba(0,0,0,0.5)"
+            }} >
+                <Grid container justify="center" alignItems="center" style={{ height: "100%" }} >
+                    <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
 
-            </Grid>
-        </Container>
-        </animated.div>
+                </Grid>
+            </Container>
+            </animated.div>
+            break;
     }
-    else if (state === 2) {
-        view = <Container fullWidth style={{
-            backgroundColor: "rgba(0,0,0,0.8)"
-        }} >
-            <Grid container justify="center" alignItems="center" style={{ height: "100vh" }}>
-                <LogoSVG roofColor={"rgba(96,148,26,0.7)"} bodyColor={"rgba(96,148,26,0.7)"} />
-            </Grid>
-        </Container>
-    }
+
     return <>
         {view}
     </>
@@ -265,13 +280,13 @@ function MySelect(props = {
             <h5 style={{ color: "black", }}>{labelTitle}</h5>
             <Select id={nameProps}
                 value={valueProps}
-                onChange={e=>{
+                onChange={e => {
                     console.log(e.target.value)
                     return handleChangeProps(e)
                 }}
                 displayEmpty
                 className={classes.textField}
-                inputProps={{ 'aria-label': 'Without label'}}
+                inputProps={{ 'aria-label': 'Without label' }}
                 style={stylesProps}
 
             >
@@ -295,11 +310,11 @@ function MySelect(props = {
  * @returns 
  */
 function MyInput(props = {
-    labelTitle: "", valueProps,placeholder, type, selectMenuArr, required, stylesProps: undefined,
+    labelTitle: "", valueProps, placeholder, type, selectMenuArr, required, stylesProps: undefined,
     handleChangeProps: (e) => {
     }
 }) {
-    let { labelTitle, valueProps,placeholder, selectMenuArr, stylesProps, type, handleChangeProps } = props
+    let { labelTitle, valueProps, placeholder, selectMenuArr, stylesProps, type, handleChangeProps } = props
     let classes = useStyles()
     return <>
 
@@ -369,5 +384,5 @@ let FailReg = ({ openDialog, hookChangeResponseView }) => {
 
 export {
     ItemTemplate, SearchMiniApp, View, LogoSVG, ToTheTop, Loading,
-    SessionState, MySelect, MyInput,SuccessReg,FailReg
+    SessionState, MySelect, MyInput, SuccessReg, FailReg
 }

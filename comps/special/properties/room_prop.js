@@ -4,38 +4,48 @@ import {
     Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Input, InputAdornment,
     makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow
 } from "@material-ui/core";
-import { useFormik } from "formik";
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
-import { FailReg, MySelect, SuccessReg } from "../../reusables";
 import View from "../../view";
 import { ProfileMenu } from "../dashboard/resuables";
 import { useStyles } from "../profile/styles";
-import { AddImageView, FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv, SpaceRulesDiv } from "./prop_reusable";
 import { RoomForm } from "./roomform";
 import AlignItemsList from "./roomlist";
-import CustomPaginationActionsTable from "./tables";
-let roomData = {
-    spaceInfo:{},
-    flatmateInfo:{},
-    spaceRules:[],
-    locationInfo:{},
-    room_pics:[],
-    spaceAvailabiltyInfo:{},
-}
-export const RoomContext = React.createContext(roomData)
+
+export let roomDataDefault = {
+    nameOfSpace: "",
+    descOfSpace: "",
+    spaceInfo: {
+        houseType: "", spaceCategory: "", spaceCondition: "",
+        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
+    },
+    flatmateInfo: [],
+    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
+    locationInfo: {},
+    room_pics: [],
+    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
+    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
+    spaceAmenities: [{ id: "", desc: "Shared Living Room" }]
+};
+
+export const RoomContext = React.createContext({ roomData: roomDataDefault, changeRoomContext: () => { } });
+
 function RoomProps(params) {
+    let ctx = useContext(RoomContext)
+    let [roomDataState, changeContext] = useState({ ...ctx.roomData })
     return <>
-        <View mobileView={<MobileView />} />
+        <RoomContext.Provider value={{ roomData: roomDataState, changeRoomContext: changeContext }} >
+            <View mobileView={<MobileView />} />
+        </RoomContext.Provider>
     </>
 }
 
 function MobileView() {
     return <>
-            <ProfileMenu />
-            <Banner />
-            <ControlPanel />
-            <RoomDetails />
+        <ProfileMenu />
+        <Banner />
+        <ControlPanel />
+        <RoomDetails />
     </>
 }
 
@@ -68,7 +78,8 @@ function ControlPanel(params) {
                 } else {
                     changeRoomListDialog(true)
                 }
-            }}  >Show Room List</Button> : null}
+            }} style={{backgroundColor:"#60941a",
+            marginLeft:"10px",color:"white"}} >Show Room List</Button> : null}
         </Container>
         <RoomList openRoomListDialog={openRoomListDialog} hookRoomListDialog={changeRoomListDialog} />
     </>
@@ -91,15 +102,12 @@ function RoomDetails({ roomInfo, changeRoomInfo }) {
 }
 
 function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
-
     let classes = useStyles()
     let templates = [
         { value: "create", text: "Create" },
         { value: "edit", text: "Edit" },
     ]
     return <>
-        <Container style={{ marginBottom: "10px", display: "inline-block" }}>
-            <h5 style={{ color: "black", }}>Select Mode</h5>
             <Select
                 displayEmpty
                 className={classes.textField}
@@ -114,7 +122,7 @@ function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
                 {templates.map(({ value, text }, index) => <MenuItem
                     key={index} value={value} >{text}</MenuItem>)}
             </Select>
-        </Container>
+        
 
     </>
 
@@ -122,7 +130,6 @@ function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
 
 let RoomList = ({ openRoomListDialog, hookRoomListDialog }) => {
     let handleClose = (e) => {
-        console.log("ijuijjioj")
         hookRoomListDialog(false)
     }
     return <>
@@ -134,7 +141,7 @@ let RoomList = ({ openRoomListDialog, hookRoomListDialog }) => {
             <DialogTitle id="alert-dialog-title">Rooms</DialogTitle>
             <DialogContent>
                 <Container style={{ padding: 0 }} >
-                    <AlignItemsList />
+                    <AlignItemsList hookRoomListDialog={hookRoomListDialog} />
                 </Container>
             </DialogContent>
             <DialogActions>
