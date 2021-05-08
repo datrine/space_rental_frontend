@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { PropIndex } from '../../comps/special/properties/prop_index';
+import { PostAdsIndex } from '../../comps/special/properties/postAdsIndex';
 
 let PostAds = ({ csrfToken, callbackUrl, ...otherProps }) => {
     //console.log("here in login")
     return <>
-        <PropIndex csrfToken={csrfToken} callbackUrl={callbackUrl} />
+        <PostAdsIndex csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
 

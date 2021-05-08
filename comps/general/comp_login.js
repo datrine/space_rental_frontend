@@ -6,9 +6,10 @@ import { AppBar, Container, Tab, Typography, Tabs, TextField, makeStyles, Box, F
 import { useFormik } from 'formik';
 import { TabPanel } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Email, Person, Visibility } from '@material-ui/icons';
+import { Email, Person, Visibility, VisibilityOff } from '@material-ui/icons';
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { errorsLibrary } from '../../utils/strapiErrors';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -33,8 +34,11 @@ const useStyles = makeStyles((theme) => ({
 let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
     let classes = useStyles()
     let router = useRouter()
+    let [showPassword, changeShowPasword] = useState(false)
+    let [isFailed, changeIsFailed] = useState(false)
     // console.log(router.query)
-    let { view } = router.query
+    let { err, errMsg } = router.query
+    errMsg =err&& errorsLibrary[err]?.msg || errMsg || "Error: please try again"
     let formik = useFormik({
         initialValues: {
             emailOrUsername: "",
@@ -43,11 +47,17 @@ let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
         onSubmit: (values, actions) => {
             (async () => {
                 let { emailOrUsername, password } = values
-                await signIn("credentials", {
-                    emailOrUsername,
-                    password,
-                    callbackUrl: callbackUrl ? callbackUrl : "/dashboard"
-                })
+                changeIsFailed(false)
+                try {
+                    await signIn("credentials", {
+                        emailOrUsername,
+                        password,
+                        callbackUrl: callbackUrl ? callbackUrl : "/dashboard"
+                    })
+                    console.log("Signed in...")
+                } catch (error) {
+                    changeIsFailed(true)
+                }
             })()
         }
     })
@@ -56,7 +66,6 @@ let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
             <form className="container-fluid mt-3" onSubmit={
                 e => {
                     e.preventDefault()
-                    console.log("logging...")
                     return formik.handleSubmit(e)
                 }} style={{ maxWidth: "350px" }} >
                 <FormControl fullWidth>
@@ -70,31 +79,29 @@ let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
                         className={classes.textField} />
                 </FormControl>
 
-
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.password} fullWidth
                         startAdornment={<InputAdornment position="start">
-                            <button type="button" className="btn p-0" >
-                                <Visibility />
+                            <button onClick={
+                                e => changeShowPasword(!showPassword)
+                            } type="button" className="btn p-0" >
+                                {showPassword ? <Visibility /> : <VisibilityOff />}
                             </button>
                         </InputAdornment>}
-                        name="password" placeholder="Password..." type="password"
+                        name="password" placeholder="Password..." type={showPassword ? "text" : "password"}
                         className={classes.textField} />
                 </FormControl>
-                <p>
-                    {view === "pass_user_err" ? <span className="w3-text-red" >
-                        Username or password error</span> : null}</p>
-                <p> {view === "network_err" ? <span className="w3-text-red" >
-                    Network error</span> : null}</p>
 
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={!formik.isValid} size="large" type="submit" variant="contained"
                         color="primary" >
-                        {formik.isSubmitting ? <FontAwesomeIcon spin icon={faSpinner} /> : "Login"} </Button>
+                        {(!formik.isSubmitting || isFailed) ?
+                            "Login" : <FontAwesomeIcon spin icon={faSpinner} />} </Button>
                 </p>
+                <p style={{ width: "100%", textAlign: "center", color: "red" }}>{errMsg}</p>
             </form>
 
-            <div className="container-fluid mt-2" style={{ maxWidth: "400px", padding: 0 }} >
+            <div className="container-fluid mt-2" style={{ maxWidth: "400px", padding: 0, display: "none" }} >
                 <div
                     style={{
                         width: "90%", marginLeft: "10%", paddingLeft: "10px",

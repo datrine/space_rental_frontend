@@ -11,6 +11,7 @@ import { getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
 import 'react-day-picker/lib/style.css';
 import startAnalytics from '../utils/analytics'
+//import {isBucketExist} from "../utils/logger"
 
 export function reportWebVitals(metric) {
   //console.log(metric)
@@ -43,7 +44,7 @@ function MyApp({ Component, pageProps }) {
 
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats","postads"]
 }
 
 async function mySessionFn(hookChangeSessionState) {

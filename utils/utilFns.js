@@ -4,6 +4,8 @@ import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
 import { uniqueId } from "lodash";
 
+export let appColor="#60941a"
+
 function stateMgr() {
     let loadingState = {
         None: 0,
@@ -219,7 +221,6 @@ let getImgUrl = (obj, format) => {
     let imgObj = imgObjProcessor(obj, format);
     return imgObj.url;
 }
-
 
 let buildDateInfo = ({ dateMode, singleDatesStrings, dateRange }) => {
     if (dateMode === "asRange") {

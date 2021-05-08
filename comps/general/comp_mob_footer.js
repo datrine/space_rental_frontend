@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AlarmOn, Dashboard } from '@material-ui/icons';
 import React from 'react';
+import { appColor } from '../../utils/utilFns';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         borderWidth: 0,
         backgroundColor: "transparent",
+        color:"#60942e",
         width: 50,
         alignItems: "center"
     },
@@ -43,13 +45,17 @@ let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
                 <span><FontAwesomeIcon icon={faHome} /></span>
                 <span style={{ fontSize: "12px" }}>Home</span>
             </Box>
-            <Link href="/dashboard"><Box component="button" className={classes.btnStacked}>
+            <Link href="/dashboard"><Box component="button" className={classes.btnStacked} >
                 <span><Dashboard /></span>
                 <span style={{ fontSize: "12px" }}>Dashboard</span>
-            </Box></Link>
-            <Box component="button" className={classes.btnStacked}>
+            </Box>
+            </Link>
+
+            <Link href="/postads"><Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faPlusCircle} className="fa-3x" /></span>
             </Box>
+            </Link> 
+
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
                 <span style={{ fontSize: "12px" }}>Realty</span>

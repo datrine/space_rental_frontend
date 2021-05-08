@@ -9,7 +9,7 @@ import {
 import { useFormik } from 'formik';
 import { TabPanel } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Email, Label, PersonAdd, Phone, Visibility } from '@material-ui/icons';
+import { CheckCircleOutline, Email, Label, PersonAdd, Phone, Visibility, VisibilityOff } from '@material-ui/icons';
 import validator from 'validator';
 import { fetchError, registerValidator } from '../../utils/validators';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
 
 let Comp_Register = ({ ...propsFromParent }) => {
     let classes = useStyles()
+    let [showPassword, changeShowPasword] = useState(false)
+    let [showRePass, changeShowRePass] = useState(false)
+    let [isFailed, changeIsFailed] = useState(false)
     let formik = useFormik({
         initialValues: {
             email: "",
@@ -59,20 +62,27 @@ let Comp_Register = ({ ...propsFromParent }) => {
         },
         onSubmit: (values, actions) => {
             (async () => {
-                let res = await fetch("/api/register", {
-                    method: "POST",
-                    body: JSON.stringify(values)
-                });
-                if (res.ok) {
-                    let data = await res.json();
-                    let { err, user, jwt } = data;
-                    if (err) {
-                        handleFail(err)
-                    }
-                    if (user) {
-                        handleSuccess(user);
-                    }
+                try {
+                    let res = await fetch("/api/register", {
+                        method: "POST",
+                        body: JSON.stringify(values)
+                    });
+                    if (res.ok) {
+                        let data = await res.json();
+                        let { err, user} = data;
+                        if (err) {
+                            handleFail(err)
+                            changeIsFailed(true)
+                        }
+                        if (user) {
 
+                            handleSuccess(user);
+                        }
+
+                    }
+                } catch (error) {
+                    console.log(error)
+                    changeIsFailed(true)
                 }
             })()
         }
@@ -86,7 +96,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
         let view = <FailReg hookChangeResponseView={changeResponseView} />
         changeResponseView(view)
     }
-
+    let isMinimal = !!(formik.values.email && formik.values.username && formik.values.password);
     return <>
         <Container>
             <form className="container-fluid mt-2" onSubmit={
@@ -94,13 +104,13 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     e.preventDefault()
                     console.log("registering")
                     return formik.handleSubmit(e)
-                }} >
+                }} style={{ maxWidth: "350px" }} >
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.email}
                         placeholder="Email..." fullWidth
                         startAdornment={
                             <InputAdornment position="start">
-                                <Email /></InputAdornment>
+                                <Email style={{ color: formik?.errors?.email ? "red" : "green" }} /></InputAdornment>
                         } type="email" name="email"
                         className={classes.textField} />
                 </FormControl>
@@ -113,9 +123,10 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         placeholder="Username..." fullWidth
                         startAdornment={
                             <InputAdornment position="start">
-                                <PersonAdd /></InputAdornment>
-                        } name="username"
-                        className={classes.textField} />
+                                <PersonAdd
+                                    style={{ color: formik?.errors?.username ? "red" : "green" }} />
+                            </InputAdornment>
+                        } name="username" className={classes.textField} />
                 </FormControl>
                 <p>
                     {formik?.errors?.username ? <span className="w3-text-red" >
@@ -124,7 +135,8 @@ let Comp_Register = ({ ...propsFromParent }) => {
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.phonenum} fullWidth
                         startAdornment={<InputAdornment position="start">
-                            <Phone /></InputAdornment>}
+                            <Phone style={{ color: formik?.errors?.phonenum ? "red" : "green" }} />
+                        </InputAdornment>}
                         name="phonenum" placeholder="Phone number..."
                         className={classes.textField} />
                 </FormControl>
@@ -135,11 +147,18 @@ let Comp_Register = ({ ...propsFromParent }) => {
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.password} fullWidth
                         startAdornment={<InputAdornment position="start">
-                            <button type="button" className="btn p-0" >
-                                <Visibility />
+                            <button onClick={
+                                e => {
+                                    changeShowPasword(!showPassword)
+                                }
+                            } type="button" className="btn p-0" >
+                                {showPassword ? <VisibilityOff
+                                    style={{ color: formik?.errors?.password ? "red" : "green" }} /> :
+                                    <Visibility style={{ color: formik?.errors?.password ? "red" : "green" }} />}
                             </button>
                         </InputAdornment>}
-                        name="password" placeholder="Password..." type="password"
+                        name="password" placeholder="Password..."
+                        type={showPassword ? "text" : "password"}
                         className={classes.textField} />
                 </FormControl>
                 <p>
@@ -149,9 +168,16 @@ let Comp_Register = ({ ...propsFromParent }) => {
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.repass} fullWidth
                         startAdornment={<InputAdornment position="start">
-                            <button type="button" className="btn p-0" >
-                                <Visibility /></button> </InputAdornment>}
-                        name="repass" placeholder="Repeat password..." type="password"
+                            <button onClick={
+                                e => {
+                                    changeShowRePass(!showRePass)
+                                }
+                            } type="button" className="btn p-0" >
+                                {showRePass ? <VisibilityOff
+                                    style={{ color: formik?.errors?.repass ? "red" : "green" }} /> :
+                                    <Visibility style={{ color: formik?.errors?.repass ? "red" : "green" }} />}</button> </InputAdornment>}
+                        name="repass" placeholder="Repeat password..."
+                        type={showRePass ? "text" : "password"}
                         className={classes.textField} />
                 </FormControl>
                 <p>
@@ -159,12 +185,13 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         {formik.errors.repass}</span> : null}</p>
 
                 <p style={{ width: "100%", textAlign: "center" }}>
-                    <Button disabled={!formik.isValid} type="submit" variant="contained"
-                        color="primary" >{formik.isSubmitting?<FontAwesomeIcon
-                         spin icon={faSpinner} />:"Register"} </Button>
+                    <Button disabled={(isMinimal && !formik.isValid)} type="submit" variant="contained"
+                        color="primary" >{
+                            (!formik.isSubmitting || isFailed) ? "Register" : <FontAwesomeIcon
+                                spin icon={faSpinner} />} </Button>
                 </p>
             </form>
-            <div className="container-fluid mt-2">
+            <div className="container-fluid mt-2" style={{ display: "none" }}>
                 <div
                     style={{
                         width: "100%", paddingLeft: "10px",
@@ -221,7 +248,6 @@ let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
         </Dialog>
     </>
 }
-
 
 let FailReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)

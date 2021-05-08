@@ -42,7 +42,7 @@ function OpenedMenu() {
                     </Accordion>
                 </Container>
 
-                <Container>
+                <Container style={{display:"none"}} >
                     <Accordion square={true} style={{ marginTop: 10 }} >
                         <AccordionSummary style={{ padding: 0 }}
                             expandIcon={<ExpandMoreIcon />}
@@ -77,6 +77,15 @@ function OpenedMenu() {
                 </Container>
 
                 <Container style={{ padding: 20, paddingTop: 10, paddingBottom: 5 }}>
+                    <Grid container style={{ paddingTop: 0, marginTop: 0 }}>
+                        <Grid item container xs={2} style={{ paddingTop: 0, marginTop: 0 }}>
+                            <Settings />
+                        </Grid>
+                        <Grid item container xs={10}><h4><a href="/postads" >Post Ads</a></h4></Grid>
+                    </Grid>
+                </Container>
+
+                <Container style={{ padding: 20, paddingTop: 5, paddingBottom: 5 }}>
                     <Grid container>
                         <Grid item container xs={2}>
                             <Chat />

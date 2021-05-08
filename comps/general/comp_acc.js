@@ -10,6 +10,9 @@ import { Comp_Mob_Footer } from './comp_mob_footer';
 import { Comp_Mob_Header } from './comp_mob_menu';
 import { Comp_Register } from './comp_register';
 import { Comp_Logout } from './comp_logout';
+import { LogoSVG } from '../reusables';
+import { appColor } from '../../utils/utilFns';
+import Image from 'next/image';
 
 let Comp_Account = ({ ...propsFromParent }) => {
     return <>
@@ -31,28 +34,35 @@ function AccountView({ callbackUrl, ...props }) {
     let [tabValue, changeTabValue] = useState(props.tabValue || "login")
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
-            <Typography component="label" variant="h3"
+            <h4 style={{ textAlign: "center", marginBottom: "0px" }}>
+                <Image src="/myspace_32x32.svg" height={50} width={50} />
+            </h4>
+            <h3
                 style={{
-                    borderBottomStyle: "solid", borderBottomWidth: "3px",
-                    textAlign: "center", paddingBottom: "10px"
+                    textAlign: "center", paddingBottom: "5px", marginBottom: "0px", color: appColor
                 }}>
                 <a>MySpace4You</a>
-            </Typography>
-            <br />
+            </h3>
 
             <Tabs value={tabValue} indicatorColor="primary" onChange={
                 (e, value) => {
                     changeTabValue(value);
                 }
             } centered >
-                <Tab label="Sign in" value="login" />
-                <Tab label="Register" value="register" />
+                <Tab label="Sign in" value="login"
+                    style={{ color: tabValue === "login" ? "green" : "black" }} />
+                <Tab label="Register" value="register"
+                    style={{ color: tabValue === "register" ? "green" : "black" }} />
             </Tabs>
             <TabPanel value={tabValue} index="login" >
-                <div className="container-fluid" ><Comp_Login callbackUrl={callbackUrl} /></div>
+                <div className="container-fluid" >
+                    <Comp_Login callbackUrl={callbackUrl} />
+                </div>
             </TabPanel>
             <TabPanel value={tabValue} index="register" >
-                <div className="container-fluid mb-5" ><Comp_Register /></div>
+                <div className="container-fluid mb-5" >
+                    <Comp_Register />
+                </div>
             </TabPanel>
         </Container>
     </>

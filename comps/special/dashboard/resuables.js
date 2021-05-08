@@ -9,8 +9,10 @@ import { OpenedMenu } from "./opened_menu"
 function ProfileMenu() {
     let [isCollapsed, toggleCollapsed] = useState(true)
     return <>
-        <Container style={{ position: "fixed", top: 0, padding: 0, zIndex: 1000, 
-        backgroundColor: "white" }}>
+        <Container style={{
+            position: "fixed", top: 0, padding: 0, zIndex: 1000,
+            backgroundColor: "white"
+        }}>
             <Grid container style={{ padding: 0, }}>
                 <Grid xs={isCollapsed ? 2 : 12} item container >
                     <IconButton onClick={
@@ -27,8 +29,7 @@ function ProfileMenu() {
                     <span style={{ paddingRight: 10, fontWeight: "bolder", color: "#60941a" }} >MySpace4You</span>
                 </Grid> : null}
             </Grid>
-       
-        {isCollapsed ? null : <OpenedMenu />} 
+            {isCollapsed ? null : <OpenedMenu />}
         </Container>
     </>
 }

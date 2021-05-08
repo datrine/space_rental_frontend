@@ -13,6 +13,7 @@ import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-sv
 import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
 import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
 import { LogoSVG } from '../reusables';
+import SearchApp from '../searchApp';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -40,12 +41,13 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
     return <>
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
-                <Image src="/logo.png" height={30} width={30} /></Box>
+                <Image src="/myspace_32x32.svg" height={30} width={30} />
+            </Box>
             <SearchBtn />
             <Box component="button" className={classes.btnStacked}>
                 {session ? <Link href="/account"><AccountCircle style={{ color: "green" }} />
-                </Link> : 
-                <Link href="/account"><AccountCircle style={{ color: "grey" }} /></Link>
+                </Link> :
+                    <Link href="/account"><AccountCircle style={{ color: "grey" }} /></Link>
                 }  </Box>
             <Box component="button" className={classes.btnStacked} >
                 <HamburgerMenu hookChangeExpandedMenu={changeExpandedMenu} expandedProps={expandedMenuState} />
@@ -58,9 +60,16 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
 let SearchBtn = () => {
     let classes = useStyles();
     let [viewState, changeViewState] = useState(false);
-    return <><TextField size="small" variant="outlined" InputLabelProps={{ shrink: true }} style={{
-        visibility: viewState ? "hidden" : "visible", marginRight: "10px", marginTop: "10px"
-    }} />
+    let [showSearchAppState, changeShowSearchAppState] = useState(false);
+    return <>
+        <TextField onFocus={
+            e => {
+                changeShowSearchAppState(true)
+                e.currentTarget.blur()
+            }
+        } size="small" variant="outlined" InputLabelProps={{ shrink: true }} style={{
+            visibility: viewState ? "hidden" : "visible", marginRight: "10px", marginTop: "10px"
+        }} />
         <Box onClick={
             e => {
                 changeViewState(!viewState)
@@ -68,6 +77,10 @@ let SearchBtn = () => {
         } component="button" className={classes.btnStacked}>
             <span><Search /></span>
         </Box>
+        {showSearchAppState ?
+            <SearchApp openSearchApp={showSearchAppState}
+                hookOpenSearchApp={changeShowSearchAppState} /> : null
+        }
     </>
 }
 

@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import knex from "../../../utils/conn"
 import Url from "url"
+import { errorsLibrary } from '../../../utils/strapiErrors'
 
 const options = {
     // Configure one or more authentication providers
@@ -16,7 +17,9 @@ const options = {
                 password: { label: "Password", type: "password" }
             },
             authorize: async (credentials) => {
-                console.log(credentials)
+                //console.log(credentials)
+                const myUrl = new URL(credentials.callbackUrl, process.env.SELF_HOST_URL)
+                myUrl.searchParams.delete("err")
                 // Add logic here to look up the user from the credentials supplied
                 const userFn = async ({ strapiToken, strapiProfileId, username, emailOrUsername, password, role }) => {
                     // You need to provide your own logic here that takes the credentials
@@ -52,10 +55,10 @@ const options = {
                                     })
                                 });
                         }
-                        let { user, jwt, err, errType } = await res.json()
+                        let { user, jwt, err, ...restOf } = await res.json()
                         if (err) {
-                            console.log(err)
-                            return { err, errType }
+                            //console.log(err)
+                            return { err, ...restOf }
                         }
                         if (user) {
                             user = { ...credentials, ...user, jwt }
@@ -65,31 +68,31 @@ const options = {
                         throw error;
                     }
                 }
-                if (credentials) {
+                if (sanitizeLogin(credentials)) {
                     // Any object returned will be saved in `user` property of the JWT
                     return new Promise(async (res, rej) => {
                         try {
-                            const myUrl = new URL(credentials.callbackUrl, process.env.SELF_HOST_URL)
-                            myUrl.searchParams.delete("view")
                             credentials.callbackUrl = myUrl.href
-                            let { user, err, errType } = await userFn(credentials)
+                            let { user, err, errType, errMsg, statusCode, errObj } = await userFn(credentials)
                             if (user) {
                                 if (!user.jwt) user.jwt = credentials.strapiToken
                                 delete credentials.strapiToken
                                 delete credentials.strapiProfileId
                                 res(user)
                             } else if (err) {
-                                console.log(errType)
-                                if (errType === "Parameter_Error") {
-                                    const myUrl = new URL(credentials.callbackUrl)
-                                    myUrl.searchParams.set("view", "pass_user_err")
-                                    rej(myUrl.href)
+                                const myUrl = new URL(credentials.callbackUrl)
+                                if (errObj) {
+                                    for (const key in errObj) {
+                                        let paramValue =
+                                            Object.keys(errorsLibrary).find(ky => ky === key) || key
+                                        myUrl.searchParams.set("err", paramValue)
+                                        myUrl.searchParams.set("errMsg", errObj[key])
+                                    }
+                                } else {
+                                    myUrl.searchParams.set("err", errType)
+                                    myUrl.searchParams.set("errMsg", errMsg)
                                 }
-                                if (errType === "Network") {
-                                    const myUrl = new URL(credentials.callbackUrl)
-                                    myUrl.searchParams.set("view", "network_err")
-                                    rej(myUrl.href)
-                                }
+                                rej(myUrl.href)
                             }
                         } catch (error) {
                             console.log(error)
@@ -97,8 +100,9 @@ const options = {
                         }
                     })
                 } else {
+                    myUrl.searchParams.set("err", "login_params_missing")
                     // If you return null or false then the credentials will be rejected
-                    return Promise.resolve("/")
+                    return Promise.reject(myUrl.href)
                     // You can also Reject this callback with an Error or with a URL:
                     // return Promise.reject(new Error('error message')) // Redirect to error page
                     // return Promise.reject('/path/to/redirect')        // Redirect to a URL
@@ -155,6 +159,14 @@ const options = {
     },
     // A database is optional, but required to persist accounts in a database
     //database: process.env.DATABASE_URL,
+}
+
+function sanitizeLogin(credentials) {
+    let { strapiToken, strapiProfileId, username, emailOrUsername, password, role } = credentials;
+    console.log(credentials)
+    let value=(strapiToken && strapiProfileId) || (emailOrUsername && password);
+    console.log(value?"Parameters are complete":"Parameters are missing")
+    return value
 }
 
 export default (req, res) => NextAuth(req, res, options)
