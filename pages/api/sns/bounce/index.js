@@ -1,4 +1,4 @@
-import { middlewareRunner } from "../../utils/utilFns"
+import { middlewareRunner } from "../../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
 const {validatePayload} = require('verify-aws-sns-signature');
