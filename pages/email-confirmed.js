@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { appColor, screenMgr } from "../utils/utilFns"
 import { ToTheTop } from '../comps/reusables';
 import { useRef } from 'react';
+import { useRouter } from 'next/router'
 const DynamicPCComp = dynamic(() => Promise.resolve(PCView));
 const DynamicMobileComp = dynamic(() => Promise.resolve(MobileView));
 

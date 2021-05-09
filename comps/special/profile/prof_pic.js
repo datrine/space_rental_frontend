@@ -2,19 +2,27 @@ import { faImage } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Container, FormControl, Grid, Input } from "@material-ui/core"
 import { signIn, useSession } from "next-auth/client"
-import { generalPutAPI, uploader } from "../../../utils/utilFns"
+import { useState } from "react"
+import { generalPutAPI, getImgUrl, stateMgr, uploader } from "../../../utils/utilFns"
 
+let state = stateMgr()
 export default function ProfilePicture({ }) {
     let [session, loading] = useSession()
+    let [loadingState, changeLoadingState] = useState(state)
     if (session) {
         let { user } = session
-        let prof_pic = user.prof_pic.formats.large.url || "/user_profile.png"
+        let prof_pic = getImgUrl(user.prof_pic) || "/user_profile.png"
         return <>
             <title>Profile</title>
             <FormControl>
                 <Container>
                     <Grid direction="column" container >
-                        <img style={{ borderRadius: "50%" }} src={prof_pic || "/user_profile.png"} width={250} height={250} />
+                        <img onLoad={
+                            e=>{
+                                console.log(e)
+                            }
+                        } style={{ borderRadius: "50%" }} src={prof_pic || "/user_profile.png"} 
+                        width={250} height={250} />
                         <span style={{ marginTop: 10 }}>
                             <label className="w3-green w3-btn"
                                 style={{
@@ -63,7 +71,8 @@ export default function ProfilePicture({ }) {
                 </Container>
             </FormControl>
         </>
-
     }
 }
+
+
 

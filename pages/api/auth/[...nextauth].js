@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import knex from "../../../utils/conn"
 import Url from "url"
-import { errorsLibrary } from '../../../utils/strapiErrors'
+import { errorsLibrary } from '../../../utils/errorLib'
 
 const options = {
     // Configure one or more authentication providers

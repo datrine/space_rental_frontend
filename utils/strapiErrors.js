@@ -1,7 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-let strapiErrors =(response, fetcher) => {
+let strapiErrors = (response, fetcher) => {
     let statusCode;
     let errors = []
     if (fetcher === "axios") {
@@ -32,26 +32,23 @@ let processStatus = async (status) => {
 }
 
 let processAxiosErrMsgs = (res) => {
-    let mergedErrors = _.merge(res.data.data, res.data.message)
     let errObj = {}
-    mergedErrors.forEach(msgObj => {
-        msgObj.messages.forEach(obj => {
-            let { id, message } = obj
-            errObj[id] = message
+    let { data } = res;
+    if (data.statusCode === 403) {
+        errObj["Access.Forbidden"] = "Unauthorized to access resource."
+    }
+    if (typeof data?.data === "object" && typeof data?.message === "object") {
+        let mergedErrors = _.merge(data.data, data.message)
+        errObj = {}
+        mergedErrors.forEach(msgObj => {
+            msgObj.messages.forEach(obj => {
+                let { id, message } = obj
+                errObj[id] = message
+            });
         });
-    });
+    }
+
     console.log(errObj)
     return { errObj }
 }
-export default strapiErrors 
-export let errorsLibrary = {
-    "login_params_missing": { msg: "Some login parameters are missing." },
-    "network_err": { msg: "Network error." },
-    "Auth.form.error.invalid": { msg: "Password and username/email do not match." },
-    "Auth.form.error.confirmed": { msg: "Your account email is not confirmed." },
-    "Auth.form.error.password.provide":{msg:"Please provide your password."},
-    "Auth.form.error.email.provide":{msg:"Please provide your email."},
-    "Auth.form.error.email.format":{msg:"Please provide valid email address."},
-    "Auth.form.error.username.taken":{msg:"Username already taken."},
-
-}
+export default strapiErrors

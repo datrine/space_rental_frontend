@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { RoomProps } from '../../comps/special/properties/room_prop';
+import { SpaceProps } from '../../comps/special/space';
 
 let Room = ({ csrfToken, callbackUrl, ...otherProps }) => {
     //console.log("here in login")
     return <>
-        <RoomProps csrfToken={csrfToken} callbackUrl={callbackUrl} />
+        <SpaceProps csrfToken={csrfToken} callbackUrl={callbackUrl} />
     </>
 }
 

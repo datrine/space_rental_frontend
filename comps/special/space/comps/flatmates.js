@@ -1,20 +1,16 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Container, Grid, makeStyles, } from "@material-ui/core";
-
-import { MyInput, MySelect } from "../../reusables";
-import GenderSelect from "../profile/gender";
+import { Button, Container, } from "@material-ui/core";
+import { MyInput, } from "../../../reusables";
+import GenderSelect from "../../profile/gender";
 import { useContext, useState } from "react";
-import { RoomContext } from "./room_prop";
+import { SpaceContext } from "..";
 import { Delete } from "@material-ui/icons";
 import React from "react";
-import { IdObj } from "../../../utils/utilFns";
-
+import { IdObj } from "../../../../utils/utilFns";
 
 function FlatmateDiv(params) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let flatmateInfo = roomData.flatmateInfo.map(info => IdObj(info))
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let flatmateInfo = spaceData.flatmateInfo.map(info => IdObj(info))
     return <>
         <Container style={{ padding: 0, marginTop: "20px", }} >
             <h4 className="w3-padding"
@@ -31,7 +27,7 @@ function FlatmateDiv(params) {
                             let obj = { name: "", gender: "male" }
                             fms.push(obj)
                             flatmateInfo = [...fms]
-                            changeRoomContext({ ...roomData, flatmateInfo })
+                            changeSpaceContext({ ...spaceData, flatmateInfo })
                         }
                     } style={{ backgroundColor: "#60941a" }}>Add Flatmate</Button></p>
 
@@ -41,9 +37,9 @@ function FlatmateDiv(params) {
 }
 
 function Flatmate({ indexProp, }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let flatmateInfo = roomData.flatmateInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let flatmateInfo = spaceData.flatmateInfo
     let oneFlatmateInfo = flatmateInfo[indexProp]
     let { name = "", gender = "", occupation = "" } = oneFlatmateInfo
 
@@ -65,8 +61,7 @@ function Flatmate({ indexProp, }) {
             <Button onClick={
                 e => {
                     flatmateInfo.splice(indexProp, 1);
-                    changeRoomContext({ ...roomData, flatmateInfo })
-                    console.log("jihugyg")
+                    changeSpaceContext({ ...spaceData, flatmateInfo })
                     //ctx.flatmateInfo=[...flatmatesState]
                 }
             }><Delete /></Button>
@@ -75,6 +70,4 @@ function Flatmate({ indexProp, }) {
     </>
 }
 
-export {
-    FlatmateDiv,
-}
+export { FlatmateDiv, }

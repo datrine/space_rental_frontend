@@ -158,7 +158,7 @@ let ProfileForm = ({ ...propsFromParent }) => {
 let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)
     let handleClose = (e) => {
-        autoSignIn()
+        autoSignIn({callbackUrl:"/profile"})
         hookChangeResponseView(null)
     }
     return <>

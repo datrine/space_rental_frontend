@@ -1,9 +1,6 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, FormControl, makeStyles, TextField } from "@material-ui/core";
-import { MySelect } from "../../reusables";
-import { useContext, useState } from "react";
-import { RoomContext } from "./room_prop";
+import { useContext, } from "react";
+import { SpaceContext } from "..";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -14,16 +11,14 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         marginBottom: "5px",
         paddingLeft: "5px",
-        borderWidth: 0.5,
-        borderBottomStyle: "solid",
-        //borderRadius: "5px"
+        borderWidth: 1,
+        borderStyle: "solid",
     },
     textArea: {
         marginBottom: "5px",
         paddingLeft: "5px",
         borderWidth: 1,
         borderStyle: "solid",
-        //borderRadius: "5px"
     },
     formDiv: {
         width: "100%",
@@ -47,14 +42,14 @@ function LocationDiv({ }) {
 
 function BuildingCity({ }) {
     let classes = useStyles()
-    let ctx = useContext(RoomContext);
-    let {roomData,changeRoomContext}=ctx
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
     let handleChange = (e) => {
-        roomData.locationInfo.cityOrTown = e.target.value
-        changeRoomContext({...roomData})
+        spaceData.locationInfo.cityOrTown = e.target.value
+        changeSpaceContext({ ...spaceData })
     }
     return <>
-        <FormControl fullWidth style={{ marginBottom: 20,marginTop:10 }} >
+        <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
             <TextField fullWidth multiline={true} onChange={handleChange}
                 name="cityOrTown" placeholder="City or town...*"
                 className={classes.textArea} />
@@ -64,11 +59,11 @@ function BuildingCity({ }) {
 
 function BuildingArea({ }) {
     let classes = useStyles()
-    let ctx = useContext(RoomContext);
-    let {roomData,changeRoomContext}=ctx
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
     let handleChange = (e) => {
-        roomData.locationInfo.area = e.target.value
-        changeRoomContext({...roomData})
+        spaceData.locationInfo.area = e.target.value
+        changeSpaceContext({ ...spaceData })
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20 }} >
@@ -81,15 +76,15 @@ function BuildingArea({ }) {
 
 function BuildingAddress({ }) {
     let classes = useStyles()
-    let ctx = useContext(RoomContext);
-    let {roomData,changeRoomContext}=ctx
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
     let handleChange = (e) => {
-        roomData.locationInfo.address = e.target.value
-        changeRoomContext({...roomData})
+        spaceData.locationInfo.address = e.target.value
+        changeSpaceContext({ ...spaceData })
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 10 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange}
+            <TextField fullWidth multiline={true} onChange={handleChange} rows={4}
                 name="email" placeholder="Address...*"
                 className={classes.textArea} />
         </FormControl>

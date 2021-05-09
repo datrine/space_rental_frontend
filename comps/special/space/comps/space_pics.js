@@ -1,23 +1,20 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid, Input, } from "@material-ui/core";
-
 import { Carousel } from "react-bootstrap";
 import Image from "next/image";
 import React, { useContext, useState } from "react";
-import { SpaceChargesDiv } from './spaceBills';
-import { SpaceAvailabilityDiv } from './spaceAvail';
-import { getImgUrl, uploader } from "../../../utils/utilFns";
-import { RoomContext } from "./room_prop";
+import { getImgUrl, uploader } from "../../../../utils/utilFns";
+import { SpaceContext } from "..";
 
-function AddImageView({ urlsProps = [], onSuccess = () => { }, onFail = () => { } }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let { room_pics } = roomData
+function AddImageView({}) {
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let { space_pics } = spaceData
     return <>
         <Container>
             <Grid justify="center" container >
-                {room_pics.length > 0 ? <Caroo imgObjUrls={room_pics} /> :
+                {space_pics.length > 0 ? <Caroo imgObjUrls={space_pics} /> :
                     <Image width={300} height={300} src="/camera_placeholder.jpg" />}
             </Grid>
         </Container>
@@ -44,9 +41,9 @@ function Caroo({ imgObjUrls = [] }) {
 }
 
 function AddBtn({ index, }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let [isPic, changeIsPic] = useState(roomData.room_pics[index] ? true : false)
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let [isPic, changeIsPic] = useState(spaceData.space_pics[index] ? true : false)
     return <>
         <label className="w3-btn" style={{
             backgroundColor: isPic ? "#60941a" : "rgba(189, 195, 199, 1)",
@@ -59,13 +56,13 @@ function AddBtn({ index, }) {
                             files,
                             ref: "file",
                             refId: index,
-                            field: "room_pics",
+                            field: "space_pics",
                             source: "upload",
                         })
                         if (dataUploaded) {
-                            roomData.room_pics[index] = dataUploaded[0]
+                            spaceData.space_pics[index] = dataUploaded[0]
                             changeIsPic(true)
-                            changeRoomContext({ ...roomData })
+                            changeSpaceContext({ ...spaceData })
                         }
 
                     } catch (error) {
@@ -83,6 +80,4 @@ function AddBtn({ index, }) {
     </>
 }
 
-export {
-    AddImageView,
-}
+export {AddImageView}

@@ -69,7 +69,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     });
                     if (res.ok) {
                         let data = await res.json();
-                        let { err, user} = data;
+                        let { err, user } = data;
                         if (err) {
                             handleFail(err)
                             changeIsFailed(true)

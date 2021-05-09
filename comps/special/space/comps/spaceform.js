@@ -1,26 +1,21 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Input, InputAdornment,
-    makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow, TextField
+    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, Input,
+    makeStyles, MenuItem, Select, TextField
 } from "@material-ui/core";
 import { CheckCircle } from "@material-ui/icons";
-import Image from "next/image";
 import React from "react";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
-import { Carousel } from "react-bootstrap";
-//import { getImgUrl, uploader } from "../../../utils/utilFns";
-import { FailReg, MySelect, SuccessReg } from "../../reusables";
+import { MySelect, } from "../../../reusables";
 import {
     FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv,
     SpaceRulesDiv, AddImageView
 } from "./prop_reusable";
-import { RoomContext, roomDataDefault } from "./room_prop";
+import { SpaceContext, spaceDataDefault } from "..";
 
-function RoomForm({ roomInfo, changeRoomInfo }) {
+function SpaceForm({ spaceInfo, changeRoomInfo }) {
     let [responseView, changeResponseView] = useState(null)
-    let ctx = useContext(RoomContext)
+    let ctx = useContext(SpaceContext)
     let handleSuccess = (user) => {
         let view = <SuccessSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
         changeResponseView(view)
@@ -38,9 +33,9 @@ function RoomForm({ roomInfo, changeRoomInfo }) {
                 }
                 console.log(values)
                 let res;
-                //no room info exists for current room=>mode:edit
-                if (roomInfo) {
-                    res = await fetch(`/api/rooms/${roomInfo.id}`, {
+                //no space info exists for current space=>mode:edit
+                if (spaceInfo) {
+                    res = await fetch(`/api/spaces/${spaceInfo.id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
@@ -48,9 +43,9 @@ function RoomForm({ roomInfo, changeRoomInfo }) {
                         body: JSON.stringify(values)
                     });
                 }
-                //no room info exists for current room=>mode:create
+                //no space info exists for current space=>mode:create
                 else {
-                    res = await fetch("/api/rooms", {
+                    res = await fetch("/api/spaces", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -61,21 +56,22 @@ function RoomForm({ roomInfo, changeRoomInfo }) {
 
                 if (res.ok) {
                     let data = await res.json();
-                    let { err, room, jwt } = data;
+                    let { err, space, jwt } = data;
                     if (err) {
                         console.log(err)
                         handleFail(err)
                     }
-                    if (room) {
-                        console.log(room)
-                        handleSuccess(room);
+                    if (space) {
+                        console.log(space)
+                        handleSuccess(space);
                     }
                 }
             }} >
             <AddImageView />
             <Container style={{ marginTop: "20px" }}>
-                <NameOfRoom />
-                <HouseType />
+                <NameOfSpace />
+                <TypeOfStay />
+                <DescOfSpace/>
                 <SpaceCategory />
                 <SpaceCondition />
                 <Grid spacing={2} container>
@@ -106,73 +102,71 @@ function RoomForm({ roomInfo, changeRoomInfo }) {
     </>
 }
 
-function HouseType({ }) {
-    let selectMenuArr = [
-        { value: "apartment", text: "Apartment" },
-        { value: "flat", text: "Flats" },
-    ]
+function DescOfSpace({ }) {
+    let classes = useStyles()
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
+    let handleChange = (e) => {
+        spaceData.descOfSpaces = e.target.value
+        changeSpaceContext({ ...spaceData })
+    }
     return <>
-        <RoomContext.Consumer>
-            {({ roomData, changeRoomContext }) => <FormControl fullWidth style={{ marginBottom: "30px" }}>
-                <h5 style={{ color: "black", }}>Type of house</h5>
-                <Select
-                    value={roomData.spaceInfo.houseType}
-                    onChange={e => {
-                        let houseType = e.target.value
-                        roomData.spaceInfo.houseType = houseType
-                        changeRoomContext({ ...roomData })
-                    }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    style={{
-                        marginBottom: "5px",
-                        paddingLeft: "5px",
-                        borderWidth: 0.5,
-                        borderBottomStyle: "solid",
-                        //borderRadius: "5px"
-                    }}
+        <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
+            <TextField fullWidth multiline={true} onChange={handleChange} rows={4}
+                name="name" placeholder="Describe the space"
+                className={classes.textField} />
+        </FormControl>
+    </>}
 
-                >
-                    {selectMenuArr.map(({ value, text }, index) => <MenuItem
-                        key={index} value={value} >{text}</MenuItem>)}
-                </Select></FormControl>
-            }
-        </RoomContext.Consumer>
+function TypeOfStay(params) {
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    return <>
+        <MySelect labelTitle="Select Type of Space" valueProps={spaceData.typeOfSpace}
+            selectMenuArr={[
+                { value: "residence", text: "Residential Space" },
+                { value: "office", text: "Office" },
+            ]} handleChangeProps={
+                e => {
+                    let newValue = e.target.value
+                    spaceData.typeOfSpace = newValue
+                    changeSpaceContext({ ...spaceData })
+                }
+            } />
     </>
 }
 
 function SpaceCategory(params) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceInfo = roomData.spaceInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceInfo = spaceData.spaceInfo
+    let selectValue= apartments[spaceData.typeOfSpace||"residence"]
     return <>
-        <MySelect labelTitle="Select category of space" valueProps={spaceInfo.spaceCategory} selectMenuArr={[
-            { value: "apartment", text: "Apartment" },
-            { value: "flat", text: "Flats" },
-        ]} handleChangeProps={
+        <MySelect labelTitle={`Select category of ${spaceData.typeOfSpace} space`} valueProps={spaceInfo.spaceCategory}
+         selectMenuArr={selectValue} handleChangeProps={
             e => {
                 let newValue = e.target.value
                 spaceInfo.spaceCategory = newValue
-                changeRoomContext({ ...roomData, spaceInfo })
+                changeSpaceContext({ ...spaceData, spaceInfo })
             }
         } />
     </>
 }
 
 function SpaceCondition(params) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let { spaceInfo } = roomData
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let { spaceInfo } = spaceData
     return <>
         <MySelect labelTitle="Select condition of space"
             valueProps={spaceInfo.spaceCondition} selectMenuArr={[
-                { value: "apartment", text: "Apartment" },
-                { value: "flat", text: "Flats" },
+                { value: "new", text: "New" },
+                { value: "furnished", text: "Furnished" },
             ]} handleChangeProps={
                 e => {
                     let houseType = e.target.value
                     spaceInfo.spaceCondition = houseType
-                    changeRoomContext({ ...roomData, spaceInfo })
+                    changeSpaceContext({ ...spaceData, spaceInfo })
                 }
             } />
     </>
@@ -189,7 +183,12 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: "5px",
         borderWidth: 1,
         borderStyle: "solid",
-        borderRadius: "5px"
+    },
+    textArea: {
+        marginBottom: "5px",
+        paddingLeft: "5px",
+        borderWidth: 1,
+        borderStyle: "solid",
     },
     formDiv: {
         width: "100%",
@@ -198,13 +197,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function NameOfRoom({ }) {
+function NameOfSpace({ }) {
     let classes = useStyles()
-    let ctx = useContext(RoomContext);
-    let { roomData, changeRoomContext } = ctx
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
     let handleChange = (e) => {
-        roomData.nameOfSpace = e.target.value
-        changeRoomContext({ ...roomData })
+        spaceData.nameOfSpace = e.target.value
+        changeSpaceContext({ ...spaceData })
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
@@ -216,9 +215,9 @@ function NameOfRoom({ }) {
 }
 
 function BedroomNumber({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let { spaceInfo } = roomData
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let { spaceInfo } = spaceData
     let classes = useStyles()
     return <>
         <FormControl fullWidth>
@@ -226,7 +225,7 @@ function BedroomNumber({ }) {
             <Input onChange={e => {
                 let bedroomNumber = e.target.value
                 spaceInfo.bedroomNumber = bedroomNumber
-                changeRoomContext({ ...roomData, spaceInfo })
+                changeSpaceContext({ ...spaceData, spaceInfo })
             }} value={spaceInfo.bedroomNumber}
                 placeholder="No of bedroom" type="number"
                 className={classes.textField} />
@@ -235,17 +234,17 @@ function BedroomNumber({ }) {
 }
 
 function KitchenNumber({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceInfo = roomData.spaceInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceInfo = spaceData.spaceInfo
     let classes = useStyles()
     return <>
         <FormControl fullWidth>
-            <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
+            <p>kitchens <strong style={{ color: "red" }} > *</strong></p>
             <Input onChange={e => {
                 let kitchenNumber = e.target.value
                 spaceInfo.kitchenNumber = kitchenNumber
-                changeRoomContext({ ...roomData, spaceInfo })
+                changeSpaceContext({ ...spaceData, spaceInfo })
             }} value={spaceInfo.kitchenNumber}
                 placeholder="No of kitchen" type="number"
                 className={classes.textField} />
@@ -254,9 +253,9 @@ function KitchenNumber({ }) {
 }
 
 function SittingNumber({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceInfo = roomData.spaceInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceInfo = spaceData.spaceInfo
     let classes = useStyles()
     return <>
         <FormControl fullWidth>
@@ -264,27 +263,26 @@ function SittingNumber({ }) {
             <Input onChange={e => {
                 let sittingNumber = e.target.value
                 spaceInfo.sittingNumber = sittingNumber
-                changeRoomContext({ ...roomData, spaceInfo })
+                changeSpaceContext({ ...spaceData, spaceInfo })
             }} value={spaceInfo.sittingNumber}
                 placeholder="No of parlour" type="number"
                 className={classes.textField} />
         </FormControl>
-
     </>
 }
 
 function BathroomNumber({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let { spaceInfo } = roomData
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let { spaceInfo } = spaceData
     let classes = useStyles()
     return <>
         <FormControl fullWidth>
-            <p>Bedroom <strong style={{ color: "red" }} > *</strong></p>
+            <p>Bathrooms <strong style={{ color: "red" }} > *</strong></p>
             <Input onChange={e => {
                 let bathroomNumber = e.target.value
                 spaceInfo.bathroomNumber = bathroomNumber
-                changeRoomContext({ ...ctx })
+                changeSpaceContext({ ...spaceData, spaceInfo })
             }} value={spaceInfo.bathroomNumber}
                 placeholder="No of bathroom" type="number"
                 className={classes.textField} />
@@ -294,9 +292,9 @@ function BathroomNumber({ }) {
 
 let SuccessSavedRoom = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(openDialog)
-    let ctx = useContext(RoomContext)
+    let ctx = useContext(SpaceContext)
     let handleClose = (e) => {
-        ctx.changeRoomContext({ ...roomDataDefault })
+        ctx.changeSpaceContext({ ...spaceDataDefault })
         hookChangeResponseView(null)
     }
     return <>
@@ -350,4 +348,28 @@ let FailSavedRoom = ({ openDialog, hookChangeResponseView }) => {
     </>
 }
 
-export { RoomForm }
+let officeTypes = [
+    { value: "trad_space", text: "Traditional Office Space" },
+    { value: "co_work", text: "Co-working Space" },
+    { value: "private", text: "Private Office" },
+    { value: "enterprise_suite", text: "Executive/Enterprise Suite" },
+]
+
+let residenceTypes = [
+    { value: "bungalow", text: "Bungalow" },
+    { value: "duplex", text: "Duplex" },
+    { value: "flat_apartment", text: "Apartments/Flats" },
+    { value: "terraced", text: "Terraced House" },
+    { value: "mansion", text: "Mansion" },
+    { value: "penthouse", text: "Penthouse" },
+    { value: "semi_detached", text: "Semi Detached" },
+    { value: "detached", text: "Detached" },
+    { value: "traditional", text: "Traditional House" },
+]
+
+let apartments={
+    office:officeTypes,
+    residence:residenceTypes
+}
+
+export { SpaceForm }

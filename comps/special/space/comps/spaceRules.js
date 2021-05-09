@@ -2,35 +2,8 @@ import { Checkbox, Container, Grid, makeStyles, Button, Input } from "@material-
 import { Add, Delete } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
-import { IdObj } from "../../../utils/utilFns";
-import { RoomContext } from "./room_prop";
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-    },
-    form: {
-        marginTop: "30px"
-    },
-    textField: {
-        marginBottom: "5px",
-        paddingLeft: "5px",
-        borderWidth: 0.5,
-        borderBottomStyle: "solid",
-        //borderRadius: "5px"
-    },
-    textArea: {
-        marginBottom: "5px",
-        paddingLeft: "5px",
-        borderWidth: 1,
-        borderStyle: "solid",
-        //borderRadius: "5px"
-    },
-    formDiv: {
-        width: "100%",
-        marginBottom: "25px",
-        marginLeft: "10%",
-    },
-}));
+import { IdObj } from "../../../../utils/utilFns";
+import { SpaceContext } from "..";
 
 function SpaceRulesDiv(params) {
     return <>
@@ -49,9 +22,9 @@ function SpaceRulesDiv(params) {
 
 function SpaceRules(params) {
     const [checked, setChecked] = useState(true);
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceRules = roomData.spaceRules;
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceRules = spaceData.spaceRules;
     let rules = spaceRules.map((rule) => IdObj(rule))
     let [rulesState, changeRulesState] = useState(rules)
     return <>
@@ -71,7 +44,7 @@ function SpaceRules(params) {
                                     spaceRules.splice(index, 1)
                                     changeRulesState([...spaceRules])
                                 }
-                                changeRoomContext({ ...roomData, spaceRules })
+                                changeSpaceContext({ ...spaceData, spaceRules })
                             }}
                             inputProps={{ 'aria-label': 'primary checkbox' }}
                         /> </Grid>
@@ -85,11 +58,11 @@ function SpaceRules(params) {
 
 function RulesAdd({ rulesProps, changeRoomsProp }) {
     const [checked, setChecked] = useState(true);
-    let ctx = useContext(RoomContext)
-    let spaceRules = ctx.spaceRules;
+    let ctx = useContext(SpaceContext)
+    let { spaceRules, changeSpaceContext } = ctx;
     let [spaceRulesToAdd, changeSpaceRulesToAdd] = useState([])
     return <>
-        <RoomContext.Provider value={spaceRules} >
+        <SpaceContext.Provider value={spaceRules} >
             <Container >
                 {spaceRulesToAdd.map((obj, index) => <Grid key={index} container >
                     <Grid xs={8} item container >
@@ -108,6 +81,7 @@ function RulesAdd({ rulesProps, changeRoomsProp }) {
                                 changeSpaceRulesToAdd([...spaceRulesToAdd])
                                 rulesProps.push(objToAdd)
                                 spaceRules.push(objToAdd)
+                                changeSpaceContext({ ...spaceRules })
                                 changeRoomsProp([...rulesProps])
                             }
                         } style={{ padding: 0, marginRight: 5, }} ><Add /></button>
@@ -128,10 +102,7 @@ function RulesAdd({ rulesProps, changeRoomsProp }) {
                         }
                     } >Add Rule</Button></p>
             </Container>
-        </RoomContext.Provider> </>
+        </SpaceContext.Provider> </>
 }
 
-
-export {
-    SpaceRulesDiv
-}
+export { SpaceRulesDiv }

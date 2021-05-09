@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
 import { uniqueId } from "lodash";
 
-export let appColor="#60941a"
+export let appColor = "#60941a"
 
 function stateMgr() {
     let loadingState = {
@@ -19,18 +19,19 @@ function stateMgr() {
         setLoadingState(state) {
             for (const key in this) {
                 if (this[key] === state) {
-                    this.Current === this[key];
+                    this.Current = this[key];
                     console.log("Initial current is set to " + this.Current)
+                    return
                 }
             }
         },
         init() {
             let { None, setLoadingState } = this
             setLoadingState(None)
+            return this;
         }
     }
-    loadingState.init()
-    return loadingState;
+    return loadingState.init()
 }
 
 let screenMgr = () => {
@@ -219,7 +220,7 @@ let imgObjProcessor = (obj = {}, format) => {
 
 let getImgUrl = (obj, format) => {
     let imgObj = imgObjProcessor(obj, format);
-    return imgObj.url;
+    return imgObj?.url;
 }
 
 let buildDateInfo = ({ dateMode, singleDatesStrings, dateRange }) => {

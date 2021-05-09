@@ -6,15 +6,15 @@ import { useEffect } from "react";
 import {
     buildDateInfo, datesFromStrings, daysSorter, listOfDatesBetween,
     stringsFromDates, rangeFromDates
-} from "../../../utils/utilFns";
-import { RoomContext } from "./room_prop";
+} from "../../../../utils/utilFns";
+import { SpaceContext } from "..";
 import { useContext } from "react";
-import { MySelect } from "../../reusables";
+import { MySelect } from "../../../reusables";
 
 export function RangeOfSpace({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceAvailabiltyInfo = roomData.spaceAvailabiltyInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     let datesInfo = spaceAvailabiltyInfo?.datesInfo
     let dateMode = datesInfo?.dateMode || "asRange"
     let dateRange = (datesInfo && dateMode === "asRange") ? (datesInfo.dateRange || {
@@ -46,12 +46,11 @@ export function RangeOfSpace({ }) {
                             let indexOfDate = days.findIndex(dayInArray =>
                                 DateUtils.isSameDay(dayInArray, day))
                             days.splice(indexOfDate, 1)
-                            console.log(indexOfDate)
                             spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                                 dateMode,
                                 dateRange, singleDatesStrings: days
                             })
-                            return changeRoomContext({ ...ctx.roomData, spaceAvailabiltyInfo })
+                            return changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                         }
                         days.push(day)
                         days.sort(daysSorter)
@@ -59,7 +58,7 @@ export function RangeOfSpace({ }) {
                             dateMode,
                             dateRange, singleDatesStrings: days
                         })
-                        changeRoomContext({ ...ctx.roomData, spaceAvailabiltyInfo })
+                        changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }
                     else if (dateMode === "asRange") {
                         days = []
@@ -77,7 +76,7 @@ export function RangeOfSpace({ }) {
                             dateMode,
                             dateRange, singleDatesStrings: daysSelected
                         })
-                        changeRoomContext({ ...ctx.roomData, spaceAvailabiltyInfo })
+                        changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }
                 }
             } selectedDays={daysSelected}
@@ -86,11 +85,10 @@ export function RangeOfSpace({ }) {
     );
 }
 
-
 function DatesSelectFormat({ }) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceAvailabiltyInfo = roomData.spaceAvailabiltyInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     return <>
         <MySelect labelTitle="Select Date Format"
             valueProps={spaceAvailabiltyInfo?.datesInfo?.dateMode || "asRange"}
@@ -115,7 +113,7 @@ function DatesSelectFormat({ }) {
                     }
                     spaceAvailabiltyInfo.datesInfo =
                         buildDateInfo(spaceAvailabiltyInfo.datesInfo)
-                    changeRoomContext({ ...roomData, spaceAvailabiltyInfo })
+                    changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                 }
             } />
     </>

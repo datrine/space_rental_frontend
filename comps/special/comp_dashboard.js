@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Loading, LogoSVG, SessionState } from '../reusables';
-import { uploader, stateMgr } from '../../utils/utilFns';
+import { uploader, stateMgr, getImgUrl } from '../../utils/utilFns';
 import { OpenedMenu } from "./dashboard/opened_menu"
 import { ProfileMenu } from './dashboard/resuables';
 
@@ -46,7 +46,8 @@ function HiWelcomer({ }) {
      * @type {File} profImgState
      */
     if (session) {
-        let prof_pic = session.user.prof_pic.formats.large.url || "/prof_pic.png"
+        let user = session.user
+        let prof_pic = getImgUrl(user.prof_pic) || "/prof_pic.png"
         //changeLoadingState(states.Loaded)
         return <>
             <Container style={{ marginTop: "70px" }}>
@@ -109,7 +110,6 @@ function MyProfile({ }) {
                     <h5>{gender}</h5>
                     <h5>{occupation || <span style={{ fontStyle: "italic" }} >
                         Occupation: edit your profile</span>}</h5>
-                    <h5 style={{ color: "green" }}>Change password</h5>
                 </Grid>
             </Container>
         </>

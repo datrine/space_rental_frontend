@@ -3,8 +3,8 @@ import { Add, Delete } from "@material-ui/icons";
 import _ from "lodash";
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
-import { IdObj } from "../../../utils/utilFns";
-import { RoomContext } from "./room_prop";
+import { IdObj } from "../../../../utils/utilFns";
+import { SpaceContext } from "..";
 
 function SpaceAmenityDiv(params) {
     return <>
@@ -23,9 +23,9 @@ function SpaceAmenityDiv(params) {
 
 function SpaceAmenities(params) {
     const [checked, setChecked] = useState(true);
-    let ctx = _.cloneDeep(useContext(RoomContext))
-    let { roomData, changeRoomContext } = ctx
-    let { spaceAmenities } = roomData
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let { spaceAmenities } = spaceData
     spaceAmenities = spaceAmenities.map((amenity) => IdObj(amenity));
     console.log(ctx)
     return <>
@@ -41,10 +41,10 @@ function SpaceAmenities(params) {
                                 onChange={(event, checked) => {
                                     if (checked) {
                                         spaceAmenities[index] = { id, desc }
-                                        changeRoomContext({ ...ctx.roomData, spaceAmenities })
+                                        changeSpaceContext({ ...spaceData, spaceAmenities })
                                     } else {
                                         spaceAmenities.splice(index, 1)
-                                        changeRoomContext({ ...ctx.roomData, spaceAmenities })
+                                        changeSpaceContext({ ...spaceData, spaceAmenities })
                                     }
                                 }}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -58,9 +58,9 @@ function SpaceAmenities(params) {
 }
 
 function AmenityAdd({ }) {
-    let ctx = _.cloneDeep(useContext(RoomContext))
-    let { roomData, changeRoomContext } = ctx
-    let { spaceAmenities } = roomData
+    let ctx = _.cloneDeep(useContext(SpaceContext))
+    let {spaceData, changeSpaceContext } = ctx
+    let { spaceAmenities } = spaceData
     let [spaceAmenitiesToAdd, changeSpaceAmenitiesToAdd] = useState([{ desc: "" }])
     return <>
         <Container >
@@ -80,7 +80,7 @@ function AmenityAdd({ }) {
                             let objToAdd = spaceAmenitiesToAdd.splice(index, 1)[0]
                             changeSpaceAmenitiesToAdd([...spaceAmenitiesToAdd])
                             spaceAmenities.push(objToAdd)
-                            changeRoomContext({ ...ctx.roomData, spaceAmenities })
+                            changeSpaceContext({ ...spaceData, spaceAmenities })
                         }
                     } style={{ padding: 0, marginRight: 5, }} ><Add /></button>
                     <button className="w3-btn" onClick={
@@ -103,7 +103,4 @@ function AmenityAdd({ }) {
     </>
 }
 
-
-export {
-    SpaceAmenityDiv,
-}
+export {SpaceAmenityDiv,}

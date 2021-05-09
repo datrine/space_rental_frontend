@@ -1,8 +1,8 @@
 import { Container, FormControl, Input, makeStyles, } from "@material-ui/core";
 import React, { useState } from "react";
-import { MySelect } from "../../reusables";
-import { maxLengthOfStay } from "../../../utils/utilFns";
-import { RoomContext } from "./room_prop";
+import { MySelect } from "../../../reusables";
+import { maxLengthOfStay } from "../../../../utils/utilFns";
+import { SpaceContext } from "..";
 import { useContext } from "react";
 import { RangeOfSpace } from "./dateApp";
 
@@ -43,7 +43,6 @@ function SpaceAvailabilityDiv() {
                 }} >Space Availability</h4>
             <Container style={{ borderWidth: 1, borderStyle: "solid", borderColor: "#60941a" }}>
                 <RangeOfSpace />
-                <TypeOfStay />
                 <LengthOfStay />
             </Container>
         </Container>
@@ -51,9 +50,9 @@ function SpaceAvailabilityDiv() {
 }
 
 function LengthOfStay(params) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceAvailabiltyInfo = roomData.spaceAvailabiltyInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     let classes = useStyles()
     let max = spaceAvailabiltyInfo?.datesInfo && maxLengthOfStay(spaceAvailabiltyInfo?.datesInfo)
     return <>
@@ -63,7 +62,7 @@ function LengthOfStay(params) {
                 let lengthOfStay = Number(e.target.value) <= max ?
                     Number(e.target.value) : max
                 spaceAvailabiltyInfo.lengthOfStay = lengthOfStay
-                changeRoomContext({ ...roomData, spaceAvailabiltyInfo })
+                changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
             }} value={Number(spaceAvailabiltyInfo?.lengthOfStay)}
                 placeholder="Length of stay" type="number"
                 max={max}
@@ -74,23 +73,21 @@ function LengthOfStay(params) {
 }
 
 function TypeOfStay(params) {
-    let ctx = useContext(RoomContext)
-    let { roomData, changeRoomContext } = ctx
-    let spaceAvailabiltyInfo = roomData.spaceAvailabiltyInfo
+    let ctx = useContext(SpaceContext)
+    let { spaceData, changeSpaceContext } = ctx
+    let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     return <>
         <MySelect labelTitle="Type of stay" valueProps={spaceAvailabiltyInfo?.lengthOfStay} selectMenuArr={[
-            { value: "apartment", text: "Apartment" },
+            { value: "continous", text: "Continous" },
             { value: "flat", text: "Flats" },
         ]} handleChangeProps={
             e => {
                 let typeOfStay = e.target.value
                 spaceAvailabiltyInfo.typeOfStay = typeOfStay
-                changeRoomContext({ ...roomData, spaceAvailabiltyInfo })
+                changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
             }
         } />
     </>
 }
 
-export {
-    SpaceAvailabilityDiv,
-}
+export { SpaceAvailabilityDiv, }

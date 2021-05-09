@@ -3,8 +3,8 @@ import Link from 'next/link';
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
-import View from '../../view';
-import { ProfileMenu } from '../dashboard/resuables';
+import View from '../view';
+import { ProfileMenu } from './dashboard/resuables';
 
 
 let PostAdsIndex = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
@@ -53,7 +53,7 @@ function PostView(params) {
                         <Typography>Advertise an apartment or entire house for
                         potential tenants to stay on contract
                           </Typography>
-                    </Grid>
+                    </Grid>s
                     <Grid xs={3} item >
                         <Image height={50} width={50} src="/icons/postads/fa-solid_house-user.svg" />
                     </Grid>

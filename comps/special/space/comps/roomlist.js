@@ -8,10 +8,10 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { getSession } from 'next-auth/client';
-import { Loading, LogoSVG } from '../../reusables';
+import { Loading, LogoSVG } from '../../../reusables';
 import { Container, Grid } from '@material-ui/core';
-import { getImgUrl } from '../../../utils/utilFns';
-import { RoomContext, roomDataDefault } from './room_prop';
+import { getImgUrl } from '../../../../utils/utilFns';
+import { SpaceContext, spaceDataDefault } from '../index';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlignItemsList({ hookRoomListDialog }) {
     const classes = useStyles();
-    let [roomsState, changeRoomsState] = useState([])
+    let [spacesState, changeSpacesState] = useState([])
     let [loadingState, changeLoadingState] = useState(false)
     useEffect(() => {
         (async () => {
             changeLoadingState(true)
             let { user } = await getSession()
-            let res = await fetch(`/api/rooms?userId_eq=${user.userId}`, {
+            let res = await fetch(`/api/spaces?userId_eq=${user.userId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -41,33 +41,33 @@ export default function AlignItemsList({ hookRoomListDialog }) {
             changeLoadingState(false)
             if (res.ok) {
                 let data = await res.json();
-                let { err, rooms, jwt } = data;
+                let { err, spaces, jwt } = data;
                 if (err) {
                     console.log(err)
                 }
-                if (rooms) {
-                    rooms = rooms.map(room => ({ ...room,...roomDataDefault }))
-                    console.log(rooms)
-                    changeRoomsState(rooms)
+                if (spaces) {
+                    spaces = spaces.map(space => (_.merge({ ...space, ...spaceDataDefault })))
+                    console.log(spaces)
+                    changeSpacesState(spaces)
                 }
             }
         })()
     }, [])
-    return <RoomContext.Consumer>
-        {({ roomData, changeRoomContext }) => loadingState ? <Grid container justify="center" alignItems="center"
+    return <SpaceContext.Consumer>
+        {({ spaceData, changeSpaceContext }) => loadingState ? <Grid container justify="center" alignItems="center"
             style={{ height: "100%", backgroundColor: "rgba(0,0,0,0.5)" }} >
             <Loading />
         </Grid> :
             <List className={classes.root}>
                 {
-                    roomsState.map(({ nameOfRoom, desc, id, spaceInfo, room_pics, created_at }, index) => <React.Fragment key={index}>
+                    spacesState.map(({ nameOfSpace, desc, id, spaceInfo, space_pics, created_at }, index) => <React.Fragment key={index}>
                         <ListItem onClick={
                             e => {
-                                changeRoomContext({ ...roomsState[index] })
+                                changeSpaceContext({ ...spacesState[index] })
                             }
                         } alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar src={getImgUrl(room_pics[0], "small") || "/room_placeholder.jpeg"} />
+                                <Avatar src={getImgUrl(space_pics[0], "small") || "/room_placeholder.jpeg"} />
                             </ListItemAvatar>
                             <ListItemText
                                 primary={nameOfRoom || "Untitled"}
@@ -88,5 +88,5 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                     </React.Fragment>)
                 }
             </List>}
-    </RoomContext.Consumer>
+    </SpaceContext.Consumer>
 }

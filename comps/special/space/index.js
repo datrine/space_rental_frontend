@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 import View from "../../view";
 import { ProfileMenu } from "../dashboard/resuables";
 import { useStyles } from "../profile/styles";
-import { RoomForm } from "./roomform";
-import AlignItemsList from "./roomlist";
+import { SpaceForm } from "./comps/spaceform";
+import AlignItemsList from "./comps/roomlist";
 
-export let roomDataDefault = {
+export let spaceDataDefault = {
     nameOfSpace: "",
     descOfSpace: "",
+    typeOfSpace:"",
     spaceInfo: {
         houseType: "", spaceCategory: "", spaceCondition: "",
         bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
@@ -22,21 +23,21 @@ export let roomDataDefault = {
     flatmateInfo: [],
     spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
     locationInfo: {},
-    room_pics: [],
+    space_pics: [],
     spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
     spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
     spaceAmenities: [{ id: "", desc: "Shared Living Room" }]
 };
 
-export const RoomContext = React.createContext({ roomData: roomDataDefault, changeRoomContext: () => { } });
+export const SpaceContext = React.createContext({ spaceData: spaceDataDefault, changeSpaceContext: () => { } });
 
-function RoomProps(params) {
-    let ctx = useContext(RoomContext)
-    let [roomDataState, changeContext] = useState({ ...ctx.roomData })
+function SpaceProps(params) {
+    let ctx = useContext(SpaceContext)
+    let [spaceDataState, changeSpaceContext] = useState({ ...ctx.spaceData })
     return <>
-        <RoomContext.Provider value={{ roomData: roomDataState, changeRoomContext: changeContext }} >
+        <SpaceContext.Provider value={{ spaceData: spaceDataState, changeSpaceContext }} >
             <View mobileView={<MobileView />} />
-        </RoomContext.Provider>
+        </SpaceContext.Provider>
     </>
 }
 
@@ -45,7 +46,7 @@ function MobileView() {
         <ProfileMenu />
         <Banner />
         <ControlPanel />
-        <RoomDetails />
+        <SpaceDetails />
     </>
 }
 
@@ -78,14 +79,16 @@ function ControlPanel(params) {
                 } else {
                     changeRoomListDialog(true)
                 }
-            }} style={{backgroundColor:"#60941a",
-            marginLeft:"10px",color:"white"}} >Show Room List</Button> : null}
+            }} style={{
+                backgroundColor: "#60941a",
+                marginLeft: "10px", color: "white"
+            }} >Show Room List</Button> : null}
         </Container>
-        <RoomList openRoomListDialog={openRoomListDialog} hookRoomListDialog={changeRoomListDialog} />
+        <SpaceList openRoomListDialog={openRoomListDialog} hookRoomListDialog={changeRoomListDialog} />
     </>
 }
 
-function RoomDetails({ roomInfo, changeRoomInfo }) {
+function SpaceDetails({ }) {
     return <>
         <Container style={{ marginTop: "20px" }}>
             <Container
@@ -93,9 +96,9 @@ function RoomDetails({ roomInfo, changeRoomInfo }) {
                 <h3 style={{
                     color: "white", backgroundColor: "#60941a",
                     paddingTop: "5px", paddingLeft: "5px"
-                }}>Room Detail</h3>
+                }}>Space Detail</h3>
 
-                <RoomForm />
+                <SpaceForm />
             </Container>
         </Container>
     </>
@@ -108,27 +111,26 @@ function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
         { value: "edit", text: "Edit" },
     ]
     return <>
-            <Select
-                displayEmpty
-                className={classes.textField}
-                inputProps={{
-                    'aria-label': 'Without label',
-                    onChange: e => {
-                        hookChangeTemplateState(e.target.value)
-                        //handleChangeProps(e)
-                    }, value: roomTemplate, name: "roomtemplate"
-                }}
-            >
-                {templates.map(({ value, text }, index) => <MenuItem
-                    key={index} value={value} >{text}</MenuItem>)}
-            </Select>
-        
+        <Select
+            displayEmpty
+            inputProps={{
+                'aria-label': 'Without label',
+                onChange: e => {
+                    hookChangeTemplateState(e.target.value)
+                    //handleChangeProps(e)
+                }, value: roomTemplate, name: "roomtemplate"
+            }}
+        >
+            {templates.map(({ value, text }, index) => <MenuItem
+                key={index} value={value} >{text}</MenuItem>)}
+        </Select>
+
 
     </>
 
 }
 
-let RoomList = ({ openRoomListDialog, hookRoomListDialog }) => {
+let SpaceList = ({ openRoomListDialog, hookRoomListDialog }) => {
     let handleClose = (e) => {
         hookRoomListDialog(false)
     }
@@ -153,4 +155,4 @@ let RoomList = ({ openRoomListDialog, hookRoomListDialog }) => {
     </>
 }
 
-export { RoomProps }
+export { SpaceProps }
