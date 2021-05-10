@@ -27,7 +27,6 @@ function SpaceAmenities(params) {
     let { spaceData, changeSpaceContext } = ctx
     let { spaceAmenities } = spaceData
     spaceAmenities = spaceAmenities.map((amenity) => IdObj(amenity));
-    console.log(ctx)
     return <>
         <>
             <Container style={{ padding: 0 }}>
@@ -86,7 +85,7 @@ function AmenityAdd({ }) {
                     <button className="w3-btn" onClick={
                         e => {
                             spaceAmenitiesToAdd.splice(index, 1)
-                            changeAmenitiesState([...spaceAmenitiesToAdd])
+                            changeSpaceAmenitiesToAdd([...spaceAmenitiesToAdd])
                         }
                     } style={{ padding: 0 }}><Delete /></button>
                 </Grid>

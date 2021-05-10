@@ -1,5 +1,5 @@
 import {
-    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, Input,
+    Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, Input,
     makeStyles, MenuItem, Select, TextField
 } from "@material-ui/core";
 import { CheckCircle } from "@material-ui/icons";
@@ -12,6 +12,32 @@ import {
     SpaceRulesDiv, AddImageView
 } from "./prop_reusable";
 import { SpaceContext, spaceDataDefault } from "..";
+import { getSession, signIn } from "next-auth/client";
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+    },
+    form: {
+        marginTop: "30px"
+    },
+    textField: {
+        marginBottom: "5px",
+        paddingLeft: "5px",
+        borderWidth: 1,
+        borderStyle: "solid",
+    },
+    textArea: {
+        marginBottom: "5px",
+        paddingLeft: "5px",
+        borderWidth: 1,
+        borderStyle: "solid",
+    },
+    formDiv: {
+        width: "100%",
+        marginBottom: "25px",
+        marginLeft: "10%",
+    },
+}));
 
 function SpaceForm({ spaceInfo, changeRoomInfo }) {
     let [responseView, changeResponseView] = useState(null)
@@ -29,7 +55,7 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
             async e => {
                 e.preventDefault()
                 let values = {
-                    ...ctx
+                    ...ctx.spaceData
                 }
                 console.log(values)
                 let res;
@@ -53,7 +79,6 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
                         body: JSON.stringify(values)
                     });
                 }
-
                 if (res.ok) {
                     let data = await res.json();
                     let { err, space, jwt } = data;
@@ -64,6 +89,14 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
                     if (space) {
                         console.log(space)
                         handleSuccess(space);
+                        let renterId = space.renterId;
+                        let session = await getSession()
+                        session.user.renterId = renterId
+                        await signIn("credentials", {
+                            redirect: false,
+                            isQuickReload: true,
+                            session: { ...session }
+                        })
                     }
                 }
             }} >
@@ -71,7 +104,7 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
             <Container style={{ marginTop: "20px" }}>
                 <NameOfSpace />
                 <TypeOfStay />
-                <DescOfSpace/>
+                <DescOfSpace />
                 <SpaceCategory />
                 <SpaceCondition />
                 <Grid spacing={2} container>
@@ -102,21 +135,39 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
     </>
 }
 
+function NameOfSpace({ }) {
+    let classes = useStyles()
+    let ctx = useContext(SpaceContext);
+    let { spaceData, changeSpaceContext } = ctx
+    let handleChange = (e) => {
+        spaceData.nameOfSpace = e.target.value
+        changeSpaceContext({ ...spaceData })
+    }
+    return <>
+        <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
+            <TextField value={spaceData.nameOfSpace} fullWidth multiline={true} onChange={handleChange}
+                name="name" placeholder="Name the space"
+                className={classes.textField} />
+        </FormControl>
+    </>
+}
+
 function DescOfSpace({ }) {
     let classes = useStyles()
     let ctx = useContext(SpaceContext);
     let { spaceData, changeSpaceContext } = ctx
     let handleChange = (e) => {
-        spaceData.descOfSpaces = e.target.value
+        spaceData.descOfSpace = e.target.value
         changeSpaceContext({ ...spaceData })
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange} rows={4}
+            <TextField value={spaceData.descOfSpace} fullWidth multiline={true} onChange={handleChange} rows={4}
                 name="name" placeholder="Describe the space"
                 className={classes.textField} />
         </FormControl>
-    </>}
+    </>
+}
 
 function TypeOfStay(params) {
     let ctx = useContext(SpaceContext)
@@ -140,16 +191,16 @@ function SpaceCategory(params) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
     let spaceInfo = spaceData.spaceInfo
-    let selectValue= apartments[spaceData.typeOfSpace||"residence"]
+    let selectValue = apartments[spaceData.typeOfSpace || "residence"]
     return <>
         <MySelect labelTitle={`Select category of ${spaceData.typeOfSpace} space`} valueProps={spaceInfo.spaceCategory}
-         selectMenuArr={selectValue} handleChangeProps={
-            e => {
-                let newValue = e.target.value
-                spaceInfo.spaceCategory = newValue
-                changeSpaceContext({ ...spaceData, spaceInfo })
-            }
-        } />
+            selectMenuArr={selectValue} handleChangeProps={
+                e => {
+                    let newValue = e.target.value
+                    spaceInfo.spaceCategory = newValue
+                    changeSpaceContext({ ...spaceData, spaceInfo })
+                }
+            } />
     </>
 }
 
@@ -169,48 +220,6 @@ function SpaceCondition(params) {
                     changeSpaceContext({ ...spaceData, spaceInfo })
                 }
             } />
-    </>
-}
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-    },
-    form: {
-        marginTop: "30px"
-    },
-    textField: {
-        marginBottom: "5px",
-        paddingLeft: "5px",
-        borderWidth: 1,
-        borderStyle: "solid",
-    },
-    textArea: {
-        marginBottom: "5px",
-        paddingLeft: "5px",
-        borderWidth: 1,
-        borderStyle: "solid",
-    },
-    formDiv: {
-        width: "100%",
-        marginBottom: "25px",
-        marginLeft: "10%",
-    },
-}));
-
-function NameOfSpace({ }) {
-    let classes = useStyles()
-    let ctx = useContext(SpaceContext);
-    let { spaceData, changeSpaceContext } = ctx
-    let handleChange = (e) => {
-        spaceData.nameOfSpace = e.target.value
-        changeSpaceContext({ ...spaceData })
-    }
-    return <>
-        <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange}
-                name="name" placeholder="Name the space"
-                className={classes.textField} />
-        </FormControl>
     </>
 }
 
@@ -336,7 +345,7 @@ let FailSavedRoom = ({ openDialog, hookChangeResponseView }) => {
             <DialogTitle id="alert-dialog-title">Room Ad Creation Error</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Unable to register. Please reload page.
+                    Unable to create room. Please reload page.
           </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -367,9 +376,9 @@ let residenceTypes = [
     { value: "traditional", text: "Traditional House" },
 ]
 
-let apartments={
-    office:officeTypes,
-    residence:residenceTypes
+let apartments = {
+    office: officeTypes,
+    residence: residenceTypes
 }
 
 export { SpaceForm }

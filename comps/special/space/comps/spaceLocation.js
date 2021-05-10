@@ -50,7 +50,8 @@ function BuildingCity({ }) {
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange}
+            <TextField value={spaceData.locationInfo.cityOrTown} fullWidth multiline={true} 
+            onChange={handleChange}
                 name="cityOrTown" placeholder="City or town...*"
                 className={classes.textArea} />
         </FormControl>
@@ -67,7 +68,7 @@ function BuildingArea({ }) {
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange}
+            <TextField value={spaceData.locationInfo.area} fullWidth multiline={true} onChange={handleChange}
                 name="Area" placeholder="Area...*"
                 className={classes.textArea} />
         </FormControl>
@@ -84,7 +85,7 @@ function BuildingAddress({ }) {
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 10 }} >
-            <TextField fullWidth multiline={true} onChange={handleChange} rows={4}
+            <TextField value={spaceData.locationInfo.address } fullWidth multiline={true} onChange={handleChange} rows={4}
                 name="email" placeholder="Address...*"
                 className={classes.textArea} />
         </FormControl>

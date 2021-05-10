@@ -46,7 +46,6 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                     console.log(err)
                 }
                 if (spaces) {
-                    spaces = spaces.map(space => (_.merge({ ...space, ...spaceDataDefault })))
                     console.log(spaces)
                     changeSpacesState(spaces)
                 }
@@ -60,9 +59,10 @@ export default function AlignItemsList({ hookRoomListDialog }) {
         </Grid> :
             <List className={classes.root}>
                 {
-                    spacesState.map(({ nameOfSpace, desc, id, spaceInfo, space_pics, created_at }, index) => <React.Fragment key={index}>
+                    spacesState.map(({ nameOfSpace, descOfSpace, id, spaceInfo, space_pics, created_at }, index) => <React.Fragment key={index}>
                         <ListItem onClick={
                             e => {
+                                console.log("list selected")
                                 changeSpaceContext({ ...spacesState[index] })
                             }
                         } alignItems="flex-start">
@@ -70,7 +70,7 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                                 <Avatar src={getImgUrl(space_pics[0], "small") || "/room_placeholder.jpeg"} />
                             </ListItemAvatar>
                             <ListItemText
-                                primary={nameOfRoom || "Untitled"}
+                                primary={nameOfSpace || "Untitled"}
                                 secondary={
                                     <>
                                         <Typography
@@ -78,7 +78,7 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                                             variant="body2"
                                             className={classes.inline}
                                             color="textPrimary">
-                                            {desc || "No desc.."} </Typography>
+                                            {descOfSpace || "No desc.."} </Typography>
                                         {`Created on : ${(new Date(created_at)).toLocaleDateString()}`}
                                     </>
                                 }

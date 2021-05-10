@@ -56,7 +56,7 @@ function SpaceCharge(params) {
                 let charge = e.target.value
                 spaceBills.charge = Number(charge)
                 changeSpaceContext({ ...spaceData, spaceBills })
-            }} value={spaceBills.charge}
+            }} value={spaceBills.charge||""}
                 placeholder="Space Charge" type="number"
                 className={classes.textField} />
         </FormControl>
@@ -75,7 +75,7 @@ function OtherBillsCharge(params) {
                 let otherBills = e.target.value
                 spaceBills.otherBills = Number(otherBills)
                 changeSpaceContext({ ...spaceData, spaceBills })
-            }} value={spaceBills.otherBills}
+            }} value={spaceBills.otherBills||""}
                 placeholder="Other Bills Charge (₦)" type="number"
                 className={classes.textField} />
         </FormControl>

@@ -70,35 +70,44 @@ const options = {
                 }
                 if (sanitizeLogin(credentials)) {
                     // Any object returned will be saved in `user` property of the JWT
-                    return new Promise(async (res, rej) => {
-                        try {
-                            credentials.callbackUrl = myUrl.href
-                            let { user, err, errType, errMsg, statusCode, errObj } = await userFn(credentials)
-                            if (user) {
-                                if (!user.jwt) user.jwt = credentials.strapiToken
-                                delete credentials.strapiToken
-                                delete credentials.strapiProfileId
-                                res(user)
-                            } else if (err) {
-                                const myUrl = new URL(credentials.callbackUrl)
-                                if (errObj) {
-                                    for (const key in errObj) {
-                                        let paramValue =
-                                            Object.keys(errorsLibrary).find(ky => ky === key) || key
-                                        myUrl.searchParams.set("err", paramValue)
-                                        myUrl.searchParams.set("errMsg", errObj[key])
+                    if (!credentials.isQuickReload) {
+                        return new Promise(async (res, rej) => {
+                            try {
+                                credentials.callbackUrl = myUrl.href
+                                let { user, err, errType, errMsg, statusCode, errObj } =
+                                    await userFn(credentials)
+                                if (user) {
+                                    if (!user.jwt) user.jwt = credentials.strapiToken
+                                    delete credentials.strapiToken
+                                    delete credentials.strapiProfileId
+                                    res(user)
+                                } else if (err) {
+                                    const myUrl = new URL(credentials.callbackUrl)
+                                    if (errObj) {
+                                        for (const key in errObj) {
+                                            let paramValue =
+                                                Object.keys(errorsLibrary).find(ky => ky === key) || key
+                                            myUrl.searchParams.set("err", paramValue)
+                                            myUrl.searchParams.set("errMsg", errObj[key])
+                                        }
+                                    } else {
+                                        myUrl.searchParams.set("err", errType)
+                                        myUrl.searchParams.set("errMsg", errMsg)
                                     }
-                                } else {
-                                    myUrl.searchParams.set("err", errType)
-                                    myUrl.searchParams.set("errMsg", errMsg)
+                                    rej(myUrl.href)
                                 }
-                                rej(myUrl.href)
+                            } catch (error) {
+                                console.log(error)
+                                rej(null)
                             }
-                        } catch (error) {
-                            console.log(error)
-                            rej(null)
-                        }
-                    })
+                        })
+                    }else{
+                        let {session}=credentials
+                        console.log("quick assess")
+                        console.log(session)
+                        console.log("quick assess")
+                        Promise.resolve(session.user)
+                    }
                 } else {
                     myUrl.searchParams.set("err", "login_params_missing")
                     // If you return null or false then the credentials will be rejected
@@ -148,7 +157,7 @@ const options = {
                 token = { ...token, ...rest }
             }
             return Promise.resolve(token)
-        },
+        }
     },
     pages: {
         signIn: '/login',
@@ -162,10 +171,12 @@ const options = {
 }
 
 function sanitizeLogin(credentials) {
-    let { strapiToken, strapiProfileId, username, emailOrUsername, password, role } = credentials;
+    let { strapiToken, strapiProfileId, username, emailOrUsername, password, role,
+        isQuickReload, session } = credentials;
     console.log(credentials)
-    let value=(strapiToken && strapiProfileId) || (emailOrUsername && password);
-    console.log(value?"Parameters are complete":"Parameters are missing")
+    let value = (strapiToken && strapiProfileId) || (emailOrUsername && password) ||
+        (isQuickReload && session);
+    console.log(value ? "Parameters are complete" : "Parameters are missing")
     return value
 }
 

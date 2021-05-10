@@ -268,7 +268,7 @@ let listOfDatesBetween = ({ from, to }) => {
         days.push(newDay)
         dayPluser++
     }
-    console.log(days.length)
+    //console.log(days.length)
     return days
 }
 let datesFromStrings = (array = []) => array.map((ds) => {
@@ -279,7 +279,7 @@ let stringsFromDates = (array = [new Date()]) => array.map((date) => date.toDate
 
 let rangeFromDates = (days = []) => {
     days = days.sort(daysSorter);
-    console.log(days)
+    //console.log(days)
     return { from: days[0], to: days[days.length - 1] }
 }
 

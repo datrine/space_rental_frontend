@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             let data = req.body
-            //console.log(data)
+            console.log(data)
             await middlewareRunner(req, res, cors);
             let response = await axios({
                 url: `${process.env.CMS_URL}/spaces`,
@@ -76,7 +76,6 @@ export default async function handler(req, res) {
                     "Content-Type": "application/json",
                     "Authorization":`Bearer ${user.jwt}`
                 },
-                
                 data
             })
 
@@ -85,7 +84,7 @@ export default async function handler(req, res) {
 
         } catch (error) {
             let errorObj=serverError(error)
-            return res.json({ err: errMsg, errType });
+            return res.json(errorObj);
         }
     }
 }

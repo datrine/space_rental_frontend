@@ -11,11 +11,13 @@ import { ProfileMenu } from "../dashboard/resuables";
 import { useStyles } from "../profile/styles";
 import { SpaceForm } from "./comps/spaceform";
 import AlignItemsList from "./comps/roomlist";
+import { useRouter } from "next/router";
+import _ from "lodash";
 
 export let spaceDataDefault = {
     nameOfSpace: "",
     descOfSpace: "",
-    typeOfSpace:"",
+    typeOfSpace: "",
     spaceInfo: {
         houseType: "", spaceCategory: "", spaceCondition: "",
         bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
@@ -29,11 +31,14 @@ export let spaceDataDefault = {
     spaceAmenities: [{ id: "", desc: "Shared Living Room" }]
 };
 
-export const SpaceContext = React.createContext({ spaceData: spaceDataDefault, changeSpaceContext: () => { } });
+export const SpaceContext = React.createContext({ spaceData: _.cloneDeep(spaceDataDefault) , changeSpaceContext: () => { } });
 
 function SpaceProps(params) {
-    let ctx = useContext(SpaceContext)
-    let [spaceDataState, changeSpaceContext] = useState({ ...ctx.spaceData })
+    let { query } = useRouter()
+    let { spaceData } = useContext(SpaceContext)
+    spaceData = { ...spaceData, ...urlCleanup(query) }
+    let [spaceDataState, changeSpaceContext] = useState({ ...spaceData })
+
     return <>
         <SpaceContext.Provider value={{ spaceData: spaceDataState, changeSpaceContext }} >
             <View mobileView={<MobileView />} />
@@ -153,6 +158,24 @@ let SpaceList = ({ openRoomListDialog, hookRoomListDialog }) => {
             </DialogActions>
         </Dialog>
     </>
+}
+
+let urlCleanup = (queryObj) => {
+    let { spaceType, } = queryObj
+    let typeOfSpace = "";
+    switch (spaceType) {
+        case "residence":
+            typeOfSpace = "residence"
+            break;
+
+        case "office":
+            typeOfSpace = "office"
+            break;
+
+        default:
+            break;
+    }
+    return { typeOfSpace }
 }
 
 export { SpaceProps }
