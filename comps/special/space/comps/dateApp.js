@@ -5,7 +5,7 @@ import DayPicker, { DateUtils } from 'react-day-picker';
 import { useEffect } from "react";
 import {
     buildDateInfo, datesFromStrings, daysSorter, listOfDatesBetween,
-    stringsFromDates, rangeFromDates
+    stringsFromDates, rangeFromDates, dateRangeFromDateStrings, dateStringsFromDateRange
 } from "../../../../utils/utilFns";
 import { SpaceContext } from "..";
 import { useContext } from "react";
@@ -16,18 +16,18 @@ export function RangeOfSpace({ }) {
     let { spaceData, changeSpaceContext } = ctx
     let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     let datesInfo = spaceAvailabiltyInfo?.datesInfo
-    let dateMode = datesInfo?.dateMode || "asRange"
-    let dateRange = (datesInfo && dateMode === "asRange") ? (datesInfo.dateRange || {
-        from: new Date(),
-        to: new Date(),
-    }) : {
-        from: new Date(),
-        to: new Date(),
+    datesInfo.dateMode = datesInfo?.dateMode || "asRange"
+    if (datesInfo.dateMode === "asRange") {
+        datesInfo.dateRangeStrings = (datesInfo.dateRangeStrings || {
+            from: (new Date()).toDateString(),
+            to: (new Date()).toDateString(),
+        })
     }
-    let daysSelected = (datesInfo && dateMode === "asSingles") ?
-        datesFromStrings(datesInfo.singleDatesStrings) : listOfDatesBetween(dateRange)
-    let [dateModeState, changeDateModeState] = useState(dateMode)
 
+    let { dateRangeStrings, singleDatesStrings, dateMode } = datesInfo;
+    let dateRange = dateRangeStrings ? dateRangeFromDateStrings(dateRangeStrings) : undefined;
+    let daysSelected = (datesInfo && dateMode === "asSingles") ?
+        datesFromStrings(singleDatesStrings) : (listOfDatesBetween(dateRange));
     return (
         <Container>
             <DatesSelectFormat />
@@ -74,7 +74,8 @@ export function RangeOfSpace({ }) {
                         days = listOfDatesBetween(dateRange)
                         spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                             dateMode,
-                            dateRange, singleDatesStrings: daysSelected
+                            dateRangeStrings: dateStringsFromDateRange(dateRange),
+                            singleDatesStrings: daysSelected
                         })
                         changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }
@@ -99,9 +100,10 @@ function DatesSelectFormat({ }) {
                 e => {
                     let dateMode = e.target.value
                     spaceAvailabiltyInfo.datesInfo.dateMode = dateMode
+                    let { dateRangeStrings } = spaceAvailabiltyInfo.datesInfo
                     if (dateMode === "asSingles") {
-                        let listOfDates = listOfDatesBetween(spaceAvailabiltyInfo.datesInfo.
-                            dateRange)
+                        let dateRange = dateRangeFromDateStrings(dateRangeStrings)
+                        let listOfDates = listOfDatesBetween(dateRange)
                         let stringsOfDates = stringsFromDates(listOfDates)
                         spaceAvailabiltyInfo.datesInfo.singleDatesStrings = stringsOfDates
                     }
@@ -109,7 +111,8 @@ function DatesSelectFormat({ }) {
                         let listOfDates = datesFromStrings(spaceAvailabiltyInfo.datesInfo.
                             singleDatesStrings)
                         let stringsOfDates = rangeFromDates(listOfDates)
-                        spaceAvailabiltyInfo.datesInfo.dateRange = stringsOfDates
+                        spaceAvailabiltyInfo.datesInfo.dateRangeStrings =
+                            dateStringsFromDateRange(stringsOfDates)
                     }
                     spaceAvailabiltyInfo.datesInfo =
                         buildDateInfo(spaceAvailabiltyInfo.datesInfo)

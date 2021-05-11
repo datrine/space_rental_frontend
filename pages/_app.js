@@ -11,7 +11,8 @@ import { getSession, Provider } from "next-auth/client";
 import { useEffect, useState } from 'react'
 import 'react-day-picker/lib/style.css';
 import startAnalytics from '../utils/analytics'
-//import {isBucketExist} from "../utils/logger"
+import useSWR from "swr"
+import { SplashScreen ,LightSplashScreen} from '../comps/general/comp_splash_screen'
 
 export function reportWebVitals(metric) {
   //console.log(metric)
@@ -21,37 +22,45 @@ export function reportWebVitals(metric) {
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();
-  //console.log(socket)
-  let [sessionState, changeSessionState] = useState(null)
-  useEffect(() => {
-    mySessionFn(changeSessionState)
-  }, [])
+  let { session, error, loading } = sessionFetcher()
   let pathNeedAuth = authList().some(pathInArray => {
     let pathRegex = new RegExp(`${pathInArray}`, "i")
     let foundArray = router.pathname.match(pathRegex) || []
     return foundArray.length > 0;
-  })
-  //console.log(session);
+  });
+
+  if (loading) {
+    return <>{router.pathname==="/"?<SplashScreen/>:<LightSplashScreen />}</>
+  }
+
+  if (pathNeedAuth && (error || !session?.user)) {
+    return <>
+      <Account callbackUrl={router.asPath} />
+    </>
+  }
+
+  if (!(session?.user)) {
+    return <>
+      <Account callbackUrl={router.asPath} />
+    </>
+  }
+
   return <>
-    {pathNeedAuth && !sessionState ?
-      <Account callbackUrl={router.asPath} /> :
-      <Provider session={sessionState}>
-        <Component {...pageProps} />
-      </Provider>
-    }
+    <Provider session={session}>
+      <Component {...pageProps} />
+    </Provider>
   </>
+
 }
 
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats","postads"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads"]
 }
 
-async function mySessionFn(hookChangeSessionState) {
-  const session = await getSession()
-  console.log(session)
-  hookChangeSessionState(session)
-  /* ... */
+function sessionFetcher() {
+  let { data, error, isValidating } = useSWR("/api/auth/session", fetcher)
+  return { session: data, error, loading: isValidating }
 }
-
+let fetcher = (url) => fetch(url).then(res => res.json())
 export default MyApp

@@ -237,7 +237,7 @@ let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
             <DialogTitle id="alert-dialog-title">User Register Success</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    User registered.
+                    Please verify your email to ensure you can log in.
           </DialogContentText>
             </DialogContent>
             <DialogActions>

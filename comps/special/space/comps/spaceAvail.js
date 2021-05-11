@@ -63,7 +63,7 @@ function LengthOfStay(params) {
                     Number(e.target.value) : max
                 spaceAvailabiltyInfo.lengthOfStay = lengthOfStay
                 changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
-            }} value={Number(spaceAvailabiltyInfo?.lengthOfStay)}
+            }} value={Number(spaceAvailabiltyInfo?.lengthOfStay)||""}
                 placeholder="Length of stay" type="number"
                 max={max}
                 className={classes.textField} />

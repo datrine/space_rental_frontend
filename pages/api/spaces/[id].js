@@ -1,12 +1,17 @@
 import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
+import { serverError } from "../../../utils/errors";
+import { getSession } from "next-auth/client";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
 });
 
 export default async function handler(req, res) {
+    let session=await getSession({req})
+    let {user}=session
+    console.log(req.method )
     if (req.method === "GET") {
         try {
             let { id } = req.query
@@ -23,72 +28,35 @@ export default async function handler(req, res) {
             let user = response.data
             return res.json({ user });
         } catch (error) {
-            let errMsg = ""
-            let errType = ""
-            if (error.response) {
-                let errors = error.response.data;
-                errMsg = errors.error
-                if (errors.message) {
-                    errors.message.forEach(msgObj => {
-                        msgObj.messages.forEach(errObj => {
-                            errMsg += ": " + errObj.message;
-                            if (errObj.message.includes("password")) {
-                                errType = "Parameter_Error"
-                            }
-                        });
-                    });
-                }
-            } else if (error.request) {
-                console.log("error.request");
-                errMsg = "Unable to get response";
-                errType = "Network"
-            } else {
-                //console.log('Error', error.message);
-                errMsg = error.message;
-            }
-            return res.json({ err: errMsg, errType });
+            let errorObj=serverError(error)
+            return res.json(errorObj);
         }
     }
     else if (req.method === "PUT") {
         try {
             let { id } = req.query
             let data = req.body
+            console.log(id)
+            console.log(process.env.CMS_URL)
+            //console.log(data)
             await middlewareRunner(req, res, cors);
             let response = await axios({
                 url: `${process.env.CMS_URL}/spaces/${id}`,
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization":`Bearer ${user.jwt}`
                 },
                 data
             })
             let space = response.data
             return res.json({ space });
         } catch (error) {
-            let errMsg = ""
-            let errType = ""
-            if (error.response) {
-                let errors = error.response.data;
-                errMsg = errors.error
-                if (errors.message) {
-                    errors.message.forEach(msgObj => {
-                        msgObj.messages.forEach(errObj => {
-                            errMsg += ": " + errObj.message;
-                            if (errObj.message.includes("password")) {
-                                errType = "Parameter_Error"
-                            }
-                        });
-                    });
-                }
-            } else if (error.request) {
-                console.log("error.request");
-                errMsg = "Unable to get response";
-                errType = "Network"
-            } else {
-                //console.log('Error', error.message);
-                errMsg = error.message;
-            }
-            return res.json({ err: errMsg, errType });
+            //console.log(error)
+            let errorObj=serverError(error)
+            let {err,...errRest}=errorObj;
+            console.log(errRest)
+            return res.json(errorObj);
         }
     }
 }

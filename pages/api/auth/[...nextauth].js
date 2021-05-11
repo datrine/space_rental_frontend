@@ -102,11 +102,11 @@ const options = {
                             }
                         })
                     }else{
-                        let {session}=credentials
-                        console.log("quick assess")
-                        console.log(session)
-                        console.log("quick assess")
-                        Promise.resolve(session.user)
+                        let {sessionInString}=credentials
+                        let session=JSON.parse(sessionInString)
+                        let user=session.user
+                        console.log(user)
+                        return Promise.resolve(user)
                     }
                 } else {
                     myUrl.searchParams.set("err", "login_params_missing")
@@ -172,10 +172,10 @@ const options = {
 
 function sanitizeLogin(credentials) {
     let { strapiToken, strapiProfileId, username, emailOrUsername, password, role,
-        isQuickReload, session } = credentials;
+        isQuickReload, sessionInString } = credentials;
     console.log(credentials)
     let value = (strapiToken && strapiProfileId) || (emailOrUsername && password) ||
-        (isQuickReload && session);
+        (isQuickReload && sessionInString);
     console.log(value ? "Parameters are complete" : "Parameters are missing")
     return value
 }

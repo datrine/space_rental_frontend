@@ -50,6 +50,7 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
         let view = <FailSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
         changeResponseView(view)
     }
+    let []=useState()
     return <>
         <form onSubmit={
             async e => {
@@ -60,8 +61,8 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
                 console.log(values)
                 let res;
                 //no space info exists for current space=>mode:edit
-                if (spaceInfo) {
-                    res = await fetch(`/api/spaces/${spaceInfo.id}`, {
+                if (ctx.spaceData.id) {
+                    res = await fetch(`/api/spaces/${ctx.spaceData.id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
@@ -93,9 +94,9 @@ function SpaceForm({ spaceInfo, changeRoomInfo }) {
                         let session = await getSession()
                         session.user.renterId = renterId
                         await signIn("credentials", {
-                            redirect: false,
+                            callbackUrl:window.location.pathname,
                             isQuickReload: true,
-                            session: { ...session }
+                            sessionInString:JSON.stringify(session)
                         })
                     }
                 }
@@ -145,7 +146,7 @@ function NameOfSpace({ }) {
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
-            <TextField value={spaceData.nameOfSpace} fullWidth multiline={true} onChange={handleChange}
+            <TextField value={spaceData.nameOfSpace||""} fullWidth multiline={true} onChange={handleChange}
                 name="name" placeholder="Name the space"
                 className={classes.textField} />
         </FormControl>
@@ -162,7 +163,7 @@ function DescOfSpace({ }) {
     }
     return <>
         <FormControl fullWidth style={{ marginBottom: 20, marginTop: 10 }} >
-            <TextField value={spaceData.descOfSpace} fullWidth multiline={true} onChange={handleChange} rows={4}
+            <TextField value={spaceData.descOfSpace||""} fullWidth multiline={true} onChange={handleChange} rows={4}
                 name="name" placeholder="Describe the space"
                 className={classes.textField} />
         </FormControl>

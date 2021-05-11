@@ -20,7 +20,7 @@ function stateMgr() {
             for (const key in this) {
                 if (this[key] === state) {
                     this.Current = this[key];
-                    console.log("Initial current is set to " + this.Current)
+                    //console.log("Initial current is set to " + this.Current)
                     return
                 }
             }
@@ -54,7 +54,7 @@ async function middlewareRunner(req, res, middleware) {
         //console.log("SAZDSXDXDF");
         middleware(req, res, (result) => {
             if (result instanceof Error) {
-                console.log(result)
+               // console.log(result)
                 return reject(result);
             }
             //console.log(result)
@@ -152,13 +152,13 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
             body: formData
         });
         let data = await res.json()
-        console.log(data)
+       // console.log(data)
         if (res.status >= 400) {
             throw data
         }
         return { data }
     } catch (err) {
-        console.log(err)
+       // console.log(err)
         return { err }
     }
 
@@ -167,7 +167,7 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
 let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
     try {
         let { url, model, entryId, dataReq } = opts
-        console.log(dataReq)
+        //console.log(dataReq)
         if (!url && !model) {
             throw "Either a model or a url";
         }
@@ -183,10 +183,10 @@ let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
             body: JSON.stringify(dataReq)
         })
         let dataRes = await res.json()
-        console.log(dataRes)
+        //console.log(dataRes)
         return { data: dataRes }
     } catch (error) {
-        console.log(error)
+       // console.log(error)
         return { err: error }
     }
 }
@@ -223,17 +223,17 @@ let getImgUrl = (obj, format) => {
     return imgObj?.url;
 }
 
-let buildDateInfo = ({ dateMode, singleDatesStrings, dateRange }) => {
+let buildDateInfo = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
     if (dateMode === "asRange") {
-        return { dateMode, dateRange }
+        return { dateMode, dateRangeStrings }
     } else if (dateMode === "asSingles") {
         return { dateMode, singleDatesStrings }
     }
 }
 
-let maxLengthOfStay = ({ dateMode, singleDatesStrings, dateRange }) => {
+let maxLengthOfStay = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
     if (dateMode === "asRange") {
-        return listOfDatesBetween(dateRange).length
+        return listOfDatesBetween(dateRangeFromDateStrings(dateRangeStrings)).length
     } else if (dateMode === "asSingles") {
         return singleDatesStrings.length
     }
@@ -277,6 +277,21 @@ let datesFromStrings = (array = []) => array.map((ds) => {
 
 let stringsFromDates = (array = [new Date()]) => array.map((date) => date.toDateString())
 
+let dateRangeFromDateStrings = (dateRangeStrings) => {
+    
+    return {
+        from: new Date(dateRangeStrings.from),
+        to: new Date(dateRangeStrings.to)
+    };
+}
+
+let dateStringsFromDateRange = (dateRangeStrings) => {
+    return {
+        from: (new Date(dateRangeStrings.from)).toDateString(),
+        to: (new Date(dateRangeStrings.to)).toDateString()
+    };
+}
+
 let rangeFromDates = (days = []) => {
     days = days.sort(daysSorter);
     //console.log(days)
@@ -290,12 +305,13 @@ let IdObj = (obj) => {
     if (!obj["id"]) {
         obj["id"] = uniqueId()
     }
-    console.log(obj["id"])
+    //console.log(obj["id"])
     return obj
 }
 
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
     generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,
-    listOfDatesBetween, datesFromStrings, stringsFromDates, maxLengthOfStay, IdObj, rangeFromDates
+    listOfDatesBetween, datesFromStrings, stringsFromDates, maxLengthOfStay, IdObj, rangeFromDates,
+    dateRangeFromDateStrings, dateStringsFromDateRange
 };

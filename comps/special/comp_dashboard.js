@@ -47,7 +47,7 @@ function HiWelcomer({ }) {
      */
     if (session) {
         let user = session.user
-        let prof_pic = getImgUrl(user.prof_pic) || "/prof_pic.png"
+        let prof_pic = getImgUrl(user.prof_pic) || "/user_profile.png"
         //changeLoadingState(states.Loaded)
         return <>
             <Container style={{ marginTop: "70px" }}>

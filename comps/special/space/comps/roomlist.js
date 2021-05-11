@@ -64,6 +64,7 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                             e => {
                                 console.log("list selected")
                                 changeSpaceContext({ ...spacesState[index] })
+                                hookRoomListDialog(false)
                             }
                         } alignItems="flex-start">
                             <ListItemAvatar>

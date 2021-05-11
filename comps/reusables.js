@@ -200,7 +200,7 @@ function Loading({ state }) {
             break;
         //same as state==Loading
         default:
-            view = <animated.div style={animProps} > <Container name="" fullWidth style={{
+            view = <animated.div style={animProps} > <Container name="" style={{
                 backgroundColor: "rgba(0,0,0,0.5)"
             }} >
                 <Grid container justify="center" alignItems="center" style={{ height: "100%" }} >

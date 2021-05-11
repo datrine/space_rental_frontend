@@ -31,7 +31,7 @@ export let spaceDataDefault = {
     spaceAmenities: [{ id: "", desc: "Shared Living Room" }]
 };
 
-export const SpaceContext = React.createContext({ spaceData: _.cloneDeep(spaceDataDefault) , changeSpaceContext: () => { } });
+export const SpaceContext = React.createContext({ spaceData: _.cloneDeep(spaceDataDefault), changeSpaceContext: () => { } });
 
 function SpaceProps(params) {
     let { query } = useRouter()
@@ -112,6 +112,7 @@ function SpaceDetails({ }) {
 function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
     let classes = useStyles()
     let templates = [
+        { value: "", text: "Select mode" },
         { value: "create", text: "Create" },
         { value: "edit", text: "Edit" },
     ]
@@ -124,7 +125,7 @@ function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
                     hookChangeTemplateState(e.target.value)
                     //handleChangeProps(e)
                 }, value: roomTemplate, name: "roomtemplate"
-            }}
+            }} style={{width:"100px"}}
         >
             {templates.map(({ value, text }, index) => <MenuItem
                 key={index} value={value} >{text}</MenuItem>)}
