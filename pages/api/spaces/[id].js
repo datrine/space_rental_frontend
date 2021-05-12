@@ -9,9 +9,9 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
-    let session=await getSession({req})
-    let {user}=session
-    console.log(req.method )
+    let session = await getSession({ req })
+    let { user } = session
+    console.log(req.method)
     if (req.method === "GET") {
         try {
             let { id } = req.query
@@ -25,10 +25,11 @@ export default async function handler(req, res) {
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
+            let space = response.data
+            //console.log(space)
+            return res.json(space);
         } catch (error) {
-            let errorObj=serverError(error)
+            let errorObj = serverError(error)
             return res.json(errorObj);
         }
     }
@@ -45,16 +46,16 @@ export default async function handler(req, res) {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization":`Bearer ${user.jwt}`
+                    "Authorization": `Bearer ${user.jwt}`
                 },
                 data
             })
             let space = response.data
-            return res.json({ space });
+            return res.json(space);
         } catch (error) {
             //console.log(error)
-            let errorObj=serverError(error)
-            let {err,...errRest}=errorObj;
+            let errorObj = serverError(error)
+            let { err, ...errRest } = errorObj;
             console.log(errRest)
             return res.json(errorObj);
         }

@@ -33,7 +33,8 @@ let IndexBody = () => {
                     backgroundColor: "rgba(96,148,26,0.7)", width: "100vw",
                     height: "100vh"
                 }} >
-                <h3 style={{color: "white",fontSize:"3.0em",textAlign:"center"
+                <h3 style={{
+                    color: "white", fontSize: "3.0em", textAlign: "center"
                 }} >
                     Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments
                 </h3>
