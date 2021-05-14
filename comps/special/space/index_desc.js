@@ -13,31 +13,15 @@ import useSWR from 'swr'
 import { useSession } from "next-auth/client";
 import { RenterProfile } from "./descriptions/renterprofile";
 import { Desc } from "./descriptions/desc";
+import { Rent } from "./descriptions/rent";
+import { Availability } from "./descriptions/availability";
+import { Location } from "./descriptions/location";
+import { Amenities } from "./descriptions/amenities";
+import { Flatmates } from "./descriptions/flatmates";
+import { Rules } from "./descriptions/rules";
+import { UserSessionContext,SpaceContext } from "../../../utils/contexts";
 
-export let spaceDataDefault = {
-    nameOfSpace: "",
-    descOfSpace: "",
-    typeOfSpace: "",
-    spaceInfo: {
-        houseType: "", spaceCategory: "", spaceCondition: "",
-        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
-    },
-    flatmateInfo: [],
-    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
-    locationInfo: {},
-    space_pics: [],
-    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
-    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
-    spaceAmenities: [{ id: "", desc: "Shared Living Room" }], ...space
-};
-
-
-export const SpaceContext = React.createContext({
-    spaceData: _.cloneDeep(space),
-});
-export const UserSessionContext = React.createContext({
-    session: _.cloneDeep(session),
-});
+export {UserSessionContext,SpaceContext}
 
 /**
  * 
@@ -69,6 +53,12 @@ function MobileView() {
         <CaroImageView />
         <RenterProfile/>
         <Desc/>
+        <Rent/>
+        <Availability/>
+        <Location/>
+        <Amenities/>
+        <Flatmates/>
+        <Rules/>
     </>
 }
 export { SpaceDescription }

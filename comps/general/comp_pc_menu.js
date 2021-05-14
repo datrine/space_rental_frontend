@@ -1,9 +1,10 @@
 import { faArrowCircleRight, faArrowLeft, faBars, faFunnelDollar, faHome, faPlusCircle, faTimes } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { AppBar, Box, Container, Grid, IconButton, Link, makeStyles, Typography } from "@material-ui/core"
-import { AccountCircle, AlarmOn, Dashboard } from "@material-ui/icons";
+import { AccountCircle, AlarmOn, Dashboard, Search } from "@material-ui/icons";
 import Image from "next/image";
 import { useEffect, useState } from "react"
+import { appColor } from "../../utils/utilFns";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         borderWidth: 0,
         backgroundColor: "transparent",
-        color: "#60942e",
+        color: "black",
         width: 50,
         alignItems: "center"
     },
@@ -35,9 +36,10 @@ let PCMenu = () => {
             <Grid container >
 
                 <Grid item container md={4}>
-                    <Grid item container md={6} justify="space-around" alignItems="center"  >
+                    <Grid item container md={6} justify="space-around" alignItems="center"
+                    >
                         <Image src="/myspace_32x32.svg" height={50} width={50} />
-                        <Typography style={{ color: "black", fontSize: "1.5em" }} >
+                        <Typography style={{ color:appColor, fontSize: "1.5em" }} >
                             MySpace4You
                             </Typography>
                     </Grid>
@@ -48,13 +50,13 @@ let PCMenu = () => {
                     <Grid item container md={2} justify="space-around" alignItems="center"  >
                         <Link href="/acccount" >
                             <IconButton>
-                                <AccountCircle style={{ color: "black", fontSize: "1.5em" }} />
+                                <Search style={{ color: "black", fontSize: "1.5em" }} />
                             </IconButton>
                         </Link>
                     </Grid>
 
                     <Grid item md={5} container justify="space-evenly" alignItems="center" >
-                        <Box component="button" className={classes.btnStacked} >
+                        <Box component="button" className={classes.btnStacked}  style={{color:appColor}}  >
                             <span><FontAwesomeIcon icon={faHome} /></span>
                             <span style={{ fontSize: "12px" }}>Home</span>
                         </Box>

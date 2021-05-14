@@ -1,4 +1,7 @@
-export let profile={
+import { bankObj } from "./bankObj";
+import { img } from "./img";
+
+export let profile = {
   "id": 3,
   "f_name": null,
   "l_name": null,
@@ -12,5 +15,7 @@ export let profile={
   "address": null,
   "created_at": "2021-05-09T11:33:25.000Z",
   "updated_at": "2021-05-09T11:33:25.000Z",
-  "prof_pic": null
+  "prof_pic": img,
+  "bankDetails": [bankObj],
 }
+

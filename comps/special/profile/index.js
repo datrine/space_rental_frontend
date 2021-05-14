@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
 import {
@@ -26,18 +26,11 @@ import Username from './username';
 import GenderSelect from './gender';
 import PhoneNum from './phonenum';
 import Lastname from './l_name';
-//import Lastname from './l_name';
-let states = stateMgr()
-
+import { ProfileContext, UserSessionContext } from '../../../utils/contexts';
+import BankDetails from './bank_details';
 let Comp_Profile = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
-    let [session, loading] = useSession()
-    let view = null
-    view = <><div className="">Fetching Dashboard data</div></>
-    if (session) {
-        view = <><View mobileView={<MobileView />} /></>
-        return view
-    }
-    return <><><View mobileView={<MobileView />} /></>
+    return <>
+        <View mobileView={<MobileView />} />
     </>
 }
 
@@ -49,42 +42,24 @@ function MobileView() {
 }
 
 let ProfileForm = ({ ...propsFromParent }) => {
-    let [session, loading] = useSession()
-        let [responseView, changeResponseView] = useState(null)
-    if (session) {
-        let user = session.user
-        let formik = useFormik({
-            initialValues: {
-                f_name: user.f_name || "",
-                l_name: user.l_name || "",
-                m_name: user.m_name || "",
-                address: user.address || "",
-                dob: user.dob,
-                email: user.email,
-                password: user.password || "",
-                phonenum: user.phonenum || "",
-                username: user.username,
-                gender: user.gender || "female",
-                repass: user.password || ""
-            },
-            validate: (values) => {
-                console.log("gcffg")
-                /**  return new Promise(async (res, rej) => {
-                     let errors = {}
-                     let valObj = await registerValidator(values)
-                     let { valid, errorList, instance } = valObj
-                     if (!valid) {
-                         for (const errorObj of errorList) {
-                             errors[errorObj.prop] = errorObj.msg;
-                         }
-                     }
-                     console.log(errors)
-                     res(errors)
-                 })*/
-            },
-            onSubmit: (values, actions) => {
-                (async () => {
-                    console.log(values)
+    let { session, changeContext: changeSessionContext } = useContext(UserSessionContext)
+    let { profile, changeContext: changeProfileContext } = useContext(ProfileContext)
+    let [responseView, changeResponseView] = useState(null)
+    let handleSuccess = (user) => {
+        let view = <SuccessReg hookChangeResponseView={changeResponseView} />
+        changeResponseView(view)
+    }
+    let handleFail = (err) => {
+        let view = <FailReg hookChangeResponseView={changeResponseView} />
+        changeResponseView(view)
+    }
+
+    return <>
+        <Container style={{ marginTop: "70px" }} >
+            <form className="container-fluid mt-2" onSubmit={
+                async e => {
+                    e.preventDefault()
+                    console.log(profile)
                     let res = await fetch(`/api/profiles/${session.user.profileId}`, {
                         method: "PUT",
                         headers: {
@@ -101,64 +76,43 @@ let ProfileForm = ({ ...propsFromParent }) => {
                         if (user) {
                             handleSuccess(user);
                         }
-
                     }
-                })()
-            }
-        })
-        let handleSuccess = (user) => {
-            let view = <SuccessReg hookChangeResponseView={changeResponseView} />
-            changeResponseView(view)
-        }
-        let handleFail = (err) => {
-            let view = <FailReg hookChangeResponseView={changeResponseView} />
-            changeResponseView(view)
-        }
+                }
+            } >
+                <ProfilePicture />
 
-        return <>
-            <Container style={{ marginTop: "70px" }} >
-                <form className="container-fluid mt-2" onSubmit={
-                    e => {
-                        e.preventDefault()
-                        return formik.handleSubmit(e)
-                    }} >
-                    <ProfilePicture />
+                <Firstname />
 
-                    <Firstname handleChange={formik.handleChange} f_name={formik.values.f_name} />
+                <Lastname />
 
-                    <Lastname handleChange={formik.handleChange} l_name={formik.values.l_name} />
+                <EmailForm />
 
-                    <EmailForm handleChange={formik.handleChange}
-                        email={formik.values.email} emailError={formik.errors.email} />
+                <Username />
 
-                    <Username handleChange={formik.handleChange}
-                        username={formik.values.username} usernameError={formik.errors.username} />
+                <GenderSelect />
 
-                    <GenderSelect genderProps={formik.values.gender}
-                        handleChangeProps={formik.handleChange} />
+                <PhoneNum />
 
-                    <PhoneNum handleChange={formik.handleChange}
-                        phonenum={formik.values.phonenum} phonenumError={formik.errors.phonenum} />
 
-                    <p style={{ width: "100%", textAlign: "center" }}>
-                        <Button disabled={!formik.isValid && !formik.isSubmitting}
-                            type="submit" variant="contained"
-                            color="primary" >{formik.isSubmitting ? <FontAwesomeIcon
-                                spin icon={faSpinner} /> : "Update"} </Button>
-                    </p>
-                </form>
-            </Container>
-            {responseView}
-        </>
-
-    }
+<BankDetails/>
+                <p style={{ width: "100%", textAlign: "center" }}>
+                    <Button disabled={false}
+                        type="submit" variant="contained"
+                        color="primary" >{false ? <FontAwesomeIcon
+                            spin icon={faSpinner} /> : "Update"} </Button>
+                </p>
+            </form>
+        </Container>
+        {responseView}
+    </>
 
 }
+
 
 let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)
     let handleClose = (e) => {
-        autoSignIn({callbackUrl:"/profile"})
+        autoSignIn({ callbackUrl: "/profile" })
         hookChangeResponseView(null)
     }
     return <>

@@ -4,23 +4,22 @@ import { Container, Grid, Input, } from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import { SpaceContext } from "../index_desc";
 
-function Rent({ }) {
+function Amenities({ }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
-    let { spaceBills } = spaceData
+    let { spaceAmenities } = spaceData
 
     return <>
-        <Container style={{marginTop:"10px"}}  >
+        <Container style={{ marginTop: "10px" }}  >
+            <h4>Amenities</h4>
             <Grid container >
-                <Grid item container xs={2} >
-                    <img src="/space_desc/rent.svg" />
-                </Grid>
-                <Grid item container xs={8}>
-                    <span>{spaceBills.charge} per {spaceBills.billFormat}</span>
-                </Grid>
+                {spaceAmenities.map(({desc},index)=><Grid container key={index} >
+                    <Grid item container xs={2} ></Grid>
+                    <Grid item container xs={10} ><p>{desc}</p></Grid>
+                </Grid>)}
             </Grid>
         </Container>
     </>
 }
 
-export { Rent }
+export { Amenities }

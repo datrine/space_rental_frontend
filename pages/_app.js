@@ -13,8 +13,7 @@ import 'react-day-picker/lib/style.css';
 import startAnalytics from '../utils/analytics'
 import useSWR from "swr"
 import { SplashScreen ,LightSplashScreen} from '../comps/general/comp_splash_screen'
-import { escapeSelector } from 'jquery'
-import { verifyAccount } from '../utils/bank_transactions'
+import { verifyAccount,getBankCodes } from '../utils/bank_transactions'
 
 export function reportWebVitals(metric) {
   //console.log(metric)
@@ -47,7 +46,7 @@ function MyApp({ Component, pageProps }) {
     </>
   }
   console.log(session)
-
+  //alert(location.href)
   return <>
     <Provider session={session}>
       <Component session={session} {...pageProps} />
@@ -67,6 +66,7 @@ function sessionFetcher() {
 }
 let fetcher = (url) => fetch(url).then(res => res.json())
 
-verifyAccount({account_bank:"UBA",account_number:"2043356432"})
+//verifyAccount({account_bank:"UBA",account_number:"2043356432"})
+getBankCodes()
 
 export default MyApp

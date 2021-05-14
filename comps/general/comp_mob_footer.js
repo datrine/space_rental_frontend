@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         borderWidth: 0,
         backgroundColor: "transparent",
-        color:"#60942e",
+        color:"black",
         width: 50,
         alignItems: "center"
     },
@@ -41,7 +41,7 @@ let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
     return <>
         <AppBar className={classes.appBar} position="fixed"
             style={{ display: showMenu ? "flex" : "none" }} >
-            <Box component="button" className={classes.btnStacked} >
+            <Box component="button" className={classes.btnStacked} style={{color:"#60942e"}} >
                 <span><FontAwesomeIcon icon={faHome} /></span>
                 <span style={{ fontSize: "12px" }}>Home</span>
             </Box>

@@ -1,11 +1,14 @@
 import { FormControl, MenuItem, Select } from "@material-ui/core"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { ProfileContext } from "../../../utils/contexts"
 import { MySelect } from "../../reusables"
 import { useStyles } from "./styles"
 
 export default function GenderSelect({ genderProps, handleChangeProps }) {
     let classes = useStyles()
-    let [genderState, changeGenderState] = useState(genderProps)
+    let { profile, changeContext } = useContext(ProfileContext)
+    let [genderState, changeGenderState] = useState(profile.gender)
+    let { gender } = profile
     let genders = [
         { value: "male", text: "Male" },
         { value: "female", text: "Female" },
@@ -13,16 +16,16 @@ export default function GenderSelect({ genderProps, handleChangeProps }) {
     ]
     return <>
         <FormControl fullWidth style={{ marginBottom: "10px" }}>
-            <h5 style={{ color: "black", textAlign:"center"}}>Select Gender</h5>
+            <h5 style={{ color: "black", textAlign: "center" }}>Select Gender</h5>
             <Select
                 displayEmpty
                 className={classes.textField}
                 inputProps={{
                     'aria-label': 'Without label',
                     onChange: e => {
-                        changeGenderState(e.target.value)
+                        changeContext(e.target.value)
                         handleChangeProps(e)
-                    }, value: genderState, name: "gender"
+                    }, value: (gender || ""), name: "gender"
                 }}
             >
                 {genders.map(({ value, text }, index) => <MenuItem

@@ -1,15 +1,16 @@
 import { FormControl, Input, InputAdornment } from "@material-ui/core"
 import { PersonAdd } from "@material-ui/icons"
 import { useSession } from "next-auth/client"
+import { useContext } from "react"
+import { UserSessionContext } from "../space/index_desc"
 import { useStyles } from "./styles"
 
 export default function Username({ username, usernameError, handleChange }) {
     let classes = useStyles()
-    let [session, loading] = useSession()
-    if (session) {
+    let { session, } = useContext(UserSessionContext)
         return <>
             <FormControl fullWidth>
-                <Input disabled onChange={handleChange} value={username}
+                <Input disabled value={session.user.username}
                     placeholder="Username..." fullWidth
                     startAdornment={
                         <InputAdornment position="start">
@@ -22,6 +23,5 @@ export default function Username({ username, usernameError, handleChange }) {
                 <span className="w3-text-red" >
                     {usernameError}</span>
             </p> : null}</>
-    }
-    return null
+  
 }
