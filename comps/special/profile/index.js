@@ -1,24 +1,14 @@
-import Link from 'next/link';
-import Image from "next/image"
+
 import { useState, useEffect, useContext } from "react"
-import { signIn, signOut, useSession } from "next-auth/client";
-import { useRouter } from 'next/router';
 import {
-    Accordion, AccordionDetails, AccordionSummary, Button, Container, Dialog,
-    DialogContent, DialogActions, DialogTitle, FormControl, Grid, IconButton, Input, InputAdornment, makeStyles, Typography
+    Button, Container, Dialog,
+    DialogContent, DialogActions, DialogTitle, Grid,
 } from "@material-ui/core"
-import { Announcement, ArrowBack, Chat, CheckCircle, Edit, Email, Label, Person, PersonAdd, Phone, PowerOff, Settings, Visibility, } from "@material-ui/icons"
 import View from '../../view';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faFile, faImage, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Loading, LogoSVG, MySelect, SessionState } from '../../reusables';
-import { uploader, stateMgr, generalPutAPI, autoSignIn } from '../../../utils/utilFns';
-import { OpenedMenu } from "../dashboard/opened_menu"
-import { useFormik } from 'formik';
-import { registerValidator } from '../../../utils/validators';
+import { faSpinner, } from '@fortawesome/free-solid-svg-icons';
+import { autoSignIn, appColor } from '../../../utils/utilFns';
 import { ProfileMenu } from '../dashboard/resuables';
-import { useRef } from 'react';
 import ProfilePicture from "./prof_pic"
 import Firstname from './f_name';
 import EmailForm from './email';
@@ -26,9 +16,14 @@ import Username from './username';
 import GenderSelect from './gender';
 import PhoneNum from './phonenum';
 import Lastname from './l_name';
-import { ProfileContext, UserSessionContext } from '../../../utils/contexts';
 import BankDetails from './bank_details';
-let Comp_Profile = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
+import { Calendar } from "./dob";
+import { UserSessionContext } from "../../../pages/_app";
+import { ProfileContext } from "../../../pages/profile";
+import { CheckCircle } from "@material-ui/icons";
+import Occupation from "./occupation";
+
+let Comp_Profile = ({ }) => {
     return <>
         <View mobileView={<MobileView />} />
     </>
@@ -37,10 +32,30 @@ let Comp_Profile = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
 function MobileView() {
     return <>
         <ProfileMenu />
-        <ProfileForm />
+        <Body />
     </>
 }
 
+function Body() {
+    return <>
+        <Container style={{ marginTop: "70px", padding: 0 }} >
+            <Grid justify="space-evenly" alignItems="center"
+                container style={{ backgroundColor: appColor, height: 100, color: "white" }}>
+                <Grid item container justify="center" alignItems="center" >
+                    <img src="/profile/header.svg" height={50} width={50} style={{ marginRight: "20px" }} />
+                    <span style={{ fontWeight: "500px", fontSize: "2.5em" }} >My Profile</span>
+                </Grid>
+                <Grid item container justify="center" >
+                    <h4>Keep Your Profile Update</h4>
+                </Grid>
+            </Grid>
+            <Container style={{marginTop:"20px"}}>
+
+                <ProfileForm />
+            </Container>
+        </Container>
+    </>
+}
 let ProfileForm = ({ ...propsFromParent }) => {
     let { session, changeContext: changeSessionContext } = useContext(UserSessionContext)
     let { profile, changeContext: changeProfileContext } = useContext(ProfileContext)
@@ -55,46 +70,58 @@ let ProfileForm = ({ ...propsFromParent }) => {
     }
 
     return <>
-        <Container style={{ marginTop: "70px" }} >
+        <Container style={{padding:0, borderWidth: 1, borderColor: appColor, borderStyle: "solid" }} >
+            <h4 style={{ backgroundColor: appColor, color: "white" }}>Profile</h4>
             <form className="container-fluid mt-2" onSubmit={
                 async e => {
                     e.preventDefault()
                     console.log(profile)
+                    let {email,emailOrUsername,username,...restOfProfile}=profile
                     let res = await fetch(`/api/profiles/${session.user.profileId}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(values)
+                        body: JSON.stringify(restOfProfile)
                     });
                     if (res.ok) {
                         let data = await res.json();
-                        let { err, user, jwt } = data;
+                        console.log(data)
+                        let { err, profile, jwt } = data;
                         if (err) {
                             handleFail(err)
                         }
-                        if (user) {
-                            handleSuccess(user);
+                        if (profile) {
+                            handleSuccess(profile);
                         }
                     }
                 }
             } >
                 <ProfilePicture />
-
+<br/>
                 <Firstname />
-
+                <br/>
                 <Lastname />
 
+                <br/>
                 <EmailForm />
 
+                <br/>
                 <Username />
 
+                <br/>
                 <GenderSelect />
 
+                <br/>
                 <PhoneNum />
 
+                <br/>
+                <Calendar/>
 
-<BankDetails/>
+                <br/>
+            <Occupation/>
+
+                <BankDetails />
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={false}
                         type="submit" variant="contained"

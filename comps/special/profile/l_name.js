@@ -1,7 +1,7 @@
 import { FormControl, Input, InputAdornment } from "@material-ui/core"
 import { Person } from "@material-ui/icons"
 import { useContext } from "react"
-import { ProfileContext } from "../../../utils/contexts"
+import { ProfileContext } from "../../../pages/profile"
 import { useStyles } from "./styles"
 export default function Lastname({ l_name, handleChange }) {
     let classes = useStyles()

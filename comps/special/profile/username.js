@@ -2,7 +2,7 @@ import { FormControl, Input, InputAdornment } from "@material-ui/core"
 import { PersonAdd } from "@material-ui/icons"
 import { useSession } from "next-auth/client"
 import { useContext } from "react"
-import { UserSessionContext } from "../space/index_desc"
+import { UserSessionContext } from "../../../pages/_app"
 import { useStyles } from "./styles"
 
 export default function Username({ username, usernameError, handleChange }) {

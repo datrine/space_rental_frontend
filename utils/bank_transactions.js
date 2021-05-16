@@ -11,7 +11,7 @@ async function verifyAccount(data = { account_number, account_bank }) {
         });
         if (res.ok) {
             let fetched = await res.json()
-            console.log(fetched)
+            //console.log(fetched)
             return fetched
         } else {
             throw await res.json()
@@ -31,7 +31,7 @@ async function getBankCodes() {
                 },
             })
         let data = res.data
-        console.log(data)
+        //console.log(data)
         data = data.map(({ code, name }) => ({ bankCode: code, bankName: name }))
         return data;
     } catch (error) {

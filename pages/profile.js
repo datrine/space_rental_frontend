@@ -2,47 +2,61 @@ import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
 import { Comp_Profile } from '../comps/special/profile/index';
-import { ProfileContext, UserSessionContext } from '../utils/contexts';
-import { useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import useSWR from "swr"
-import { session, profile } from "../utils/models/exportModels"
+import { profile } from "../utils/models/exportModels"
+import _ from 'lodash';
+import { UserSessionContext } from './_app';
+
+
 /**
  * 
  * @param {object} params
  * @param {session} params.session
  * @returns 
  */
-let Profile = ({ session, csrfToken, callbackUrl, ...otherProps }) => {
-    let [profileState, changeProfileContextState] = useState({ ...session.user });
-    let { data, loading, error } = profileFetcher(session.user.profileId)
-    let profView = null
+
+let ProfileContext = createContext({ profile: _.cloneDeep(profile), changeContext: () => { } });
+
+let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
+    let { session } = useContext(UserSessionContext);
+    let { data, loading, error } = profileFetcher(session.user.profileId);
     if (error) {
-        profView = <><p>Error loading view...</p></>
+        return <><p>Error loading view...</p></>
     }
-    else if (data) {
-        /**
-         * @type {profileState}
-         */
-        let profile = data.profile
-        profView = <ProfileContext.Provider
-            value={{ profile, changeContext: changeProfileContextState }} >
-            <Comp_Profile csrfToken={csrfToken} callbackUrl={callbackUrl} />
-        </ProfileContext.Provider>
-    }
-    else if (!data) {
-        profView = <><p>No user found...</p></>
+    if (!data) {
+        return <><p>No user found...</p></>
     }
     return <>
-        <UserSessionContext.Provider value={{ session }} >
-            {profView}
+        <ProfileContext.Provider value={{
+            profile: data.profile,
+            changeContext: () => { }
+        }}>
+            <PlaceHolder csrfToken={csrfToken} callbackUrl={callbackUrl} />
+        </ProfileContext.Provider>
+    </>
 
-        </UserSessionContext.Provider>
+}
+
+function PlaceHolder({ csrfToken, callbackUrl, ...otherProps }) {
+    let { profile } = useContext(ProfileContext)
+    let [profileState, changeProfileState] = useState(profile)
+    //console.log("profile")
+    console.log(profileState)
+    //console.log("profile")
+    return <>
+        <ProfileContext.Provider value={{
+            profile: profileState,
+            changeContext: changeProfileState
+        }}>
+            <Comp_Profile csrfToken={csrfToken} callbackUrl={callbackUrl} />
+        </ProfileContext.Provider>
     </>
 }
 
 function profileFetcher(id) {
     let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher)
-    console.log(data || error || isValidating)
+    //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }
 let fetcher = (url) => fetch(url).then(async res => {
@@ -50,6 +64,5 @@ let fetcher = (url) => fetch(url).then(async res => {
     return res.json()
 });
 
-
-export { ProfileContext, UserSessionContext }
+export { ProfileContext }
 export default Profile;

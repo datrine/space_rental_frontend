@@ -20,35 +20,16 @@ import { Amenities } from "./descriptions/amenities";
 import { Flatmates } from "./descriptions/flatmates";
 import { Rules } from "./descriptions/rules";
 
-export let spaceDataDefault = {
-    nameOfSpace: "",
-    descOfSpace: "",
-    typeOfSpace: "",
-    spaceInfo: {
-        houseType: "", spaceCategory: "", spaceCondition: "",
-        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
-    },
-    flatmateInfo: [],
-    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
-    locationInfo: {},
-    space_pics: [],
-    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
-    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
-    spaceAmenities: [{ id: "", desc: "Shared Living Room" }], ...space
-};
+export {SpaceContext}
 
-
-export const SpaceContext = React.createContext({
-    spaceData: _.cloneDeep(space),
-});
 /**
  * 
  * @param {space} spaceDataProps 
  * @returns 
  */
-function SpaceDescription() {
+function Spaces() {
     let { query:{ id}} = useRouter();
-    let { data: spaceDataFetched, error } = useSWR(`/api/spaces/${id}`)
+    let { data: spaceDataFetched, error } = useSWR(`/api/spaces${id}`)
     if (error) {
         return <>
             <p>Error loading data...</p>

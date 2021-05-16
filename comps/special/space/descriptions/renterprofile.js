@@ -9,8 +9,8 @@ import _ from "lodash";
 import { space, session } from "../../../../utils/models/exportModels";
 import useSWR from 'swr'
 import { useSession } from "next-auth/client";
-import { UserSessionContext } from "../index_desc";
 import { getImgUrl } from "../../../../utils/utilFns";
+import { UserSessionContext } from "../../../../pages/_app";
 
 function RenterProfile() {
     let ctx = useContext(UserSessionContext)

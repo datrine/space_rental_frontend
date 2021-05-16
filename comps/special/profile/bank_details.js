@@ -3,22 +3,25 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { AccountBalance, Person, PlusOneRounded } from "@material-ui/icons"
 import { useStyles } from "./styles"
 import { verifyAccount, getBankCodes } from "../../../utils/bank_transactions"
-import { ProfileContext } from "../../../utils/contexts"
 import { bankObj } from "../../../utils/models/exportModels"
 import _ from "lodash"
 import { appColor } from "../../../utils/utilFns"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons"
+import { ProfileContext } from "../../../pages/profile"
 
 export default function BankDetails({ }) {
     let { profile, changeContext } = useContext(ProfileContext);
     let { bankDetails } = profile
     return <>
-        <FormControl fullWidth style={{ marginBottom: "10px" }}>
-            <h4
+        <FormControl fullWidth style={{
+            marginBottom: "10px",
+            borderStyle: "solid", borderWidth: "1px", borderColor: appColor
+        }}>
+            <h5
                 style={{
                     color: "white", backgroundColor: appColor, paddingLeft: "5px"
-                }}>Bank Details</h4>
+                }}>Bank Details</h5>
             {bankDetails.map(({ }, index) => <BankObj key={index} indexProps={index} />)}
             <IconButton variant="contained" color="primary" onClick={
                 e => {
@@ -67,7 +70,7 @@ function BankList({ indexProps }) {
     }, []);
     return <>
         <FormControl fullWidth style={{ marginBottom: "10px" }}>
-            <h5 style={{ color: "black", }}>Select Bank</h5>
+            <h5 style={{ color: "black", textAlign: "center" }}>Select Bank</h5>
             <Select
                 displayEmpty
                 className={classes.textField}
@@ -79,7 +82,7 @@ function BankList({ indexProps }) {
                         bankObj = { ...bankObj, bankCode, bankName }
                         bankDetails[indexProps] = bankObj;
                         changeContext({ ...profile, bankDetails });
-                    }, value:bankCode, name: "bank"
+                    }, value: bankCode, name: "bank"
                 }}>
                 {banks.map(({ bankCode, bankName }, index) => <MenuItem
                     key={index} value={bankCode} >{bankName}</MenuItem>)}
@@ -116,7 +119,7 @@ function AccountNumber({ indexProps }) {
                             ...bankObj,
                             accountName: resultObj.accountName
                         };
-                        console.log(resultObj);
+                        // console.log(resultObj);
                         changeContext({ ...profile, bankDetails });
                     }
                 } catch (error) {

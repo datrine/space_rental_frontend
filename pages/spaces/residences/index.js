@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { SpaceDescription } from '../../comps/special/space/index_desc';
-import { SWRConfig } from 'swr'
-import { session } from '../../utils/models/session';
+import { SpaceDescription } from '../../../comps/special/space/index_desc';
+import  { SWRConfig } from 'swr'
+import { session } from '../../../utils/models/session';
 import React from 'react';
 import _ from 'lodash';
 
 
-let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
+let Residences = ({ csrfToken, callbackUrl,session, ...otherProps }) => {
     //console.log("here in login")
     return <>
         <SWRConfig value={{
@@ -19,4 +19,4 @@ let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     </>
 }
 
-export default Space;
+export default Residences;

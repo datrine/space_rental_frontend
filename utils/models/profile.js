@@ -1,7 +1,7 @@
 import { bankObj } from "./bankObj";
 import { img } from "./img";
 
-export let profile = {
+ const profile = {
   "id": 3,
   "f_name": null,
   "l_name": null,
@@ -19,3 +19,4 @@ export let profile = {
   "bankDetails": [bankObj],
 }
 
+export default profile

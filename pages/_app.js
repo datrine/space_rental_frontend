@@ -12,14 +12,21 @@ import { useEffect, useState } from 'react'
 import 'react-day-picker/lib/style.css';
 import startAnalytics from '../utils/analytics'
 import useSWR from "swr"
-import { SplashScreen ,LightSplashScreen} from '../comps/general/comp_splash_screen'
-import { verifyAccount,getBankCodes } from '../utils/bank_transactions'
+import { SplashScreen, LightSplashScreen } from '../comps/general/comp_splash_screen'
+import { verifyAccount, getBankCodes } from '../utils/bank_transactions'
+import { session } from '../utils/models/session'
+import { createContext } from 'react'
+import _ from 'lodash'
 
 export function reportWebVitals(metric) {
   //console.log(metric)
   startAnalytics(metric)
 }
 
+
+export const UserSessionContext = createContext({
+  session: _.cloneDeep(session),
+});
 
 function MyApp({ Component, pageProps }) {
   let router = useRouter();
@@ -31,27 +38,31 @@ function MyApp({ Component, pageProps }) {
   });
 
   if (loading) {
-    return <>{router.pathname==="/"?<SplashScreen/>:<LightSplashScreen />}</>
+    return <>{router.pathname === "/" ? <SplashScreen /> : <LightSplashScreen />}</>
   }
 
-  if (pathNeedAuth && (error || !session?.user)) {
+  if (error) {
+    return <>
+      <p>Error loading page...</p>
+    </>
+  }
+  if (pathNeedAuth && (!session)) {
     return <>
       <Account callbackUrl={router.asPath} />
     </>
   }
 
-  if (!(session?.user)) {
+  if (session) {
+    //console.log(session)
+    //alert(location.href)
     return <>
-      <Account callbackUrl={router.asPath} />
+      <Provider session={session}>
+        <UserSessionContext.Provider value={{ session }} >
+          <Component {...pageProps} />
+        </UserSessionContext.Provider>
+      </Provider>
     </>
   }
-  console.log(session)
-  //alert(location.href)
-  return <>
-    <Provider session={session}>
-      <Component session={session} {...pageProps} />
-    </Provider>
-  </>
 
 }
 
