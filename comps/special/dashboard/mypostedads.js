@@ -77,7 +77,7 @@ function CountResidence({ }) {
 
 function spaceCounter({ userId, typeOfSpace }) {
     let { data, error, isValidating } =
-        useSWR(`http://localhost:1337/spaces/count?userId=${userId}&typeOfSpace=${typeOfSpace}`, fetcher)
+        useSWR(`${process.env. NEXT_PUBLIC_CMS_URL}/spaces/count?userId=${userId}&typeOfSpace=${typeOfSpace}`, fetcher)
     //console.log(data || error || isValidating)
     return { count: data, error, loading: isValidating }
 }
