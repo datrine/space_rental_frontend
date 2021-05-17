@@ -36,23 +36,29 @@ function MyApp({ Component, pageProps }) {
     let foundArray = router.pathname.match(pathRegex) || []
     return foundArray.length > 0;
   });
-
+//if loading
   if (loading) {
     return <>{router.pathname === "/" ? <SplashScreen /> : <LightSplashScreen />}</>
   }
-
+  //if error getting user session
   if (error) {
     return <>
       <p>Error loading page...</p>
     </>
   }
+  //if is user is not logged in but authh data is needed
   if (pathNeedAuth && !(session && session.user)) {
     return <>
       <Account callbackUrl={router.asPath} />
     </>
   }
 
-  if (session) {
+  if (!(session && session.user)) {
+    return <>
+    <Component {...pageProps} />
+    </>
+  }
+  if (session&&session.user) {
     //console.log(session)
     //alert(location.href)
     return <>
@@ -68,7 +74,7 @@ function MyApp({ Component, pageProps }) {
 
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads","payment"]
 }
 
 function sessionFetcher() {
