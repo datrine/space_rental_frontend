@@ -48,7 +48,7 @@ export function RangeOfSpace({ }) {
                             days.splice(indexOfDate, 1)
                             spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                                 dateMode,
-                                dateRange, singleDatesStrings: days
+                                dateRange, singleDatesStrings: stringsFromDates(days)
                             })
                             return changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                         }
@@ -56,7 +56,7 @@ export function RangeOfSpace({ }) {
                         days.sort(daysSorter)
                         spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                             dateMode,
-                            dateRange, singleDatesStrings: days
+                            dateRange, singleDatesStrings: stringsFromDates(days)
                         })
                         changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }

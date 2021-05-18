@@ -2,7 +2,7 @@ import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { useEffect, useState } from "react";
 import View from "../../view";
 import { useRouter } from "next/router";
@@ -19,64 +19,60 @@ import { Location } from "./descriptions/location";
 import { Amenities } from "./descriptions/amenities";
 import { Flatmates } from "./descriptions/flatmates";
 import { Rules } from "./descriptions/rules";
+import { FooterMenu } from "./descriptions/reusuables";
+import { SpaceContext } from "../../../pages/spaces/[id]";
 
-export let spaceDataDefault = {
-    nameOfSpace: "",
-    descOfSpace: "",
-    typeOfSpace: "",
-    spaceInfo: {
-        houseType: "", spaceCategory: "", spaceCondition: "",
-        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
-    },
-    flatmateInfo: [],
-    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
-    locationInfo: {},
-    space_pics: [],
-    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
-    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
-    spaceAmenities: [{ id: "", desc: "Shared Living Room" }], ...space
-};
-
-
-export const SpaceContext = React.createContext({
-    spaceData: _.cloneDeep(space),
-});
 /**
  * 
  * @param {space} spaceDataProps 
  * @returns 
  */
-function SpaceDescription() {
-    let { query:{ id}} = useRouter();
-    let { data: spaceDataFetched, error } = useSWR(`/api/spaces/${id}`)
-    if (error) {
-        return <>
-            <p>Error loading data...</p>
-        </>
-    }
-    if (!spaceDataFetched) {
-        return <>
 
-        </>
-    }
+export const SpaceToBookContext = createContext({
+    spaceToBookData: _.clone({
+        spaceId: 0,
+        datesToStayInfo: {
+            dateMode: "asRange",
+            singleDatesStrings: [],
+            dateRangeStrings: {
+                from: new Date().toDateString(),
+                to: new Date().toDateString()
+            }
+        }
+    }), changeContext: () => { }
+});
+
+function SpaceDescription() {
+    let { spaceData } = useContext(SpaceContext);
+    let { spaceToBookData } = useContext(SpaceToBookContext)
+    let [spaceToBookDataState, changeSpaceToBookDataState] = useState({
+        ...spaceToBookData,
+        spaceId: spaceData.id,
+    });
+    console.log(spaceToBookDataState)
     return <>
-        <SpaceContext.Provider value={{ spaceData: spaceDataFetched }} >
+        <SpaceToBookContext.Provider
+            value={{
+                spaceToBookData: spaceToBookDataState,
+                changeContext: changeSpaceToBookDataState
+            }} >
             <View mobileView={<MobileView />} />
-        </SpaceContext.Provider>
+        </SpaceToBookContext.Provider>
     </>
 }
 
 function MobileView() {
     return <>
         <CaroImageView />
-        <RenterProfile/>
-        <Desc/>
-        <Rent/>
-        <Availability/>
-        <Location/>
-        <Amenities/>
-        <Flatmates/>
-        <Rules/>
+        <RenterProfile />
+        <Desc />
+        <Rent />
+        <Availability />
+        <Location />
+        <Amenities />
+        <Flatmates />
+        <Rules />
+        <FooterMenu />
     </>
 }
-export { SpaceDescription }
+export { SpaceDescription,SpaceContext }

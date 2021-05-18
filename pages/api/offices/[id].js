@@ -19,7 +19,7 @@ export default async function handler(req, res) {
             let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/spaces/${id}`,
+                url: `${process.env.CMS_URL}/offices/${id}`,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

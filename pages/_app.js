@@ -79,7 +79,7 @@ function authList() {
 
 function sessionFetcher() {
   let { data, error, isValidating } = useSWR("/api/auth/session", fetcher)
-  console.log(isValidating || error || data)
+  //console.log(isValidating || error || data)
   return { session: data, error, loading: isValidating }
 }
 let fetcher = (url) => fetch(url).then(res => res.json())

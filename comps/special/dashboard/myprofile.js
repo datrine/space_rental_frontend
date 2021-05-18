@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ProfileContext } from "../../../pages/dashboard";
 
 export default function MyProfile({ }) {
-    let { profile } = useContext(ProfileContext)
+    let { profile } = useContext(ProfileContext);
     let { f_name, l_name, email, gender, occupation } = profile
     return <>
         <Container style={{ marginTop: "30px" }}>
@@ -33,3 +33,4 @@ export default function MyProfile({ }) {
         </Container>
     </>
 }
+

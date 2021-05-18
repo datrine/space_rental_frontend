@@ -7,6 +7,7 @@ import profile from '../utils/models/profile';
 import useSWR from "swr";
 import { UserSessionContext } from './_app';
 import { createContext, useContext } from 'react';
+import PaymentApp from '../comps/special/payments';
 
 /**
  * 
@@ -16,31 +17,79 @@ import { createContext, useContext } from 'react';
  */
 
 let ProfileContext = createContext({ profile: _.cloneDeep(profile), changeContext: () => { } });
+let order = {
+    trackingId: 0,
+    billingInfo: {},
+    userId: 0,
+    state: "begun",
+    spaceId: 0,
+    paymentInfo: {
+        via: "e-payment",
+        platform: "paystack",
+        platformMeta: {},
+        type: "full" || "split",
+        state: "none" || "incomplete" || "completed"
+    }
+}
+export const OrdersContext = createContext({
+    orders: [order],
+});
+export const OrderContext = createContext({
+    order: _.cloneDeep({ ...order }), changeContext: () => { }
+});
 
 let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
     let { session } = useContext(UserSessionContext);
-    let { data, loading, error } = profileFetcher(session.user.profileId)
-    if (loading) {
+    let { data: dataForProfile, loading: loadingProfile, error: errorForProfileFetch } =
+        profileFetcher(session.user.profileId);
+    if (loadingProfile) {
         return <>Loading...</>
     }
-    if (error) {
+    if (errorForProfileFetch) {
         return <>Error...</>
     }
-    if (!data) {
+    if (!dataForProfile) {
         return <>No data...</>
     }
     return <>
         <ProfileContext.Provider value={{
-            profile: data.profile
+            profile: dataForProfile.profile
         }}>
-            <PaymentApp csrfToken={csrfToken} callbackUrl={callbackUrl} />
+            <PlaceHolder />
         </ProfileContext.Provider>
+    </>
+}
+
+let PlaceHolder = ({ csrfToken, callbackUrl, ...otherProps }) => {
+    let { session } = useContext(UserSessionContext)
+    let { data: dataForOrders, loading: loadingOrders, error: errorForOrdersFetch } =
+        ordersFetcher(session.user.userId);
+    if (loadingOrders) {
+        return <>Loading...</>
+    }
+    if (errorForOrdersFetch) {
+        return <>Error...</>
+    }
+    if (!dataForOrders) {
+        return <>No data...</>
+    }
+    return <>
+        <OrdersContext.Provider value={{ orders: dataForOrders.orders }} >
+            <PaymentApp csrfToken={csrfToken} callbackUrl={callbackUrl} />
+        </OrdersContext.Provider>
     </>
 }
 
 function profileFetcher(id) {
     let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher)
     //console.log(data || error || isValidating)
+    return { data, error, loading: isValidating }
+}
+
+
+function ordersFetcher(id) {
+    let { data, error, isValidating } = useSWR(`/api/orders/?userId=${id}`, fetcher)
+    console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }
 

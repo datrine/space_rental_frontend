@@ -31,7 +31,7 @@ export const SpaceContext = createContext({
 
 let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     let { query: { id } } = useRouter();
-    let { data: spaceDataFetched, error } = useSWR(`/api/spaces/${id}`);
+    let { data: spaceDataFetched, error } = useSWR(`/api/offices/${id}`);
     if (error) {
         return <>
             <p>Error loading data...</p>

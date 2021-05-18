@@ -22,6 +22,7 @@ import { UserSessionContext } from "../../../pages/_app";
 import { ProfileContext } from "../../../pages/profile";
 import { CheckCircle } from "@material-ui/icons";
 import Occupation from "./occupation";
+import Address from "./address";
 
 let Comp_Profile = ({ }) => {
     return <>
@@ -49,7 +50,7 @@ function Body() {
                     <h4>Keep Your Profile Update</h4>
                 </Grid>
             </Grid>
-            <Container style={{marginTop:"20px"}}>
+            <Container style={{ marginTop: "20px" }}>
 
                 <ProfileForm />
             </Container>
@@ -70,13 +71,13 @@ let ProfileForm = ({ ...propsFromParent }) => {
     }
 
     return <>
-        <Container style={{padding:0, borderWidth: 1, borderColor: appColor, borderStyle: "solid" }} >
+        <Container style={{ padding: 0, borderWidth: 1, borderColor: appColor, borderStyle: "solid" }} >
             <h4 style={{ backgroundColor: appColor, color: "white" }}>Profile</h4>
             <form className="container-fluid mt-2" onSubmit={
                 async e => {
                     e.preventDefault()
                     console.log(profile)
-                    let {email,emailOrUsername,username,...restOfProfile}=profile
+                    let { email, emailOrUsername, username, ...restOfProfile } = profile
                     let res = await fetch(`/api/profiles/${session.user.profileId}`, {
                         method: "PUT",
                         headers: {
@@ -98,30 +99,37 @@ let ProfileForm = ({ ...propsFromParent }) => {
                 }
             } >
                 <ProfilePicture />
-<br/>
+                <br />
+
                 <Firstname />
-                <br/>
+                <br />
+
                 <Lastname />
+                <br />
 
-                <br/>
                 <EmailForm />
+                <br />
 
-                <br/>
                 <Username />
+                <br />
 
-                <br/>
                 <GenderSelect />
+                <br />
 
-                <br/>
+                <Address />
+                <br />
+
                 <PhoneNum />
+                <br />
 
-                <br/>
-                <Calendar/>
+                <Calendar />
+                <br />
 
-                <br/>
-            <Occupation/>
+                <Occupation />
+                <br />
 
                 <BankDetails />
+                
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={false}
                         type="submit" variant="contained"
