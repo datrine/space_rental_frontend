@@ -23,9 +23,9 @@ let MobileView = () => {
         {readyState ? <>
             <Container onFocus={
                 e => {
-                    if(e.target.type==="text"||e.target.type==="number"){
-                    changeShowFooterState(false)
-                }
+                    if (e.target.type === "text" || e.target.type === "number") {
+                        changeShowFooterState(false)
+                    }
                 }
             } onBlur={
                 e => {
@@ -53,8 +53,8 @@ let IndexBody = () => {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center", backgroundSize: "cover"
             }} >
-                <Container maxWidth="xs" style={{
-                    paddingTop: 100, height: 700,
+                <Container style={{
+                    paddingTop: 100, height: 700, width: "100vw",
                     backgroundColor: "rgba(0,128,0,0.5)"
                 }} >
                     <h1 className="w3-text-white" style={{

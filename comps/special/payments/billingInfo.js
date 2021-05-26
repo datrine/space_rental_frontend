@@ -1,9 +1,8 @@
 import { Button, Container, FormControl, Input, InputAdornment } from "@material-ui/core";
 import { Email } from "@material-ui/icons";
 import { useContext } from "react";
-import { OrderContext } from "../../../pages/payments";
 import { useStyles } from "../profile/styles";
-import { paymentEnums } from "./index"
+import {paymentEnums, PresentOrderContext } from "./index"
 /**
  * 
  * @param {object} param0 
@@ -12,18 +11,18 @@ import { paymentEnums } from "./index"
  */
 export function BillingInfo({ paymentProp, hookChangePaymentProp }) {
     const classes = useStyles();
-    let { order, changeContext } = useContext(OrderContext);
-    order.billingInfo = order.billingInfo ? order.billingInfo : {}
+    let { presentOrder, changeContext } = useContext(PresentOrderContext);
+    presentOrder.billingInfo = presentOrder.billingInfo ? presentOrder.billingInfo : {}
     return <>
         <Container>
             <form className="container-fluid mt-2" style={{ maxWidth: "350px" }} >
 
                 <FormControl fullWidth>
-                    <Input value={order.billingInfo.email || ""} onChange={
+                    <Input value={presentOrder.billingInfo.email || ""} onChange={
                         e => {
-                            order.billingInfo.email = e.target.value
-                            console.log(order)
-                            changeContext({ ...order })
+                            presentOrder.billingInfo.email = e.target.value
+                            console.log(presentOrder)
+                            changeContext({ ...presentOrder })
                         }
                     }
                         placeholder="Email..." fullWidth
@@ -35,10 +34,10 @@ export function BillingInfo({ paymentProp, hookChangePaymentProp }) {
                 </FormControl>
 
                 <FormControl fullWidth>
-                    <Input value={order.billingInfo.fullName || ""} onChange={
+                    <Input value={presentOrder.billingInfo.fullName || ""} onChange={
                         e => {
-                            order.billingInfo.fullName = e.target.value
-                            changeContext({ ...order })
+                            presentOrder.billingInfo.fullName = e.target.value
+                            changeContext({ ...presentOrder })
                         }
                     }
                         placeholder="Full name..." fullWidth
@@ -50,10 +49,10 @@ export function BillingInfo({ paymentProp, hookChangePaymentProp }) {
                 </FormControl>
 
                 <FormControl fullWidth>
-                    <Input value={order.billingInfo.address || ""} onChange={
+                    <Input value={presentOrder.billingInfo.address || ""} onChange={
                         e => {
-                            order.billingInfo.address = e.target.value
-                            changeContext({ ...order })
+                            presentOrder.billingInfo.address = e.target.value
+                            changeContext({ ...presentOrder })
                         }
                     } multiline
                         placeholder="Address..." fullWidth
@@ -65,12 +64,14 @@ export function BillingInfo({ paymentProp, hookChangePaymentProp }) {
                 </FormControl>
 
                 <p>
-                    <Button variant="contained" color="primary" onClick={
-                        async e => {
-                            paymentEnums.setCurrent(paymentEnums.paymentOpts)
-                            hookChangePaymentProp({ ...paymentEnums })
-                        }
-                    } >Pay</Button>
+                    <Button disabled={!presentOrder.billingInfo.address || !presentOrder.billingInfo.email}
+                        variant="contained" color="primary" onClick={
+                            async e => {
+                                paymentProp.setCurrent(paymentProp.paymentOpts)
+                                //console.log("paymentProp: "+paymentProp.current);
+                                hookChangePaymentProp({ ...paymentProp })
+                            }
+                        } >Pay</Button>
                 </p>
             </form>
         </Container>

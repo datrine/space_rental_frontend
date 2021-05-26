@@ -3,7 +3,7 @@ import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
 import { Comp_Dashboard } from '../comps/special/dashboard';
 import _ from 'lodash';
-import profile from '../utils/models/profile';
+import {profile} from '../utils/models/exportModels';
 import useSWR from "swr";
 import { UserSessionContext } from './_app';
 import { createContext, useContext } from 'react';
@@ -34,9 +34,6 @@ let order = {
 export const OrdersContext = createContext({
     orders: [order],
 });
-export const OrderContext = createContext({
-    order: _.cloneDeep({ ...order }), changeContext: () => { }
-});
 
 let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
     let { session } = useContext(UserSessionContext);
@@ -55,12 +52,12 @@ let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
         <ProfileContext.Provider value={{
             profile: dataForProfile.profile
         }}>
-            <PlaceHolder />
+            <OrdersView />
         </ProfileContext.Provider>
     </>
 }
 
-let PlaceHolder = ({ csrfToken, callbackUrl, ...otherProps }) => {
+let OrdersView = ({ csrfToken, callbackUrl, ...otherProps }) => {
     let { session } = useContext(UserSessionContext)
     let { data: dataForOrders, loading: loadingOrders, error: errorForOrdersFetch } =
         ordersFetcher(session.user.userId);
@@ -86,10 +83,9 @@ function profileFetcher(id) {
     return { data, error, loading: isValidating }
 }
 
-
 function ordersFetcher(id) {
     let { data, error, isValidating } = useSWR(`/api/orders/?userId=${id}`, fetcher)
-    console.log(data || error || isValidating)
+    //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }
 

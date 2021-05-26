@@ -53,6 +53,7 @@ export default async function handler(req, res) {
         let errorObj = serverError(error)
         let { err, ...errRest } = errorObj;
         console.log(errRest)
+        res.status(errObj.statusCode);
         return res.json(errorObj);
     }
 }

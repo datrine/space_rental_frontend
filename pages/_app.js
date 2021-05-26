@@ -17,6 +17,7 @@ import { verifyAccount, getBankCodes } from '../utils/bank_transactions'
 import { session } from '../utils/models/session'
 import { createContext } from 'react'
 import _ from 'lodash'
+import { startSocket } from '../utils/chat_client'
 
 export function reportWebVitals(metric) {
   //console.log(metric)
@@ -32,11 +33,11 @@ function MyApp({ Component, pageProps }) {
   let router = useRouter();
   let { session, error, loading } = sessionFetcher()
   let pathNeedAuth = authList().some(pathInArray => {
-    let pathRegex = new RegExp(`${pathInArray}`, "i")
+    let pathRegex = new RegExp(`${pathInArray}`, "i");
     let foundArray = router.pathname.match(pathRegex) || []
     return foundArray.length > 0;
   });
-//if loading
+  //if loading
   if (loading) {
     return <>{router.pathname === "/" ? <SplashScreen /> : <LightSplashScreen />}</>
   }
@@ -55,10 +56,10 @@ function MyApp({ Component, pageProps }) {
 
   if (!(session && session.user)) {
     return <>
-    <Component {...pageProps} />
+      <Component {...pageProps} />
     </>
   }
-  if (session&&session.user) {
+  if (session && session.user) {
     //console.log(session)
     //alert(location.href)
     return <>
@@ -74,7 +75,7 @@ function MyApp({ Component, pageProps }) {
 
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads","payment"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads", "payment"]
 }
 
 function sessionFetcher() {
@@ -84,7 +85,12 @@ function sessionFetcher() {
 }
 let fetcher = (url) => fetch(url).then(res => res.json())
 
-//verifyAccount({account_bank:"UBA",account_number:"2043356432"})
-getBankCodes()
+if (typeof window !== "undefined") {
+  startSocket().then(sck => {
+    sck.emit("testing", (ack) => {
+      console.log("Testing Emitted...")
+    });
+  })
+}
 
 export default MyApp

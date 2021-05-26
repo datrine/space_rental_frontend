@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { SpaceDescription } from '../../../comps/special/space/index_desc';
+import { SpaceDescription } from '../../comps/special/space/index_desc';
 import  { SWRConfig } from 'swr'
-import { session } from '../../../utils/models/session';
+import { session } from '../../utils/models/session';
 import React from 'react';
 import _ from 'lodash';
 

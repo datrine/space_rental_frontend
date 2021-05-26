@@ -50,9 +50,10 @@ export default async function handler(req, res) {
             return res.json(space);
         }
     } catch (error) {
-        let errorObj = serverError(error)
-        let { err, ...errRest } = errorObj;
+        let errObj = serverError(error)
+        let { err, ...errRest } = errObj;
         console.log(errRest)
-        return res.json(errorObj);
+        res.status(errObj.statusCode);
+        return res.json(errObj);
     }
 }

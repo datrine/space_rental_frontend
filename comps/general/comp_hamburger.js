@@ -36,55 +36,62 @@ let ExpandedMenu = ({ hookToggleExpanded, defaultList = listOfMenu }) => {
     }, [currentMenuHeadObj])
     return <>
         <div className="container-fluid"
-         style={{ position: "absolute", backgroundColor: "rgba(0,0,0,0.6)",
-         top:70,bottom:0,zIndex:1000 }}>
-             <div className="w3-text-white">
-            <h3 style={{fontWeight:"bolder"}} >
-                <button className="w3-btn" onClick={
-                    e => {
-                        if (currentMenuHeadObj.name !== "home") {
-                            let parentListOfCurrentMenuHeadObj = defaultList.filter((item) => {
-                                return item.parentName === currentMenuHeadObj.parentName;
-                            })
-                            let newMenuHeadObj = defaultList.find((item) => {
-                                return item.name === currentMenuHeadObj.parentName
-                            })
-                            if (newMenuHeadObj) {
-                                changeMenuHeadObj(newMenuHeadObj)
+            style={{
+                position: "fixed", backgroundColor: "white",
+                top: 60, bottom: 0, zIndex: 1000, width:"66%"
+            }}>
+            <div className="w3-text-black">
+                <h3 style={{ fontWeight: "bolder" }} >
+                    <button className="w3-btn" onClick={
+                        e => {
+                            if (currentMenuHeadObj.name !== "home") {
+                                let parentListOfCurrentMenuHeadObj = defaultList.filter((item) => {
+                                    return item.parentName === currentMenuHeadObj.parentName;
+                                })
+                                let newMenuHeadObj = defaultList.find((item) => {
+                                    return item.name === currentMenuHeadObj.parentName
+                                })
+                                if (newMenuHeadObj) {
+                                    changeMenuHeadObj(newMenuHeadObj)
+                                }
+                                if (parentListOfCurrentMenuHeadObj.length > 0) {
+                                    changeMenuList(parentListOfCurrentMenuHeadObj)
+                                }
+                            } else {
+                                hookToggleExpanded(false)
                             }
-                            if (parentListOfCurrentMenuHeadObj.length > 0) {
-                                changeMenuList(parentListOfCurrentMenuHeadObj)
-                            }
-                        } else {
-                            hookToggleExpanded(false)
                         }
-                    }
-                }>
-                    <FontAwesomeIcon
-                        icon={currentMenuHeadObj.name === "home" ? faTimes : faArrowLeft} /></button>
-                <span className="w3-padding"
-                    style={{ fontSize: "25px" }}>{currentMenuHeadObj.displayName}</span>
-            </h3>  <MenuList list={currentMenuList}
-                hookChangeMenuHeadObj={changeMenuHeadObj} /></div></div>
+                    }>
+                        <FontAwesomeIcon
+                            icon={currentMenuHeadObj.name === "home" ? faTimes : faArrowLeft} /></button>
+                    <span className="w3-padding"
+                        style={{ fontSize: "25px" }}>{currentMenuHeadObj.displayName}</span>
+                </h3>  <MenuList list={currentMenuList}
+                    hookChangeMenuHeadObj={changeMenuHeadObj} />
+            </div>
+        </div>
     </>
 }
 
 let MenuList = ({ list, hookChangeMenuHead, hookChangeMenuHeadObj }) => {
     return <>
-        <ul className="w-100 w3-text-white" style={{ listStyle: "none" }}>
-            {list.map(({ name, icon, isList, link, displayName }, index) =>
-                <li style={{ fontSize: "20px", textAlignLast: "left" }} key={index}>
+        <ul className="" style={{ listStyle: "none" }}>
+            {list.map(({ name, icon, isList, link, displayName }, index) => (
+                <li style={{ fontSize: "20px", textAlignLast: "left", color: "black" }} key={index}>
                     {isList ?
-                        <button className="w-100 w3-btn w3-card mb-3" onClick={
-                            e => {
-                                hookChangeMenuHeadObj(list[index])
-                            }
-                        }> {icon ? <img /> : null} {displayName}
+                        <button className="w-100 w3-btn w3-card mb-3"
+                            onClick={e => {
+                                hookChangeMenuHeadObj(list[index]);
+                            }}> {icon ? <img /> : null} {displayName}
                             <span className="float-right" style={{}}>
-                                <FontAwesomeIcon icon={faArrowCircleRight} /></span> </button> :
-                        <a className="w-100 w3-btn w3-card mb-3" href={link}>
+                                <FontAwesomeIcon icon={faArrowCircleRight} />
+                            </span>
+                        </button> :
+                        <a style={{ color: "black" }} className="w-100 w3-btn w3-card mb-3"
+                            href={link}>
                             {icon ? <img /> : null} {displayName}</a>}
-                </li>)}
+                </li>)
+            )}
         </ul>
     </>
 }
@@ -94,6 +101,10 @@ let listOfMenu = [
     { parentName: "home", displayName: "Home", name: "home", icon: "", isList: false, link: "/" },
     //{ parentName: "home", displayName: "Account", name: "account", icon: "", isList: true, link: "" },
     { parentName: "home", displayName: "Account", name: "account", icon: "", isList: false, link: "/account" },
+    { parentName: "home", displayName: "Profile", name: "profile", icon: "", isList: false, link: "/profile" },
+    { parentName: "home", displayName: "Dashboard", name: "dashboard", icon: "", isList: false, link: "/dashboard" },
+    { parentName: "home", displayName: "Notification", name: "notif", icon: "", isList: false, link: "/notifications" },
+    { parentName: "home", displayName: "Post Ads", name: "postads", icon: "", isList: false, link: "/postads" },
     { parentName: "home", displayName: "About", name: "about", icon: "", isList: false, link: "/about" },
     //{ parentName: "account", displayName: "Sign in", name: "login", icon: "", isList: true },
     //{ parentName: "account", displayName: "Sign out", name: "logout", icon: "", isList: false },

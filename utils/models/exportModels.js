@@ -5,7 +5,8 @@ import profile from "./profile"
 import {img} from "./img"
 import {space} from "./space"
 import { bankObj } from "./bankObj"
+import order from "./order"
 
 
 
-export {renter,session,tenant,profile,img,space,bankObj}
+export {renter,session,tenant,profile,img,space,bankObj,order}
