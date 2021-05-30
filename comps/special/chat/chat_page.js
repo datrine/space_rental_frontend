@@ -1,7 +1,7 @@
 import { faFile, faPhotoVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Container, Grid, Tab, Tabs, TextField } from "@material-ui/core"
-import { manager } from "../../../utils/chat_client";
+import { socket } from "../../../pages/_app";
 import { ChatHeadNav } from "./chatNav";
 const { Comment, ArrowBack, EmojiEmotions, Send, PictureInPicture, FileCopyRounded, PictureInPictureAltRounded } = require("@material-ui/icons")
 const { useState } = require("react");
@@ -23,7 +23,7 @@ export default function ChatPage({ }) {
                             <FontAwesomeIcon icon={faPhotoVideo} /></button>
                         <button onClick={
                             e=>{
-                                manager.socket
+                                socket
                             }
                         } className="btn" style={{ padding: 0, marginLeft: "5px" }}>
                             <Send /></button>

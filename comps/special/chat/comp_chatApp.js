@@ -6,8 +6,10 @@ import MessagesStack from "./messages";
 import PropTypes from "prop-types"
 import ChatPage from "./chat_page";
 import { ChatHeadNav } from "./chatNav";
-import { manager, socket } from "../../../utils/chat_client";
 import { useSession } from "next-auth/client";
+import { socket } from "../../../pages/_app";
+
+
 
 export default function ChatApp({ tabValue = "messages" }) {
     let [tabValueState, changeTabValue] = useState(tabValue)

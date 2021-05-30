@@ -78,6 +78,8 @@ const options = {
                                     await userFn(credentials)
                                 if (user) {
                                     if (!user.jwt) user.jwt = credentials.strapiToken
+                                    myUrl.searchParams.delete("err")
+                                    myUrl.searchParams.delete("errMsg")
                                     delete credentials.strapiToken
                                     delete credentials.strapiProfileId
                                     res(user)
@@ -136,7 +138,10 @@ const options = {
             }
         },
         redirect: async (url, baseUrl) => {
-            return Promise.resolve(url)
+            const myUrl = new URL(url, baseUrl)
+            myUrl.searchParams.delete("errMsg");
+            myUrl.searchParams.delete("err")
+            return Promise.resolve(myUrl.href)
             /*  return url.startsWith(baseUrl)
                   ? Promise.resolve(url)
                   : Promise.resolve(baseUrl)*/

@@ -52,6 +52,7 @@ let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
         onSubmit: (values, actions) => {
             (async () => {
                 let { emailOrUsername, password } = values
+                console.log("values")
                 changeIsFailed(false)
                 try {
                     await signIn("credentials", {

@@ -18,7 +18,11 @@ import { session } from '../utils/models/session'
 import { createContext } from 'react'
 import _ from 'lodash'
 import { startSocket } from '../utils/chat_client'
-
+import { Socket } from 'socket.io-client'
+/**
+ * @type {Socket<DefaultEventsMap, DefaultEventsMap>}
+ */
+let socket;
 export function reportWebVitals(metric) {
   //console.log(metric)
   startAnalytics(metric)
@@ -87,10 +91,8 @@ let fetcher = (url) => fetch(url).then(res => res.json())
 
 if (typeof window !== "undefined") {
   startSocket().then(sck => {
-    sck.emit("testing", (ack) => {
-      console.log("Testing Emitted...")
-    });
+    socket=sck;
   })
 }
-
+export {socket}
 export default MyApp

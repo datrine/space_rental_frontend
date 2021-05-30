@@ -105,7 +105,9 @@ let Comp_Register = ({ ...propsFromParent }) => {
                     console.log("registering")
                     return formik.handleSubmit(e)
                 }} style={{ maxWidth: "350px" }} >
-                <FormControl fullWidth>
+                <FormControl fullWidth>  <div style={{height:20}} >
+                    {formik?.errors?.email ? <span className="w3-text-red" >
+                        {formik?.errors?.email}</span> : null}</div>
                     <Input onChange={formik.handleChange} value={formik.values.email}
                         placeholder="Email..." fullWidth
                         startAdornment={
@@ -114,11 +116,12 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         } type="email" name="email"
                         className={classes.textField} />
                 </FormControl>
-                <p>
-                    {formik?.errors?.email ? <span className="w3-text-red" >
-                        {formik?.errors?.email}</span> : null}</p>
+              
 
                 <FormControl fullWidth>
+                <div style={{height:"20px"}} >
+                    {formik?.errors?.username ? <span className="w3-text-red" >
+                        {formik?.errors?.username}</span> : null}</div>
                     <Input onChange={formik.handleChange} value={formik.values.username}
                         placeholder="Username..." fullWidth
                         startAdornment={
@@ -128,9 +131,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                             </InputAdornment>
                         } name="username" className={classes.textField} />
                 </FormControl>
-                <p>
-                    {formik?.errors?.username ? <span className="w3-text-red" >
-                        {formik?.errors?.username}</span> : null}</p>
+              
 
                 <FormControl fullWidth>
                     <Input onChange={formik.handleChange} value={formik.values.phonenum} fullWidth
@@ -152,9 +153,9 @@ let Comp_Register = ({ ...propsFromParent }) => {
                                     changeShowPasword(!showPassword)
                                 }
                             } type="button" className="btn p-0" >
-                                {showPassword ? <VisibilityOff
+                                {showPassword ? <Visibility
                                     style={{ color: formik?.errors?.password ? "red" : "green" }} /> :
-                                    <Visibility style={{ color: formik?.errors?.password ? "red" : "green" }} />}
+                                    <VisibilityOff style={{ color: formik?.errors?.password ? "red" : "green" }} />}
                             </button>
                         </InputAdornment>}
                         name="password" placeholder="Password..."
@@ -173,9 +174,9 @@ let Comp_Register = ({ ...propsFromParent }) => {
                                     changeShowRePass(!showRePass)
                                 }
                             } type="button" className="btn p-0" >
-                                {showRePass ? <VisibilityOff
+                                {showRePass ? <Visibility
                                     style={{ color: formik?.errors?.repass ? "red" : "green" }} /> :
-                                    <Visibility style={{ color: formik?.errors?.repass ? "red" : "green" }} />}</button> </InputAdornment>}
+                                    <VisibilityOff style={{ color: formik?.errors?.repass ? "red" : "green" }} />}</button> </InputAdornment>}
                         name="repass" placeholder="Repeat password..."
                         type={showRePass ? "text" : "password"}
                         className={classes.textField} />
@@ -185,7 +186,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         {formik.errors.repass}</span> : null}</p>
 
                 <p style={{ width: "100%", textAlign: "center" }}>
-                    <Button disabled={(isMinimal && !formik.isValid)} type="submit" variant="contained"
+                    <Button disabled={(isMinimal || !formik.isValid)} type="submit" variant="contained"
                         color="primary" >{
                             (!formik.isSubmitting || isFailed) ? "Register" : <FontAwesomeIcon
                                 spin icon={faSpinner} />} </Button>

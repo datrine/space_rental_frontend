@@ -61,7 +61,7 @@ const { Manager, Socket } = require("socket.io-client");
                 console.log("Message sent to recipient..." + data.reciepient_id);
                 ack({ msg: "client message sent" });
             });
-        }, 10000);
+        }, 60000);
 
         //
         socket.on("no_sender_id", (data, ack) => {
