@@ -81,7 +81,7 @@ let Comp_Register = ({ ...propsFromParent }) => {
 
                     }
                 } catch (error) {
-                    console.log(error)
+                    console.log(error);
                     changeIsFailed(true)
                 }
             })()
