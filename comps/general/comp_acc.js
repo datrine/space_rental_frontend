@@ -10,7 +10,7 @@ import { Comp_Mob_Footer } from './comp_mob_footer';
 import { Comp_Mob_Header } from './comp_mob_menu';
 import { Comp_Register } from './comp_register';
 import { Comp_Logout } from './comp_logout';
-import { LogoSVG } from '../reusables';
+import { LogoSVG } from '../resuables/reusables';
 import { appColor } from '../../utils/utilFns';
 import Image from 'next/image';
 
@@ -89,4 +89,4 @@ TabPanel.propTypes = {
 };
 
 
-export { Comp_Account }
+export { Comp_Account ,AccountView}

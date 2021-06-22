@@ -1,14 +1,14 @@
 import { img } from "./img";
 
 export let space={
-  id: 1,
+  id: undefined,
   "payment_format": null,
   "spaceInfo": {
     "houseType": "",
     "spaceCategory": "co_work",
     "spaceCondition": "furnished",
-    "bedroomNumber": 1,
-    "bathroomNumber": 1,
+    "bedroomNumber": 0,
+    "bathroomNumber": 0,
     "kitchenNumber": 0,
     "sittingNumber": 0
   },
@@ -16,29 +16,29 @@ export let space={
   "spaceRules": [
     {
       "desc": "Pets allowed",
-      "id": "2"
+      "id": ""
     },
     {
       "desc": "No smoking allowed",
-      "id": "13"
+      "id": ""
     }
   ],
-  "renterId": 1,
-  "userId": 7,
+  "renterId": undefined,
+  "userId": undefined,
   "locationInfo": {
-    "cityOrTown": "Lagos",
-    "area": "Ajah",
-    "address": "Badore, Ajah, Lagos"
+    "cityOrTown": "",
+    "area": "",
+    "address": ""
   },
-  "nameOfSpace": "Room projects",
-  "descOfSpace": "My first description",
+  "nameOfSpace": "",
+  "descOfSpace": "",
   "spaceAvailabiltyInfo": {
-    "lengthOfStay": 12,
+    "lengthOfStay": undefined,
     "datesInfo": {
       "dateMode": "asRange",
       "dateRangeStrings": {
-        "from": "Tue May 11 2021",
-        "to": "Sat May 29 2021"
+        "from": "",
+        "to": ""
       }
     }
   },
@@ -49,21 +49,21 @@ export let space={
   },
   "spaceAmenities": [
     {
-      "id": "1",
-      "desc": "Shared Living Room"
+      "id": "",
+      "desc": ""
     },
     {
-      "desc": "Wifi service",
-      "id": "10"
+      "desc": "",
+      "id": ""
     },
     {
-      "desc": "Gym facility",
-      "id": "11"
+      "desc": "",
+      "id": ""
     }
   ],
-  "published_at": "2021-05-10T05:05:09.000Z",
-  "created_at": "2021-05-10T05:05:09.000Z",
-  "updated_at": "2021-05-11T04:18:09.000Z",
+  "published_at": "",
+  "created_at": "",
+  "updated_at": "",
   "typeOfSpace": "office",
   "space_pics": [img]
 }

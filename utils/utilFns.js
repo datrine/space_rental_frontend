@@ -3,6 +3,7 @@ import { DateTime, Interval } from "luxon"
 import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
 import { uniqueId } from "lodash";
+import { space } from "./models/space";
 
 export let appColor = "#60941a"
 
@@ -54,7 +55,7 @@ async function middlewareRunner(req, res, middleware) {
         //console.log("SAZDSXDXDF");
         middleware(req, res, (result) => {
             if (result instanceof Error) {
-               // console.log(result)
+                // console.log(result)
                 return reject(result);
             }
             //console.log(result)
@@ -152,13 +153,13 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
             body: formData
         });
         let data = await res.json()
-       // console.log(data)
+        // console.log(data)
         if (res.status >= 400) {
             throw data
         }
         return { data }
     } catch (err) {
-       // console.log(err)
+        // console.log(err)
         return { err }
     }
 
@@ -186,7 +187,7 @@ let generalPutAPI = async (opts = { url, model, entryId, dataReq }) => {
         //console.log(dataRes)
         return { data: dataRes }
     } catch (error) {
-       // console.log(error)
+        // console.log(error)
         return { err: error }
     }
 }
@@ -231,7 +232,7 @@ let buildDateInfo = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
     }
 }
 
-let maxLengthOfStay = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
+let numberOfDays = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
     if (dateMode === "asRange") {
         return listOfDatesBetween(dateRangeFromDateStrings(dateRangeStrings)).length
     } else if (dateMode === "asSingles") {
@@ -271,6 +272,7 @@ let listOfDatesBetween = ({ from, to }) => {
     //console.log(days.length)
     return days
 }
+
 let datesFromStrings = (array = []) => array.map((ds) => {
     return new Date(ds)
 })
@@ -278,7 +280,7 @@ let datesFromStrings = (array = []) => array.map((ds) => {
 let stringsFromDates = (array = [new Date()]) => array.map((date) => date.toDateString())
 
 let dateRangeFromDateStrings = (dateRangeStrings) => {
-    
+
     return {
         from: new Date(dateRangeStrings.from),
         to: new Date(dateRangeStrings.to)
@@ -309,9 +311,35 @@ let IdObj = (obj) => {
     return obj
 }
 
+let spaceB = space.spaceBills
+/**
+ * 
+ * @param {spaceB} spaceData 
+ */
+let billEstimator = (spaceBills, lengthOfStay) => {
+    let billEstimate = 0;
+    if (spaceBills.billFormat === "day") {
+        billEstimate = Number(lengthOfStay) *
+            Number(spaceBills.charge)
+    }
+    else
+        if (spaceBills.billFormat === "week") {
+            billEstimate = (Number(lengthOfStay) / 7) *
+                Number(spaceBills.charge)
+        }
+        else
+            if (spaceBills.billFormat === "month") {
+                billEstimate = (Number(lengthOfStay) / 31) *
+                    Number(spaceBills.charge)
+            }
+    billEstimate = Number(billEstimate + Number(spaceBills.otherBills) || 0)
+    console.log('billEstimate: ' + billEstimate);
+    return billEstimate
+}
+
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
     generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,
-    listOfDatesBetween, datesFromStrings, stringsFromDates, maxLengthOfStay, IdObj, rangeFromDates,
-    dateRangeFromDateStrings, dateStringsFromDateRange
+    listOfDatesBetween, datesFromStrings, stringsFromDates, numberOfDays, IdObj, rangeFromDates,
+    dateRangeFromDateStrings, dateStringsFromDateRange, billEstimator
 };

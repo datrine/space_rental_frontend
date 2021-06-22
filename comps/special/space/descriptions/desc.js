@@ -8,7 +8,7 @@ import { SpaceContext } from "../index_desc";
 
 function Desc({ }) {
     let ctx = useContext(SpaceContext)
-    let { spaceData, changeSpaceContext } = ctx
+    let { spaceData, } = ctx
     let { descOfSpace } = spaceData
     return <>
         <Container style={{marginTop:"10px"}}  >

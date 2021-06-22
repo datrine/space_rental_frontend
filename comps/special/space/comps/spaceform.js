@@ -6,7 +6,7 @@ import { CheckCircle } from "@material-ui/icons";
 import React from "react";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
-import { MySelect, } from "../../../reusables";
+import { MySelect, } from "../../../resuables/index";
 import {
     FlatmateDiv, LocationDiv, SpaceAmenityDiv, SpaceAvailabilityDiv, SpaceChargesDiv,
     SpaceRulesDiv, AddImageView

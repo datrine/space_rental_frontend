@@ -1,7 +1,7 @@
 import { Container, FormControl, Input, makeStyles, } from "@material-ui/core";
 import React, { useState } from "react";
-import { MySelect } from "../../../reusables";
-import { maxLengthOfStay } from "../../../../utils/utilFns";
+import { MySelect } from "../../../resuables/index";
+import {numberOfDays } from "../../../../utils/utilFns";
 import { SpaceContext } from "..";
 import { useContext } from "react";
 import { RangeOfSpace } from "./dateApp";
@@ -54,7 +54,8 @@ function LengthOfStay(params) {
     let { spaceData, changeSpaceContext } = ctx
     let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
     let classes = useStyles()
-    let max = spaceAvailabiltyInfo?.datesInfo && maxLengthOfStay(spaceAvailabiltyInfo?.datesInfo)
+   // let max = spaceAvailabiltyInfo?.datesInfo && numberOfDays(spaceAvailabiltyInfo?.datesInfo)
+    let max = spaceAvailabiltyInfo.lengthOfStay
     return <>
         <FormControl fullWidth>
             <p>Length Of Stay <strong style={{ color: "red" }} > *</strong></p>

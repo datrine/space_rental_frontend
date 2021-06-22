@@ -1,5 +1,5 @@
 import { Button, Container, } from "@material-ui/core";
-import { MyInput, } from "../../../reusables";
+import { MyInput, } from "../../../resuables/index";
 import GenderSelect from "../../profile/gender";
 import { useContext, useState } from "react";
 import { SpaceContext } from "..";

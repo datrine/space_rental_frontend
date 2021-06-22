@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
+let Comp_Login = ({ callbackUrl, onSuccess, onFailure, ...propsFromParent }) => {
     let classes = useStyles()
     let router = useRouter()
     let [showPassword, changeShowPasword] = useState(false)
@@ -55,14 +55,21 @@ let Comp_Login = ({ callbackUrl, ...propsFromParent }) => {
                 console.log("values")
                 changeIsFailed(false)
                 try {
+                    /** */
                     await signIn("credentials", {
                         emailOrUsername,
                         password,
                         callbackUrl: callbackUrl ? callbackUrl : "/dashboard"
                     })
                     console.log("Signed in...")
+                    if (typeof onSuccess === "function") {
+                        onSuccess()
+                    }
                 } catch (error) {
                     changeIsFailed(true)
+                    if (typeof onFailure === "function") {
+                        onFailure()
+                    }
                 }
             })()
         }

@@ -9,40 +9,53 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
+    let userFromSession;
     let session = await getSession({ req })
-    let { user } = session
-    console.log(req.method)
+    if (session) {
+        let { user } = session
+        userFromSession=user
+    }
     try {
-
         if (req.method === "GET") {
             let { id } = req.query
-            let data = req.body
+            if(!id){
+                throw "No id"
+            }
+            console.log("id of residence: "+id)
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/spaces/${id}`,
+                url: `${process.env.CMS_URL}/residences/${id}`,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
-                },
-                data
+                }
             })
             let space = response.data
             //console.log(space)
+            if(space)
             return res.json(space);
+            else{
+
+            }
         }
         else if (req.method === "PUT") {
+            if (!userFromSession) {
+                res.status=403;
+                throw "No Auth"
+            }
             let { id } = req.query
+            if (!id) {
+                res.status=400;
+                throw "No Id"
+            }
             let data = req.body
-            console.log(id)
-            console.log(process.env.CMS_URL)
-            //console.log(data)
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/spaces/${id}`,
+                url: `${process.env.CMS_URL}/residences/${id}`,
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.jwt}`
+                    "Authorization": `Bearer ${userFromSession.jwt}`
                 },
                 data
             })
@@ -50,9 +63,10 @@ export default async function handler(req, res) {
             return res.json(space);
         }
     } catch (error) {
-        let errorObj = serverError(error)
-        let { err, ...errRest } = errorObj;
+        let errObj = serverError(error)
+        let { err, ...errRest } = errObj;
         console.log(errRest)
-        return res.json(errorObj);
+        res.status(errObj.statusCode);
+        return res.json(errObj);
     }
 }

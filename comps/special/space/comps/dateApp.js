@@ -9,7 +9,7 @@ import {
 } from "../../../../utils/utilFns";
 import { SpaceContext } from "..";
 import { useContext } from "react";
-import { MySelect } from "../../../reusables";
+import { MySelect } from "../../../resuables/index";
 
 export function RangeOfSpace({ }) {
     let ctx = useContext(SpaceContext)
@@ -28,6 +28,8 @@ export function RangeOfSpace({ }) {
     let dateRange = dateRangeStrings ? dateRangeFromDateStrings(dateRangeStrings) : undefined;
     let daysSelected = (datesInfo && dateMode === "asSingles") ?
         datesFromStrings(singleDatesStrings) : (listOfDatesBetween(dateRange));
+        spaceAvailabiltyInfo.lengthOfStay=daysSelected.length;
+        console.log("Default length of stay: "+ spaceAvailabiltyInfo.lengthOfStay)
     return (
         <Container>
             <DatesSelectFormat />

@@ -1,15 +1,26 @@
 let order = {
-    trackingId: 0,
+    trackingId: null,
     billingInfo: {},
-    userId: 0,
+    userId: null,
     state: "begun",
-    spaceId: 0,
+    spaceId: null,
+    amountToPay:undefined,
     paymentInfo: {
         via: "e-payment",
         platform: "paystack",
         platformMeta: {},
         type: "full" || "split",
         state: "none" || "incomplete" || "completed"
+    },
+    spaceMeta: {
+        "datesToStayInfo": {
+            "dateMode": "",
+            "dateRangeStrings": {
+                "to": "",
+                "from": ""
+            },
+            "singleDatesStrings": []
+        }
     }
 }
 

@@ -8,7 +8,6 @@ function Location({ }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
     let { locationInfo } = spaceData
-
     return <>
         <Container style={{ marginTop: "10px" }}  >
                         <h4>Location</h4>

@@ -30,23 +30,33 @@ export const SpaceContext = createContext({
 });
 
 let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
-    let { query: { id } } = useRouter();
-    let { data: spaceDataFetched, error } = useSWR(`/api/offices/${id}`);
+    let router = useRouter();
+    let { query: { id } } = router;
+    let { spaceDataFromServer, error, loading } = residenceFetcher(id);
     if (error) {
         return <>
             <p>Error loading data...</p>
         </>
     }
-    if (!spaceDataFetched) {
+    if (loading) {
         return <>
-
+            <><p>Loading...</p></>
         </>
     }
     return <>
-        <SpaceContext.Provider value={{ spaceData: spaceDataFetched }} >
-            <SpaceDescription />
-        </SpaceContext.Provider>
+            <SpaceDescription spaceDataProps={spaceDataFromServer} />
     </>
 }
+
+function residenceFetcher(residenceId) {
+    let { data, error, isValidating } = useSWR(`/api/residences/${residenceId}`, fetcher)
+    console.log(data || error || isValidating)
+    return { spaceDataFromServer: data, error, loading: isValidating }
+}
+
+let fetcher = (url) => fetch(url).then(async res => {
+    if (!res.ok) throw await res.json()
+    return res.json()
+});
 
 export default Space;

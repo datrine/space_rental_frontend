@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Container, Grid, IconButton } from "@material-ui/core"
 import Image from "next/image"
 import { useState } from "react"
-import { LogoSVG } from "../../reusables"
+import { LogoSVG } from "../../resuables/reusables"
 import { OpenedMenu } from "./opened_menu"
 
 function ProfileMenu() {

@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             });
             let orders = response.data
             console.log(orders);
-            return res.json({ orders });
+            return res.json(orders );
         } catch (error) {
             let errObj = serverError(error);
             console.log(errObj.errMsg);

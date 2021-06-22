@@ -1,7 +1,7 @@
 import { Container, Grid } from "@material-ui/core"
 import Image from "next/image"
 import { appColor } from "../../utils/utilFns"
-import { LogoSVG } from "../reusables"
+import { LogoSVG } from "../resuables/"
 function SplashScreen({ urlLink = "splash_screen.png" }) {
     return <>
         <div style={{

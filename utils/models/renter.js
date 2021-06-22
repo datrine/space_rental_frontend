@@ -1,9 +1,21 @@
+import profile from "./profile"
+
 export let renter = {
-    "id": 1,
-    "email": "trinitietp@gmail.com",
-    "username": null,
-    "userId": 7,
-    "profileId": 3,
-    "created_at": "2021-05-10T05:05:08.000Z",
-    "updated_at": "2021-05-10T05:05:08.000Z"
+    /**
+     * @type {number}
+     */
+    "id": null,
+    "email": "",
+    "username": "",
+    /**
+     * @type {number}
+     */
+    "userId": null,
+    /**
+     * @type {number}
+     */
+    "profileId": null,
+    "created_at": "",
+    "updated_at": "",
+    ...profile
 }

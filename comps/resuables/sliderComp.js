@@ -1,114 +1,23 @@
-import { Container, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Input, AppBar, Toolbar, Slider, Typography } from "@material-ui/core";
+import { Grid, Slider, Typography } from "@material-ui/core";
 import { ArrowLeftRounded, ArrowRightRounded, Cancel } from "@material-ui/icons";
-import { useEffect, useState } from "react";
-import { appColor } from "../utils/utilFns";
-import { MySelect } from "./reusables";
-
-export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
-    let handleClose = () => {
-        hookOpenSearchApp(false)
-    }
-    return <> <Dialog
-        open={true}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title" style={{
-            paddingTop: 2, paddingBottom: 2,
-            backgroundColor: "#474545"
-        }} >
-            <Grid container style={{}} >
-                <Grid item container xs={10} ><h3 style={{ color: "white" }} >Search</h3> </Grid>
-                <Grid item container xs={2} >
-                    <Button onClick={handleClose} color="primary" autoFocus>
-                        <Cancel style={{ color: "red" }} />
-                    </Button></Grid>
-            </Grid>
-        </DialogTitle>
-        <DialogContent>
-            <Container style={{ padding: 0 }} >
-                <BtnsToggle />
-                <br />
-                <Container>
-                    <Input placeholder="City, town or area" fullWidth />
-                </Container>
-                <br />
-                <Container>
-                <Categories /></Container>
-                <br />
-                <SliderComp />
-                <p style={{ textAlign: "center" }}>
-                    <button className="w3-btn"
-                        style={{ color: "white", backgroundColor: appColor }} >Search</button>
-                </p>
-            </Container>
-        </DialogContent>
-    </Dialog>
-
-    </>
-}
-
-function BtnsToggle(params) {
-    let [currentBtnIndex, changeCurrentBtnIndex] = useState(0)
-    return <>
-        <Grid container justify="space-between" style={{ backgroundColor: "#E0DEDE" }} >
-            <Button style={{
-                backgroundColor: currentBtnIndex === 0 ? appColor : "inherit",
-                color: currentBtnIndex === 0 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(0)
-                }
-            } >Rent</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 1 ? appColor : "inherit",
-                color: currentBtnIndex === 1 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(1)
-                }
-            } >Buy</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 2 ? appColor : "inherit",
-                color: currentBtnIndex === 2 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(2)
-                }
-            } >Invest</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 3 ? appColor : "inherit",
-                color: currentBtnIndex === 3 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(3)
-                }
-            } >Flatmate</Button>
-
-        </Grid>
-    </>
-}
-
-function Categories(params) {
-    return <>
-        <MySelect labelTitle="Type of Space" valueProps={"office"} selectMenuArr={[
-            { value: "residence", text: "Residence" },
-            { value: "office", text: "Office" },
-        ]} handleChangeProps={
-            e => {
-                let typeOfStay = e.target.value
-            }
-        } />
-    </>
-}
-
-function SliderComp(params) {
-    let [slideRange, changeSlideRange] = useState([15000, 65000]);
+import { useContext, useEffect, useState } from "react";
+import { SearchContext } from "../searchNfilter";
+import { appColor } from "../../utils/utilFns";
+/**
+ * 
+ * @param {{Ctx:SearchContext}} 
+ * @returns 
+ */
+export default function SliderComp({ }) {
+    let { params, changeParams } = useContext(SearchContext)
+    let { lowerBudget = 15000, upperBudget = 65000 } = params
+    let [slideRange, changeSlideRange] = useState([lowerBudget, upperBudget]);
     let [maxState, changeMaxState] = useState(100000);
 
     const handleChange = (event, newValue) => {
-        // console.log(newValue)
-        changeSlideRange(newValue);
+        params.lowerBudget = newValue[0];
+        params.upperBudget = newValue[1];
+        changeParams({ ...params })
     };
     let slideUpper = slideRange[1]
     let slideLower = slideRange[0]
@@ -247,7 +156,8 @@ function SliderComp(params) {
                 } > <ArrowLeftRounded />
                 </span> </Grid>
             <Grid item container xs={10} >
-                <Slider max={maxState} marks={marksup(maxState)} value={slideRange}
+                <Slider max={maxState} marks={marksup(maxState)}
+                    value={[params.lowerBudget, params.upperBudget]}
                     onChange={handleChange} getAriaValueText={valuetext} />
             </Grid>
             <Grid item container xs={1} >

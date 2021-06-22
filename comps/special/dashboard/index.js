@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Dialog, DialogTitle, Grid, IconButton, Input, InputAdornment, Typography } from "@material-ui/core"
@@ -9,25 +9,39 @@ import View from '../../view';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Loading, LogoSVG, SessionState } from '../../reusables';
+import { Loading, LogoSVG, SessionState } from '../../resuables/reusables';
 import { uploader, stateMgr, getImgUrl } from '../../../utils/utilFns';
 import { OpenedMenu } from "./opened_menu"
 import { ProfileMenu } from './resuables';
 import HiWelcomer from './hiwelcomer';
 import MyProfile from './myprofile';
 import MyPostedAds from './mypostedads';
+import { QuickAlert } from '../../resuables';
+import { UserSessionContext } from '../../../pages/_app';
 
 let Comp_Dashboard = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
-    let [session, loading] = useSession()
-    let view = null
-    view = <><div className="">Fetching Dashboard data</div></>
-    if (session) {
-        view = <><View mobileView={<MobileView />} /></>
-        return view
-    }
-    return <><><View mobileView={<MobileView />} /></>
+    return <>
+        <View mobileView={<MobileView />} />
+        <Alerts />
     </>
 }
+
+function Alerts() {
+    let { session: { user } } = useContext(UserSessionContext)
+    let view = null
+    let profileAlert = null;
+    view = <>
+        <div className="">Fetching Dashboard data</div>
+    </>
+    let isCompleteProfile = user.l_name && user.f_name;
+    if (!isCompleteProfile) {
+        profileAlert =  <QuickAlert msg="Profile is not complete" timerLimit={5000} />
+    }
+    return <>
+        {profileAlert}
+    </>
+}
+
 
 function MobileView() {
     return <>
@@ -35,7 +49,7 @@ function MobileView() {
         <HiWelcomer />
         <MyProfile />
         <MyChats />
-        <MyPostedAds/>
+        <MyPostedAds />
     </>
 }
 

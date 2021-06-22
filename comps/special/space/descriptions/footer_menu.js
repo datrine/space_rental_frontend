@@ -1,21 +1,27 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AppBar, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Input, } from "@material-ui/core";
 import { AddShoppingCart, Book, Bookmark, CheckCircleOutline, Favorite, Save } from "@material-ui/icons";
-import React, { useContext, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
+import { UserSessionContext } from "../../../../pages/_app";
 import { appColor } from "../../../../utils/utilFns";
+import { AccountView } from "../../../general/comp_acc";
 import { SpaceContext, SpaceToBookContext } from "../index_desc";
 
 function FooterMenu({ }) {
-    let ctx = useContext(SpaceToBookContext)
-    let { spaceToBookData, changeSpaceContext } = ctx
-    let { datesToStayInfo } = spaceToBookData;
+    let { query: { id } } = useRouter()
+    let { session: { user } } = useContext(UserSessionContext)
+    let spaceCtx = useContext(SpaceToBookContext)
+    let { spaceToBookData, changeSpaceContext } = spaceCtx
+    let { datesToStayInfo } = spaceToBookData.spaceMeta;
     let { dateMode, dateRangeStrings, singleDatesStrings } = datesToStayInfo;
     let [clickedBtnState, changeClickedBtnState] = useState("");
     let [modeState, changeModeState] = useState("presave");
     let [openRoomListDialog, changeRoomListDialog] = useState(false);
     let [openSuccessDialog, changeSuccessDialog] = useState(false);
     let [openFailedDialog, changeFailedDialog] = useState(false);
+    let [errMsgState, changeErrMsgState] = useState("");
     let handleProceed = async e => {
         try {
             let res = await fetch("/api/orders", {
@@ -25,7 +31,10 @@ function FooterMenu({ }) {
                 },
                 body: JSON.stringify(spaceToBookData)
             });
-            let { order } = await res.json()
+            if (!res.ok) {
+                throw await res.json()
+            }
+            let order = await res.json()
             console.log(order);
             if (order) {
                 changeSuccessDialog(true)
@@ -33,14 +42,24 @@ function FooterMenu({ }) {
             }
         } catch (error) {
             console.log(error)
-            changeFailedDialog(true)
-            changeModeState("fail")
+            changeFailedDialog(true);
+            changeModeState("fail");
+            if (error.errMsg) {
+
+                changeErrMsgState(error.errMsg)
+            }
         }
     }
     let handleCancel = async e => {
         changeRoomListDialog(true)
         changeModeState("cancel")
     }
+    let loggedIn = !!user.id;
+    let [showAccountApp, toggleShowAccountApp] = useState(false);
+
+    useEffect(() => {
+    }, [user.id]);
+
     let summaryView = <><h5>Dates:</h5>
         {dateMode === "asRange" ? <p>
             {dateRangeStrings.from} to {dateRangeStrings.to}
@@ -63,38 +82,59 @@ function FooterMenu({ }) {
         case "cancel":
             view = null;
             break;
+        case "fail":
+            view = null;
+            break;
         default:
             break;
     }
     return <>
         <Grid container style={{ position: "fixed", height: 50, bottom: 0, backgroundColor: "grey" }} >
-            <Grid item container xs={4} >
-                <Button>
-                    <Bookmark />
-                </Button>
-            </Grid>
-            <Grid item container xs={4} >
-                <Button onClick={e => {
-                    changeClickedBtnState("save")
-                    changeRoomListDialog(true)
-                    changeModeState("summary")
-                }} style={{
-                    color: clickedBtnState === "save" ? appColor : "black",
-                    backgroundColor: clickedBtnState === "save" ? "white" : "inherit",
-                }} >
-                    <AddShoppingCart />
-                </Button>
-            </Grid>
-            <Grid item container xs={4} >
-                <Button>
-                    <Favorite />
-                </Button>
-            </Grid>
+            {loggedIn ? <>
+                <Grid item container xs={12} >
+                    <Button onClick={e => {
+                        changeClickedBtnState("save")
+                        changeRoomListDialog(true)
+                        changeModeState("summary")
+                    }} style={{
+                        color: clickedBtnState === "save" ? appColor : "black",
+                        backgroundColor: clickedBtnState === "save" ? "white" : "inherit",
+                    }} >
+                        <AddShoppingCart />
+                    </Button>
+                </Grid>
+            </> : <>
+                <Grid item container xs={12} justify="center" >
+                    <button onClick={
+                        e => {
+                            toggleShowAccountApp(true)
+                        }
+                    } className=" btn"
+                        style={{ color: "white", }} >
+                        Click to log in first
+                </button>
+                </Grid>
+            </>}
         </Grid>
         {view}
         <SuccessOrder openDialog={openSuccessDialog} hookChangeSuccessDialog={changeSuccessDialog} />
-
-        <FailOrder openDialog={openFailedDialog} hookChangeFailDialog={changeFailedDialog} />
+        <FailOrder openDialog={openFailedDialog}
+            hookChangeFailDialog={changeFailedDialog} errMsgProp={errMsgState} />
+        {showAccountApp ? <>
+            <Grid direction="column" style={{
+                width: "100vw", height: "100vh", backgroundColor: "white",
+                position: "fixed", top: 0, bottom: 0, zIndex: 500
+            }}  >
+                <button onClick={
+                    e => {
+                        toggleShowAccountApp(false)
+                    }
+                } className="w3-btn" style={{ float: "right" }} >
+                    <FontAwesomeIcon icon={faTimes} />
+                </button>
+                <AccountView callbackUrl={`/residences/${id}`} />
+            </Grid>
+        </> : null}
     </>
 }
 
@@ -145,9 +185,9 @@ let SuccessOrder = ({ openDialog, hookChangeSuccessDialog }) => {
     </>
 }
 
-let FailOrder = ({ openDialog, hookChangeFailDialog }) => {
+let FailOrder = ({ openDialog, hookChangeFailDialog, errMsgProp }) => {
     let handleClose = (e) => {
-        hookChangeSuccessDialog(false)
+        hookChangeFailDialog(false)
     }
     return <>
         <Dialog
@@ -156,14 +196,14 @@ let FailOrder = ({ openDialog, hookChangeFailDialog }) => {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">User Registration Error</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Error Creating Order</DialogTitle>
             <DialogContent>
                 <Container>
-
+                    {errMsgProp ? errMsgProp : "Some error arose while creating your order."}
                 </Container>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary" autoFocus>
+                <Button onClick={handleClose} style={{ color: "red" }} autoFocus>
                     Close
           </Button>
             </DialogActions>

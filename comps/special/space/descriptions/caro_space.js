@@ -14,15 +14,18 @@ function CaroImageView({ }) {
 }
 
 function Caroo({ imgObjUrls = [] }) {
-    let ctx=useContext(SpaceContext)
+    let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
-    let { space_pics=[] } = spaceData
+    let { space_pics = [] } = spaceData
     return <>
         <Carousel>
-            {space_pics.map((imgObj, index) => imgObj ? <Carousel.Item key={index}
-             style={{width:"100vw",height:"50vh"}} >
-                <Image layout="fill" src={getImgUrl(imgObj)} />
-            </Carousel.Item> : null)}
+            {space_pics.length > 0 ?
+                space_pics.map((imgObj, index) => <Carousel.Item key={index}
+                    style={{ width: "100vw", height: "50vh" }} >
+                    <Image layout="fill" src={getImgUrl(imgObj)} />
+                </Carousel.Item>) : <Carousel.Item style={{ width: "100vw", height: "50vh" }} >
+                    <Image layout="fill" src="/room_placeholder.jpeg" />
+                </Carousel.Item>}
         </Carousel>
     </>
 }

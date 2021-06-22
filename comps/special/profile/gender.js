@@ -2,7 +2,6 @@ import { FormControl, MenuItem, Select } from "@material-ui/core"
 import { useContext, useState } from "react"
 import { ProfileContext } from "../../../pages/profile"
 import { appColor } from "../../../utils/utilFns"
-import { MySelect } from "../../reusables"
 import { useStyles } from "./styles"
 
 export default function GenderSelect({ genderProps, handleChangeProps }) {

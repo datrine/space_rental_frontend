@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -12,7 +12,9 @@ import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-sv
 import { AlarmOn, Dashboard } from '@material-ui/icons';
 import React from 'react';
 import { appColor } from '../../utils/utilFns';
-
+import { socket, UserSessionContext } from '../../pages/_app'
+import PubSub from 'pubsub-js';
+import { ordersNotifFetcher } from '../../utils/notifs';
 const useStyles = makeStyles((theme) => ({
     appBar: {
         display: 'flex',
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         borderWidth: 0,
         backgroundColor: "transparent",
-        color:"black",
+        color: "black",
         width: 50,
         alignItems: "center"
     },
@@ -38,10 +40,18 @@ const useStyles = makeStyles((theme) => ({
 
 let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
     let classes = useStyles();
+    useEffect(() => {
+        // create a function to receive the topic
+        var mySubscriber = function (msg, data) {
+            console.log(data);
+            console.log(data);
+        };
+        PubSub.subscribe("message", mySubscriber)
+    })
     return <>
         <AppBar className={classes.appBar} position="fixed"
             style={{ display: showMenu ? "flex" : "none" }} >
-            <Box component="button" className={classes.btnStacked} style={{color:"#60942e"}} >
+            <Box component="button" className={classes.btnStacked} style={{ color: "#60942e" }} >
                 <span><FontAwesomeIcon icon={faHome} /></span>
                 <span style={{ fontSize: "12px" }}>Home</span>
             </Box>
@@ -54,19 +64,46 @@ let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
             <Link href="/postads"><Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faPlusCircle} className="fa-3x" /></span>
             </Box>
-            </Link> 
+            </Link>
 
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
                 <span style={{ fontSize: "12px" }}>Realty</span>
             </Box>
-            <Box component="button" className={classes.btnStacked}>
-                <span><AlarmOn /></span>
-                <span style={{ fontSize: "12px" }} >Notification</span>
-            </Box>
+            <NotifBtn />
         </AppBar>
     </>
 }
-
-
+let notifCount = 0;
+function NotifBtn(params) {
+    let ctx = useContext(UserSessionContext);
+    let classes = useStyles();
+    let { session: { user } } = ctx;
+    let [notifCountState, changeNotifCountState] = useState(0);
+    let orderCount = 0;
+    useEffect(() => {
+        setTimeout(() => {
+            if (user&&user.id) {
+                console.log(user);
+                (async () => {
+                    let { orders } = await ordersNotifFetcher({
+                        userId: user.id,
+                        lastOrderNotifiedTime: new Date().toISOString()
+                    });
+                    if (orders && orders.length) {
+                        orderCount = orders && orders.length ? orders.length : 0;
+                        changeNotifCountState(notifCountState + orderCount)
+                    }
+                })();
+            }
+        }, 5000)
+    })
+    return <>
+        <Link href="/chats?mode=notif">
+            <Box component="button" className={classes.btnStacked}>
+                <span><AlarmOn /><sub>{notifCountState}</sub></span>
+                <span style={{ fontSize: "12px" }} >Notification</span>
+            </Box></Link>
+    </>
+}
 export { Comp_Mob_Footer }

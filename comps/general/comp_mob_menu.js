@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
 import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
-import { LogoSVG } from '../reusables';
+import { LogoSVG } from '../resuables/reusables';
 import SearchApp from '../searchApp';
 
 const useStyles = makeStyles((theme) => ({

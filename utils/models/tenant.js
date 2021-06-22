@@ -1,12 +1,12 @@
 export let tenant = {
-    "id": 1,
+    "id": null,
     "userId": null,
-    "published_at": "2021-05-11T11:37:50.000Z",
-    "created_at": "2021-05-11T11:37:51.000Z",
-    "updated_at": "2021-05-11T11:37:51.000Z",
+    "published_at": "",
+    "created_at": "",
+    "updated_at": "",
     "profileId": null,
     "budget": {
-        id:1,
+        id:0,
         lower:0,
         upper:0
     }

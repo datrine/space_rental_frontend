@@ -1,7 +1,8 @@
-import {  Container, FormControl, FormControlLabel, Input, makeStyles, Radio, RadioGroup, } from "@material-ui/core";
+import { Container, FormControl, FormControlLabel, Input, makeStyles, Radio, RadioGroup, } from "@material-ui/core";
 import React, { useState } from "react";
 import { SpaceContext } from "..";
 import { useContext } from "react";
+import { DateTime } from "luxon";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -56,7 +57,7 @@ function SpaceCharge(params) {
                 let charge = e.target.value
                 spaceBills.charge = Number(charge)
                 changeSpaceContext({ ...spaceData, spaceBills })
-            }} value={spaceBills.charge||""}
+            }} value={spaceBills.charge || ""}
                 placeholder="Space Charge" type="number"
                 className={classes.textField} />
         </FormControl>
@@ -75,7 +76,7 @@ function OtherBillsCharge(params) {
                 let otherBills = e.target.value
                 spaceBills.otherBills = Number(otherBills)
                 changeSpaceContext({ ...spaceData, spaceBills })
-            }} value={spaceBills.otherBills||""}
+            }} value={spaceBills.otherBills || ""}
                 placeholder="Other Bills Charge (₦)" type="number"
                 className={classes.textField} />
         </FormControl>
@@ -85,14 +86,32 @@ function OtherBillsCharge(params) {
 function SpaceChargeFormat(params) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
-    let spaceBills = spaceData.spaceBills
+    let spaceBills = spaceData.spaceBills;
+    let billEstimate = 0;
+    if (spaceBills.billFormat === "day") {
+        billEstimate = Number(spaceData.spaceAvailabiltyInfo.lengthOfStay) *
+            Number(spaceBills.charge)
+    }
+    else
+        if (spaceBills.billFormat === "week") {
+            billEstimate = (Number(spaceData.spaceAvailabiltyInfo.lengthOfStay) / 7) *
+                Number(spaceBills.charge)
+        }
+        else
+            if (spaceBills.billFormat === "month") {
+                billEstimate = (Number(spaceData.spaceAvailabiltyInfo.lengthOfStay) / 31) *
+                    Number(spaceBills.charge)
+            }
+    spaceBills.billEstimate = Number(billEstimate + Number(spaceBills.otherBills) || 0)
+    console.log('billEstimate: ' + spaceBills.billEstimate);
     return <> <SpaceContext.Provider value={spaceBills} >
         <FormControl fullWidth>
             <h5>Select Payment Format</h5>
             <RadioGroup onChange={e => {
                 let billFormat = e.target.value
                 spaceBills.billFormat = billFormat
-                changeSpaceContext({ ...spaceData, spaceBills })
+                changeSpaceContext({ ...spaceData, spaceBills });
+
             }} value={spaceBills.billFormat} aria-label="Billing Format" name="customized-radios">
                 <FormControlLabel value="day" control={<Radio />} label="Day" />
                 <FormControlLabel value="week" control={<Radio />} label="Week" />
@@ -103,4 +122,4 @@ function SpaceChargeFormat(params) {
     </>
 }
 
-export {SpaceChargesDiv,}
+export { SpaceChargesDiv, }

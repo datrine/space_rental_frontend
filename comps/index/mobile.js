@@ -8,7 +8,7 @@ import { Container, Grid } from '@material-ui/core';
 import { SplashScreen } from '../general/comp_splash_screen';
 import { useEffect, useState } from 'react';
 import { screenMgr } from "../../utils/utilFns"
-import { ToTheTop } from '../reusables';
+import { ToTheTop } from '../resuables/index';
 import { useRef } from 'react';
 
 let MobileView = () => {
@@ -78,22 +78,22 @@ let IndexBody = () => {
 
 let Tiles = () => {
     let listOf = [{
-        link: "/listings/rooms",
+        link: "/residences",
         titleOf: "Find a place to stay",
         textOf: "Entire homes, apartment, rooms & more",
         imgSrcOf: "/home_find.png"
     }, {
-        link: "/listings/office_spaces",
+        link: "/offices",
         titleOf: "Find a place to work",
         textOf: "Entire building, part of an office, & more",
         imgSrcOf: "/workspace_find.png"
     }, {
-        link: "/listings/investments",
+        link: "/investments",
         titleOf: "Find a real estate investment",
         textOf: "long-term or short-term investment in real esteate space",
         imgSrcOf: "/investment_find.png"
     }, {
-        link: "/listings/tenants",
+        link: "/tenants",
         titleOf: "Find a tenant for your space",
         textOf: "House, Office & more",
         imgSrcOf: "/tenant_find.png"

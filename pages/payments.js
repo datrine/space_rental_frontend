@@ -58,9 +58,9 @@ let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
 }
 
 let OrdersView = ({ csrfToken, callbackUrl, ...otherProps }) => {
-    let { session } = useContext(UserSessionContext)
+    let { session:{user} } = useContext(UserSessionContext)
     let { data: dataForOrders, loading: loadingOrders, error: errorForOrdersFetch } =
-        ordersFetcher(session.user.userId);
+        ordersFetcher(user.userId);
     if (loadingOrders) {
         return <>Loading...</>
     }
@@ -70,8 +70,9 @@ let OrdersView = ({ csrfToken, callbackUrl, ...otherProps }) => {
     if (!dataForOrders) {
         return <>No data...</>
     }
+    console.log(dataForOrders)
     return <>
-        <OrdersContext.Provider value={{ orders: dataForOrders.orders }} >
+        <OrdersContext.Provider value={{ orders: dataForOrders }} >
             <PaymentApp csrfToken={csrfToken} callbackUrl={callbackUrl} />
         </OrdersContext.Provider>
     </>
@@ -84,7 +85,7 @@ function profileFetcher(id) {
 }
 
 function ordersFetcher(id) {
-    let { data, error, isValidating } = useSWR(`/api/orders/?userId=${id}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/orders?userId=${id}`, fetcher)
     //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }

@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         let { id } = req.query
         let data = req.body
         let session = await getSession({ req });
+        console.log(session.user.email)
         let jwt = session.user.jwt
         await middlewareRunner(req, res, cors);
         let response;
@@ -48,8 +49,10 @@ export default async function handler(req, res) {
         let profile = response.data
         return res.json({ profile });
     } catch (error) {
-        let sorted = strapiErrors(error)
-        res.status(sorted.statusCode);
-        console.log(sorted)
+        let errObj = serverError(error)
+        let { err, ...errRest } = errObj;
+        console.log(errRest)
+        res.status(errObj.statusCode);
+        return res.json(errObj);
     }
 }

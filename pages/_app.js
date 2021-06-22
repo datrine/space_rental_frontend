@@ -19,6 +19,7 @@ import { createContext } from 'react'
 import _ from 'lodash'
 import { startSocket } from '../utils/chat_client'
 import { Socket } from 'socket.io-client'
+import { UserSettingsContextProviderPre } from '../comps/resuables/contextInterfaces'
 /**
  * @type {Socket<DefaultEventsMap, DefaultEventsMap>}
  */
@@ -69,7 +70,9 @@ function MyApp({ Component, pageProps }) {
     return <>
       <Provider session={session}>
         <UserSessionContext.Provider value={{ session }} >
-          <Component {...pageProps} />
+          <UserSettingsContextProviderPre>
+            <Component {...pageProps} />
+          </UserSettingsContextProviderPre>
         </UserSessionContext.Provider>
       </Provider>
     </>
@@ -87,12 +90,14 @@ function sessionFetcher() {
   //console.log(isValidating || error || data)
   return { session: data, error, loading: isValidating }
 }
-let fetcher = (url) => fetch(url).then(res => res.json())
+
+
+let fetcher = (url) => fetch(url).then(res => res.json());
 
 if (typeof window !== "undefined") {
   startSocket().then(sck => {
-    socket=sck;
+    socket = sck;
   })
 }
-export {socket}
+export { socket }
 export default MyApp

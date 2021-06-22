@@ -19,6 +19,7 @@ let ProfileContext = createContext({ profile: _.cloneDeep(profile), changeContex
 
 let Dashboard = ({ csrfToken, callbackUrl, ...otherProps }) => {
     let { session } = useContext(UserSessionContext);
+    console.log("session.user.profileId: "+session.user.profileId)
     let { data, loading, error } = profileFetcher(session.user.profileId)
     if (loading) {
         return <>Loading...</>

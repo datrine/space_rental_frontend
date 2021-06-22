@@ -8,7 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { getSession } from 'next-auth/client';
-import { Loading, LogoSVG } from '../../../reusables';
+import { Loading, LogoSVG } from '../../../resuables/index';
 import { Container, Grid } from '@material-ui/core';
 import { getImgUrl } from '../../../../utils/utilFns';
 import { SpaceContext, spaceDataDefault } from '../index';
@@ -41,10 +41,7 @@ export default function AlignItemsList({ hookRoomListDialog }) {
             changeLoadingState(false)
             if (res.ok) {
                 let data = await res.json();
-                let { err, spaces, jwt } = data;
-                if (err) {
-                    console.log(err)
-                }
+                let spaces= data;
                 if (spaces) {
                     console.log(spaces)
                     changeSpacesState(spaces)

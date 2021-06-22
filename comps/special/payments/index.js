@@ -11,6 +11,7 @@ import order from "../../../utils/models/order";
 import { createContext } from "react";
 import _ from "lodash";
 import View from "../../view";
+import { Comp_Mob_Header } from "../../general/comp_mob_menu";
 
 export const PresentOrderContext = createContext({
     presentOrder: _.cloneDeep({ ...order }), changeContext: () => { }
@@ -20,8 +21,6 @@ export default function PaymentApp(params) {
     let [paymentState, changePaymentState] = useState(paymentEnums.init());
     let [presentOrderState, changePresentOrderState] = useState(null);
     let commonProps = { paymentProp: paymentState, hookChangePaymentProp: changePaymentState }
-    console.log("paymentState for origin: " + paymentState.current)
-    console.log("spaceId: " + presentOrderState?.spaceId)
     return <>
         <PresentOrderContext.Provider value={{
             presentOrder: presentOrderState,
@@ -52,7 +51,8 @@ function MobileView(props) {
             break;
     }
     return <>
-        <Container>
+    <Comp_Mob_Header/>
+        <Container style={{marginTop:70}} >
             {view}
         </Container>
     </>

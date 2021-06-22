@@ -16,15 +16,16 @@ export default async function handler(req, res) {
 
         if (req.method === "GET") {
             let { id } = req.query
-            let data = req.body
+            if (!Number.isInteger(Number(id))) {
+                throw "Id is not a number"
+            }
             await middlewareRunner(req, res, cors);
             let response = await axios({
                 url: `${process.env.CMS_URL}/spaces/${id}`,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
-                },
-                data
+                }
             })
             let space = response.data
             //console.log(space)
@@ -47,7 +48,7 @@ export default async function handler(req, res) {
                 data
             })
             let space = response.data
-            return res.json(space);
+            return res.json({space});
         }
     } catch (error) {
         let errObj = serverError(error)

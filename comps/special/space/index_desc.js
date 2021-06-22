@@ -1,7 +1,6 @@
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-} from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import React, { createContext, useContext } from "react";
 import { useEffect, useState } from "react";
 import View from "../../view";
@@ -19,8 +18,9 @@ import { Location } from "./descriptions/location";
 import { Amenities } from "./descriptions/amenities";
 import { Flatmates } from "./descriptions/flatmates";
 import { Rules } from "./descriptions/rules";
-import { FooterMenu } from "./descriptions/reusuables";
+import { FooterMenu } from "./descriptions/footer_menu";
 import { SpaceContext } from "../../../pages/spaces/[id]";
+import { UserSessionContext } from "../../../pages/_app";
 
 /**
  * 
@@ -31,48 +31,58 @@ import { SpaceContext } from "../../../pages/spaces/[id]";
 export const SpaceToBookContext = createContext({
     spaceToBookData: _.clone({
         spaceId: 0,
-        datesToStayInfo: {
-            dateMode: "asRange",
-            singleDatesStrings: [],
-            dateRangeStrings: {
-                from: new Date().toDateString(),
-                to: new Date().toDateString()
+        spaceMeta: {
+            datesToStayInfo: {
+                dateMode: "asRange",
+                singleDatesStrings: [],
+                dateRangeStrings: {
+                    from: new Date().toDateString(),
+                    to: new Date().toDateString()
+                }
             }
         }
     }), changeContext: () => { }
 });
 
-function SpaceDescription() {
-    let { spaceData } = useContext(SpaceContext);
+function SpaceDescription({ spaceDataProps }) {
     let { spaceToBookData } = useContext(SpaceToBookContext)
     let [spaceToBookDataState, changeSpaceToBookDataState] = useState({
         ...spaceToBookData,
-        spaceId: spaceData.id,
+        spaceId: spaceDataProps.spaceId ? spaceDataProps.spaceId : spaceDataProps.id
     });
-    console.log(spaceToBookDataState)
     return <>
-        <SpaceToBookContext.Provider
-            value={{
-                spaceToBookData: spaceToBookDataState,
-                changeContext: changeSpaceToBookDataState
-            }} >
-            <View mobileView={<MobileView />} />
-        </SpaceToBookContext.Provider>
+        <SpaceContext.Provider value={{ spaceData: spaceDataProps }}>
+            <SpaceToBookContext.Provider
+                value={{
+                    spaceToBookData: spaceToBookDataState,
+                    changeContext: changeSpaceToBookDataState
+                }} >
+                <View mobileView={<MobileView />} />
+            </SpaceToBookContext.Provider>
+        </SpaceContext.Provider>
     </>
 }
 
 function MobileView() {
+    let { session: { user } } = useContext(UserSessionContext)
+    let { spaceData } = useContext(SpaceContext);
+    let isUserViewer = false;
+    if (user.id === spaceData.userId) {
+        isUserViewer = true;
+    }
     return <>
         <CaroImageView />
-        <RenterProfile />
-        <Desc />
-        <Rent />
-        <Availability />
-        <Location />
-        <Amenities />
-        <Flatmates />
-        <Rules />
-        <FooterMenu />
+        <Container>
+            <RenterProfile />
+            <Desc />
+            <Rent />
+            <Availability />
+            <Location />
+            <Amenities />
+            <Flatmates />
+            <Rules />
+        </Container>
+        {isUserViewer ? null : <FooterMenu />}
     </>
 }
-export { SpaceDescription,SpaceContext }
+export { SpaceDescription, SpaceContext }

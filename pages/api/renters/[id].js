@@ -1,6 +1,7 @@
 import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
+import { serverError } from "../../../utils/errors";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
@@ -20,33 +21,14 @@ export default async function handler(req, res) {
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
-        } catch (error) {
-            let errMsg = ""
-            let errType = ""
-            if (error.response) {
-                let errors = error.response.data;
-                errMsg = errors.error
-                if (errors.message) {
-                    errors.message.forEach(msgObj => {
-                        msgObj.messages.forEach(errObj => {
-                            errMsg += ": " + errObj.message;
-                            if (errObj.message.includes("password")) {
-                                errType = "Parameter_Error"
-                            }
-                        });
-                    });
-                }
-            } else if (error.request) {
-                console.log("error.request");
-                errMsg = "Unable to get response";
-                errType = "Network"
-            } else {
-                //console.log('Error', error.message);
-                errMsg = error.message;
-            }
-            return res.json({ err: errMsg, errType });
+            let renter = response.data
+            return res.json(renter);
+        }catch(error){
+            let errObj = serverError(error)
+            let { err, ...errRest } = errObj;
+            console.log(errRest)
+            res.status(errObj.statusCode);
+            return res.json(errObj);
         }
     }
     else if (req.method === "PUT") {
@@ -62,33 +44,14 @@ export default async function handler(req, res) {
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
+            let renter = response.data
+            return res.json(renter);
         } catch (error) {
-            let errMsg = ""
-            let errType = ""
-            if (error.response) {
-                let errors = error.response.data;
-                errMsg = errors.error
-                if (errors.message) {
-                    errors.message.forEach(msgObj => {
-                        msgObj.messages.forEach(errObj => {
-                            errMsg += ": " + errObj.message;
-                            if (errObj.message.includes("password")) {
-                                errType = "Parameter_Error"
-                            }
-                        });
-                    });
-                }
-            } else if (error.request) {
-                console.log("error.request");
-                errMsg = "Unable to get response";
-                errType = "Network"
-            } else {
-                //console.log('Error', error.message);
-                errMsg = error.message;
-            }
-            return res.json({ err: errMsg, errType });
+            let errObj = serverError(error)
+            let { err, ...errRest } = errObj;
+            console.log(errRest)
+            res.status(errObj.statusCode);
+            return res.json(errObj);
         }
     }
 }

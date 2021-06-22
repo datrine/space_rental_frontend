@@ -125,7 +125,7 @@ function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
                     hookChangeTemplateState(e.target.value)
                     //handleChangeProps(e)
                 }, value: roomTemplate, name: "roomtemplate"
-            }} style={{width:"100px"}}
+            }} style={{ width: "100px" }}
         >
             {templates.map(({ value, text }, index) => <MenuItem
                 key={index} value={value} >{text}</MenuItem>)}
@@ -174,6 +174,7 @@ let urlCleanup = (queryObj) => {
             break;
 
         default:
+            typeOfSpace = "residence"
             break;
     }
     return { typeOfSpace }

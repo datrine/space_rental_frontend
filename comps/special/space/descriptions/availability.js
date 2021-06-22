@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { appColor, buildDateInfo, dateRangeFromDateStrings, datesFromStrings, dateStringsFromDateRange, daysSorter, listOfDatesBetween, rangeFromDates, stringsFromDates } from "../../../../utils/utilFns";
 import { SpaceContext, SpaceToBookContext } from "../index_desc";
 import DayPicker, { DateUtils } from 'react-day-picker';
-import { MySelect } from "../../../reusables";
+import { MySelect } from "../../../resuables";
 
 function Availability({ }) {
     let ctx = useContext(SpaceContext)
@@ -58,12 +58,11 @@ function DateAvailableView({ openRoomListDialog, hookRoomListDialog }) {
     </>
 }
 
-
 export function Calendar({ }) {
     let { spaceData } = useContext(SpaceContext)
     let { spaceToBookData, changeContext } = useContext(SpaceToBookContext)
     let { spaceAvailabiltyInfo: { datesInfo } } = spaceData
-    let { datesToStayInfo } = spaceToBookData
+    let { datesToStayInfo } = spaceToBookData.spaceMeta
     datesToStayInfo.dateMode = datesToStayInfo?.dateMode || "asRange"
     if (datesToStayInfo.dateMode === "asRange") {
         datesToStayInfo.dateRangeStrings = (datesToStayInfo.dateRangeStrings || {
@@ -101,7 +100,6 @@ export function Calendar({ }) {
             backgroundColor: 'white',
         },
     };
-    console.log(daysSelected);
     return (
         <Container>
             <DayPicker modifiers={modifiers} modifiersStyles={modifiersStyles}
@@ -124,7 +122,10 @@ export function Calendar({ }) {
                                     dateMode,
                                     dateRange, singleDatesStrings: stringsFromDates(days)
                                 })
-                                return changeContext({ ...spaceToBookData, datesToStayInfo })
+                                return changeContext({
+                                    ...spaceToBookData,
+                                    spaceMeta: { ...spaceToBookData.spaceMeta, datesToStayInfo }
+                                })
                             }
                             days.push(day)
                             days.sort(daysSorter)
@@ -151,7 +152,10 @@ export function Calendar({ }) {
                                 dateRangeStrings: dateStringsFromDateRange(dateRange),
                                 singleDatesStrings: daysSelected
                             });
-                            changeContext({ ...spaceToBookData, datesToStayInfo })
+                            changeContext({
+                                ...spaceToBookData,
+                                spaceMeta: { ...spaceToBookData.spaceMeta, datesToStayInfo }
+                            })
                         }
                     }
                 } />
@@ -159,11 +163,10 @@ export function Calendar({ }) {
     );
 }
 
-
 function DatesSelectFormat({ }) {
     let ctx = useContext(SpaceToBookContext)
     let { spaceToBookData, changeContext } = ctx
-    let { datesToStayInfo } = spaceToBookData
+    let { datesToStayInfo } = spaceToBookData.spaceMeta
     return <>
         <MySelect labelTitle="Select Date Format"
             valueProps={datesToStayInfo?.dateMode || "asRange"}
@@ -188,7 +191,10 @@ function DatesSelectFormat({ }) {
                             dateStringsFromDateRange(stringsOfDates)
                     }
                     datesToStayInfo = buildDateInfo(datesToStayInfo)
-                    changeContext({ ...spaceToBookData, datesToStayInfo })
+                    changeContext({
+                        ...spaceToBookData,
+                        spaceMeta: { ...spaceToBookData.spaceMeta, datesToStayInfo }
+                    })
                 }
             } />
     </>

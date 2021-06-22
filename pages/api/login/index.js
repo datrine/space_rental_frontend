@@ -31,8 +31,11 @@ export default async function handler(req, res) {
 
             return res.json({ user, jwt });
         } catch (error) {
-           let serverErrResponse= serverError(error)
-           res.json(serverErrResponse) 
+            let errObj = serverError(error)
+            let { err, ...errRest } = errObj;
+            console.log(errRest)
+            res.status(errObj.statusCode);
+            return res.json(errObj);
         }
     }
 }

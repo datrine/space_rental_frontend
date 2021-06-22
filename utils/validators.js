@@ -26,6 +26,8 @@ let registerValidator = async (instance = {
             }
             errorList.push(errObj)
         }
+        /**
+         * 
         else {
             try {
                 let res = await memoFn(fetch, `/api/verify/username?username=${username}`, {
@@ -49,7 +51,7 @@ let registerValidator = async (instance = {
                     errorList.push(errObj)
                 } else if (err) {
                     let errObj = {
-                        msg: "Error: Unable to verify username " + username,
+                        msg: "Error: Unable to verify username ",
                         info: "Retry later please...",
                         prop: "username",
                         value: username,
@@ -67,7 +69,7 @@ let registerValidator = async (instance = {
                 errorList.push(errObj)
             }
         }
-    } else {
+         */
     }
 
     if (!(typeof phonenum === "undefined")) {
@@ -80,7 +82,6 @@ let registerValidator = async (instance = {
             }
             errorList.push(errObj)
         }
-    } else {
     }
 
     if (!(typeof email === "undefined")) {
@@ -93,6 +94,7 @@ let registerValidator = async (instance = {
             }
             errorList.push(errObj)
         }
+        /**
         else if (validator.isEmail(email)) {
             try {
                 let res = await memoFn(fetch, `/api/verify/email?email=${email}`, {
@@ -117,7 +119,7 @@ let registerValidator = async (instance = {
                     errorList.push(errObj)
                 } else if (err) {
                     let errObj = {
-                        msg: "Error: Unable to verify email " + email,
+                        msg: "Error: Unable to verify email",
                         info: "Retry later please...",
                         prop: "email",
                         value: email,
@@ -134,8 +136,8 @@ let registerValidator = async (instance = {
                 }
                 errorList.push(errObj)
             }
-        }
-    } else {
+        } 
+        */
     }
 
     if (!(typeof password === "undefined")) {
@@ -174,7 +176,6 @@ let registerValidator = async (instance = {
             }
             errorList.push(errObj)
         }
-    } else {
     }
 
     if (errorList.length > 0) {
