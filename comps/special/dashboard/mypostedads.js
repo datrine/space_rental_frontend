@@ -7,7 +7,6 @@ import useSWR from "swr";
 import { UserSessionContext } from "../../../pages/_app";
 
 export default function MyPostedAds({ }) {
-    let { session } = useContext(UserSessionContext);
 
     return <>
         <Container style={{ marginTop: "30px" }}>

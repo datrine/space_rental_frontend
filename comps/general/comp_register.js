@@ -56,7 +56,6 @@ let Comp_Register = ({ ...propsFromParent }) => {
                         errors[errorObj.prop] = errorObj.msg;
                     }
                 }
-                console.log(errors)
                 res(errors)
             })
         },
@@ -75,7 +74,6 @@ let Comp_Register = ({ ...propsFromParent }) => {
                             changeIsFailed(true)
                         }
                         if (user) {
-
                             handleSuccess(user);
                         }
 

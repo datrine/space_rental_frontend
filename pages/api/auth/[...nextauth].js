@@ -21,7 +21,12 @@ const options = {
                 const myUrl = new URL(credentials.callbackUrl, process.env.SELF_HOST_URL)
                 myUrl.searchParams.delete("err")
                 // Add logic here to look up the user from the credentials supplied
-                const userFn = async ({ strapiToken, strapiProfileId, username, emailOrUsername, password, role }) => {
+                const userFn = async ({
+                    strapiToken,
+                    strapiProfileId,
+                    emailOrUsername,
+                    password,
+                    role }) => {
                     // You need to provide your own logic here that takes the credentials
                     // submitted and returns either a object representing a user or value
                     // that is false/null if the credentials are invalid.
@@ -74,7 +79,7 @@ const options = {
                         return new Promise(async (res, rej) => {
                             try {
                                 credentials.callbackUrl = myUrl.href
-                                let { user, err, errType, errMsg, statusCode, errObj } =
+                                let { user, err, errType, errMsg,errObj } =
                                     await userFn(credentials)
                                 if (user) {
                                     if (!user.jwt) user.jwt = credentials.strapiToken
@@ -103,10 +108,10 @@ const options = {
                                 rej(null)
                             }
                         })
-                    }else{
-                        let {sessionInString}=credentials
-                        let session=JSON.parse(sessionInString)
-                        let user=session.user
+                    } else {
+                        let { sessionInString } = credentials
+                        let session = JSON.parse(sessionInString)
+                        let user = session.user
                         console.log(user)
                         return Promise.resolve(user)
                     }
@@ -176,7 +181,7 @@ const options = {
 }
 
 function sanitizeLogin(credentials) {
-    let { strapiToken, strapiProfileId, username, emailOrUsername, password, role,
+    let { strapiToken, strapiProfileId, emailOrUsername, password, role,
         isQuickReload, sessionInString } = credentials;
     console.log(credentials)
     let value = (strapiToken && strapiProfileId) || (emailOrUsername && password) ||

@@ -4,7 +4,6 @@ let registerValidator = async (instance = {
     email: "", username: "", phonenum: "", password: "", repass: "", referral
 }) => {
     let { email, username, password, phonenum, repass: repass, referral } = instance
-    console.log(instance)
     let errorList = []
     if (!(typeof username === "undefined")) {
         if (!validator.isLength(username, { min: 1 })) {

@@ -42,9 +42,6 @@ function MyApp({ Component, pageProps }) {
     let foundArray = router.pathname.match(pathRegex) || []
     return foundArray.length > 0;
   });
-  console.log("session")
-  console.log(session)
-  console.log("session")
   //if loading
   if (loading) {
     return <>{router.pathname === "/" ? <SplashScreen /> : <LightSplashScreen />}</>
