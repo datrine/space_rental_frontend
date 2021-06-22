@@ -97,8 +97,6 @@ let Comp_Register = ({ ...propsFromParent }) => {
         changeResponseView(view)
     }
     let isMinimal = !!(formik.values.email && formik.values.username && formik.values.password);
-    console.log("isMinimal: "+isMinimal);
-    console.log("isValid: "+formik.isValid);
     return <>
         <Container>
             <form className="container-fluid mt-2" onSubmit={
@@ -227,7 +225,6 @@ let Comp_Register = ({ ...propsFromParent }) => {
 let SuccessReg = ({ openDialog, hookChangeResponseView }) => {
     let [open, setOpen] = useState(true)
     let handleClose = (e) => {
-        console.log("Closed")
         hookChangeResponseView(null)
         window.location = "/account";
     }
