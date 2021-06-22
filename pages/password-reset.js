@@ -10,7 +10,7 @@ import { SplashScreen } from '../comps/general/comp_splash_screen';
 import View from '../comps/view';
 import { useEffect, useState } from 'react';
 import { screenMgr, stateMgr } from "../utils/utilFns"
-import { ToTheTop } from '../comps/reusables';
+import { ToTheTop } from '../comps/resuables';
 import { useRef } from 'react';
 import { useRouter } from 'next/router';
 import { RepeatRounded, Visibility, VisibilityOff } from '@material-ui/icons';
