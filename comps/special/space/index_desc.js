@@ -31,6 +31,7 @@ import { UserSessionContext } from "../../../pages/_app";
 export const SpaceToBookContext = createContext({
     spaceToBookData: _.clone({
         spaceId: 0,
+        renterId:undefined,
         spaceMeta: {
             datesToStayInfo: {
                 dateMode: "asRange",
@@ -48,7 +49,8 @@ function SpaceDescription({ spaceDataProps }) {
     let { spaceToBookData } = useContext(SpaceToBookContext)
     let [spaceToBookDataState, changeSpaceToBookDataState] = useState({
         ...spaceToBookData,
-        spaceId: spaceDataProps.spaceId ? spaceDataProps.spaceId : spaceDataProps.id
+        spaceId: spaceDataProps.spaceId ? spaceDataProps.spaceId : spaceDataProps.id,
+        renterId: spaceDataProps.renterId
     });
     return <>
         <SpaceContext.Provider value={{ spaceData: spaceDataProps }}>

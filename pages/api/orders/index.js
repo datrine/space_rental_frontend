@@ -4,6 +4,7 @@ import axios from 'axios';
 import {nanoid} from "nanoid"
 import { serverError } from "../../../utils/errors";
 import { getSession } from "next-auth/client";
+import qs from "qs";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
@@ -14,10 +15,11 @@ export default async function handler(req, res) {
     let {user}=session
     if (req.method === "GET") {
         try {
-            let {userId} = req.query
+            let {query} = req
+            let params= qs.stringify(query)
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${fetchHost}/orders?userId=${userId}`,
+                url: `${fetchHost}/orders?${params}`,
                 method: "get",
                 headers: {
                     "Content-Type": "application/json",

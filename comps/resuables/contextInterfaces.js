@@ -132,7 +132,6 @@ function userSettingFetcher({ userId, id }) {
         url = `/api/settings?userId=${userId}`;
     }
     let { data, error, isValidating } = useSWR(url, fetcher)
-    console.log(isValidating || error || data)
     if (Array.isArray(data)) {
         data = data[0]
     }

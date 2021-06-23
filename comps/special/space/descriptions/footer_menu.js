@@ -24,6 +24,7 @@ function FooterMenu({ }) {
     let [errMsgState, changeErrMsgState] = useState("");
     let handleProceed = async e => {
         try {
+            console.log(spaceToBookData)
             let res = await fetch("/api/orders", {
                 method: "post",
                 headers: {

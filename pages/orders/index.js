@@ -4,7 +4,7 @@ import React, { createContext, useContext } from 'react';
 import _ from 'lodash';
 import order from '../../utils/models/order';
 import { UserSessionContext } from '../_app';
-import { Order } from '../../comps/special/order';
+import { OrderComp } from '../../comps/special/order';
 import View from '../../comps/view';
 
 export const OrderContext = createContext({
@@ -35,7 +35,7 @@ function MobileView({ ordersProp }) {
         {
             ordersProp.map((orderData, index) => <OrderContext.Provider
                 value={{ orderData }} key={index} >
-                <Order/>
+                <OrderComp/>
             </OrderContext.Provider>)}
     </>
 }

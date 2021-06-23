@@ -50,7 +50,6 @@ let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
 
 function residenceFetcher(residenceId) {
     let { data, error, isValidating } = useSWR(`/api/residences/${residenceId}`, fetcher)
-    console.log(data || error || isValidating)
     return { spaceDataFromServer: data, error, loading: isValidating }
 }
 

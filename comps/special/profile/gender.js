@@ -23,9 +23,11 @@ export default function GenderSelect({ genderProps, handleChangeProps }) {
                 inputProps={{
                     'aria-label': 'Without label',
                     onChange: e => {
-                        changeContext(e.target.value)
-                        handleChangeProps(e)
-                    }, value: (gender || ""), name: "gender"
+                        let gender=e.target.value;
+                        changeGenderState(gender);
+                        profile.gender=gender
+                        changeContext({...profile})
+                    }, value: (genderState || ""), name: "gender"
                 }}
             >
                 {genders.map(({ value, text }, index) => <MenuItem

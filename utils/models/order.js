@@ -2,6 +2,8 @@ let order = {
     trackingId: null,
     billingInfo: {},
     userId: null,
+    tenantId: null,
+    renterId: null,
     state: "begun",
     spaceId: null,
     amountToPay:undefined,
