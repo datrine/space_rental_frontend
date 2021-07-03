@@ -14,15 +14,15 @@ export default async function handler(req, res) {
             let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/renters/${id}`,
+                url: `${process.env.CMS_URL}/tenants/${id}`,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
+            let tenant = response.data
+            return res.json(tenant);
         }catch(error){
             let errObj = serverError(error)
             let { err, ...errRest } = errObj;
@@ -37,15 +37,15 @@ export default async function handler(req, res) {
             let data = req.body
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/renters/${id}`,
+                url: `${process.env.CMS_URL}/tenants/${id}`,
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 data
             })
-            let user = response.data
-            return res.json({ user });
+            let tenant = response.data
+            return res.json(tenant);
         } catch (error) {
             let errObj = serverError(error)
             let { err, ...errRest } = errObj;

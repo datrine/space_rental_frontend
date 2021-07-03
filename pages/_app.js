@@ -29,7 +29,6 @@ export function reportWebVitals(metric) {
   startAnalytics(metric)
 }
 
-
 export const UserSessionContext = createContext({
   session: _.cloneDeep(session),
 });
@@ -66,8 +65,6 @@ function MyApp({ Component, pageProps }) {
   }
 
   if (session && session.user) {
-    //console.log(session)
-    //alert(location.href)
     return <>
       <Provider session={session}>
         <UserSessionContext.Provider value={{ session }} >
@@ -83,11 +80,17 @@ function MyApp({ Component, pageProps }) {
 
 
 function authList() {
-  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats", "postads", "payment"]
+  return ["/admin", "/dashboard", "/wallet", "/profile", "/chats",
+    "/payment", "/postads", "/my_spaces", "/my_rents","/my_rents"]
 }
 
 function sessionFetcher() {
-  let { data, error, isValidating } = useSWR("/api/auth/session", fetcher)
+  let { data, error, isValidating } = useSWR("/api/auth/session", fetcher, {
+    revalidateOnFocus: false,
+    //revalidateOnMount: false,
+    //revalidateOnReconnect: false,
+  })
+  console.log(data);
   //console.log(isValidating || error || data)
   return { session: data, error, loading: isValidating }
 }

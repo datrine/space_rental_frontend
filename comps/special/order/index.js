@@ -1,4 +1,4 @@
-import { Grid, Paper } from "@material-ui/core";
+import { Container, Grid, Paper } from "@material-ui/core";
 import _ from "lodash";
 import React, { createContext, useContext } from "react";
 import { useEffect, useState } from "react";
@@ -6,6 +6,9 @@ import { OrderContext } from "../../../pages/my_orders";
 import { tenant } from "../../../utils/models/tenant";
 import View from "../../view";
 import useSWR from "swr"
+import TenantBio from "./tenant_biodata";
+import { ISpaceContext } from "../../resuables/contextInterfaces";
+import DemTemplates from "./demtemplates";
 
 export const TenantContext = createContext({
     tenantData: _.cloneDeep(tenant),
@@ -14,20 +17,29 @@ export const TenantContext = createContext({
 function OrderComp({ }) {
     return <>
         <TenantContextProvider>
-            <View mobileView={<MobileView />} />
+            <RecombinedWithSpace />
         </TenantContextProvider>
     </>
 }
 
-function MobileView() {
-    let { orderData } = useContext(OrderContext);
+function RecombinedWithSpace({ }) {
+    let { orderData } = useContext(OrderContext)
+    console.log(orderData)
     return <>
-        <Paper>
-            <Grid container >
-                <Grid xs={4} item container ></Grid>
-                <Grid></Grid>
-            </Grid>
-        </Paper>
+        <SpaceDataProvider spaceId={orderData.spaceId} >
+            <View mobileView={<MobileView />} />
+        </SpaceDataProvider>
+    </>
+}
+
+function MobileView() {
+    return <>
+        <Grid justify="center" direction="column" container >
+            <Paper style={{ width: "300px" }}>
+                <TenantBio />
+                <DemTemplates />
+            </Paper>
+        </Grid>
     </>
 }
 
@@ -45,7 +57,6 @@ function TenantContextProvider({ children }) {
             {children}
         </>
     }
-
     if (tenantFromServer) {
         view = <>
             <TenantContext.Provider value={{ tenantData: tenantFromServer }} >
@@ -58,12 +69,44 @@ function TenantContextProvider({ children }) {
     </>
 }
 
-
 function tenantFetcher(tenantId) {
-    console.log(tenantId)
-    let { data, error, isValidating } = useSWR(`/api/tenants/${tenantId}`, fetcher)
-    //console.log(data || error || isValidating)
+    let { data, error, isValidating } = useSWR(`/api/tenants/${tenantId}`, fetcher, {
+        revalidateOnFocus: false,
+    })
     return { tenantFromServer: data, error, loading: isValidating }
+}
+
+export function SpaceDataProvider({ children, spaceId }) {
+    let { spaceDataFromServer, error, loading } = spaceFetcher(spaceId)
+    if (loading) {
+        return <>
+            {children}
+        </>
+    }
+    if (error) {
+        return <>
+            <p>Error...</p>
+            {children}
+        </>
+    }
+    if (!spaceDataFromServer) {
+        return <>
+            {children}
+        </>
+    }
+    return <>
+        <ISpaceContext.Provider value={{ spaceData: spaceDataFromServer }} >
+            {children}
+        </ISpaceContext.Provider>
+    </>
+}
+
+function spaceFetcher(spaceId) {
+    let { data, error, isValidating } = useSWR(`/api/spaces/${spaceId}`, fetcher, {
+        revalidateOnFocus: false
+    })
+    //console.log(data || error || isValidating)
+    return { spaceDataFromServer: data, error, loading: isValidating }
 }
 
 let fetcher = (url) => fetch(url).then(async res => {

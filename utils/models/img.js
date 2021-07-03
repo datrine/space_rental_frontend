@@ -19,12 +19,12 @@ export let img = {
         }
     },
     "hash": "",
-    "ext": ".jpeg",
-    "mime": "image/jpeg",
+    "ext": "",
+    "mime": "",
     "size":undefined,
     "url": "",
     "previewUrl": null,
-    "provider": "aws-s3",
+    "provider": "",
     "provider_metadata": null,
     "created_at": "",
     "updated_at": ""

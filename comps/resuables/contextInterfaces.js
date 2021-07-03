@@ -19,6 +19,9 @@ export const ISpaceContext = createContext({
 });
 
 
+export const SpaceContext = createContext({
+    spaceData: _.cloneDeep(space),changeContext: () => { },
+});
 /**
  * 
  * @param {space} spaceDataProps 
@@ -91,7 +94,7 @@ export function UserSettingsContextProvider({ children }) {
         if (settingExists!==true && typeof settingExists !== "object") {
             (async () => {
                 try {
-                    let res = await fetch(`api/settings`, {
+                    let res = await fetch(`/api/settings`, {
                         method: "POST",
                         body: JSON.stringify({ userId })
                     });
@@ -131,7 +134,12 @@ function userSettingFetcher({ userId, id }) {
     else if (userId) {
         url = `/api/settings?userId=${userId}`;
     }
-    let { data, error, isValidating } = useSWR(url, fetcher)
+    console.log(url)
+    let { data, error, isValidating } = useSWR(`${url}`, fetcher, {
+        revalidateOnFocus: false,
+        revalidateOnMount: false,
+        revalidateOnReconnect: false,
+        })
     if (Array.isArray(data)) {
         data = data[0]
     }

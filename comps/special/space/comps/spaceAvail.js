@@ -2,7 +2,7 @@ import { Container, FormControl, Input, makeStyles, } from "@material-ui/core";
 import React, { useState } from "react";
 import { MySelect } from "../../../resuables/index";
 import {numberOfDays } from "../../../../utils/utilFns";
-import { SpaceContext } from "..";
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 import { useContext } from "react";
 import { RangeOfSpace } from "./dateApp";
 

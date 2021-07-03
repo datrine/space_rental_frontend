@@ -6,6 +6,7 @@ import { appColor, buildDateInfo, dateRangeFromDateStrings, datesFromStrings, da
 import { SpaceContext, SpaceToBookContext } from "../index_desc";
 import DayPicker, { DateUtils } from 'react-day-picker';
 import { MySelect } from "../../../resuables";
+import { listAllDatesAsDateObjs } from "../../../../utils/dateFns";
 
 function Availability({ }) {
     let ctx = useContext(SpaceContext)
@@ -66,8 +67,8 @@ export function Calendar({ }) {
     datesToStayInfo.dateMode = datesToStayInfo?.dateMode || "asRange"
     if (datesToStayInfo.dateMode === "asRange") {
         datesToStayInfo.dateRangeStrings = (datesToStayInfo.dateRangeStrings || {
-            from: (new Date()).toDateString(),
-            to: (new Date()).toDateString(),
+            from: (new Date()).toISOString(),
+            to: (new Date()).toISOString(),
         })
     }
 
@@ -79,9 +80,8 @@ export function Calendar({ }) {
     let renterdaysSelected = (datesInfo && dateMode === "asSingles") ?
         datesFromStrings(renterSingleDatesStrings) : (listOfDatesBetween(renterDateRange));
 
-    let dateRange = dateRangeStrings ? dateRangeFromDateStrings(dateRangeStrings) : undefined;
-    let daysSelected = (dateMode === "asSingles") ?
-        datesFromStrings(singleDatesStrings) : (listOfDatesBetween(dateRange));
+    let dateRange = dateRangeStrings && dateRangeFromDateStrings(dateRangeStrings);
+    let daysSelected = listAllDatesAsDateObjs(datesInfo);
     const modifiers = {
         renterdaysSelected: renterDateMode === "asRange" ?
             dateRangeFromDateStrings(renterDateRangeStrings) :

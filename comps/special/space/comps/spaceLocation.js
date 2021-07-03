@@ -1,6 +1,6 @@
 import { Container, FormControl, makeStyles, TextField } from "@material-ui/core";
 import { useContext, } from "react";
-import { SpaceContext } from "..";
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 
 const useStyles = makeStyles((theme) => ({
     container: {

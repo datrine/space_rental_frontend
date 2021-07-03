@@ -63,14 +63,10 @@ function RenterContextProvider({ children }) {
 function MobileView({ loadingProp, errorProp, ordersProp }) {
     let view = null;
     if (loadingProp) {
-        view = <>
-            <p>Loading</p>
-        </>
+        view = <> <p>Loading</p></>
     }
     if (errorProp) {
-        view = <>
-            <p>Error loading</p>
-        </>
+        view = <><p>Error loading</p> </>
     }
     if (ordersProp) {
         view = <>
@@ -86,9 +82,7 @@ function MobileView({ loadingProp, errorProp, ordersProp }) {
 }
 
 function renterFetcher(userId) {
-    let { data, error, isValidating } = useSWR(`/api/renters?userId=${userId}`, fetcher, {
-        revalidateOnFocus: false,
-    });
+    let { data, error, isValidating } = useSWR(`/api/renters?userId=${userId}`, fetcher)
     if (data) {
         if (Array.isArray(data)) {
             data = data[0]
@@ -100,7 +94,7 @@ function renterFetcher(userId) {
 function ordersFetcher(renterId) {
     let { data, error, isValidating } = useSWR(`/api/orders?renterId=${renterId}`, fetcher, {
         revalidateOnFocus: false,
-    });
+    })
     //console.log(data || error || isValidating)
     return { ordersFromServer: data, error, loading: isValidating }
 }

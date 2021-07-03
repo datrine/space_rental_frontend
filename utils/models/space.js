@@ -5,7 +5,7 @@ export let space={
   "payment_format": null,
   "spaceInfo": {
     "houseType": "",
-    "spaceCategory": "co_work",
+    "spaceCategory": "",
     "spaceCondition": "furnished",
     "bedroomNumber": 0,
     "bathroomNumber": 0,
@@ -36,29 +36,26 @@ export let space={
     "lengthOfStay": undefined,
     "datesInfo": {
       "dateMode": "asRange",
-      "dateRangeStrings": {
-        "from": "",
-        "to": ""
-      }
+      "dateRangeStrings":  {
+        from: (new Date()).toISOString(),
+        to: (new Date()).toISOString(),
+    }
     }
   },
   "spaceBills": {
     "charge": 0,
     "otherBills": 0,
-    "billFormat": "day"
+    "billFormat": "day",
+    billEstimate:0
   },
   "spaceAmenities": [
     {
-      "id": "",
-      "desc": ""
+      "id": 0,
+      "desc": "Running water"
     },
     {
-      "desc": "",
-      "id": ""
-    },
-    {
-      "desc": "",
-      "id": ""
+      "id": 1,
+      "desc": "Electricity"
     }
   ],
   "published_at": "",

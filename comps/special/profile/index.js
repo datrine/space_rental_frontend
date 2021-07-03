@@ -75,27 +75,26 @@ let ProfileForm = ({ ...propsFromParent }) => {
             <h4 style={{ backgroundColor: appColor, color: "white" }}>Profile</h4>
             <form className="container-fluid mt-2" onSubmit={
                 async e => {
-                    e.preventDefault()
-                    console.log(profile)
-                    let { email, emailOrUsername, username, ...restOfProfile } = profile
-                    let res = await fetch(`/api/profiles/${session.user.profileId}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(restOfProfile)
-                    });
-                    if (res.ok) {
-                        let data = await res.json();
-                        console.log(data)
-                        let { err, profile, jwt } = data;
-                        if (err) {
-                            handleFail(err)
-                        }
-                        if (profile) {
+                    try {
+                        e.preventDefault();
+                        let { email, emailOrUsername, username, ...restOfProfile } = profile
+                        let res = await fetch(`/api/profiles/${session.user.profileId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(restOfProfile)
+                        });
+                        if (res.ok) {
+                            let profile = await res.json();
                             handleSuccess(profile);
+                        } else {
+                            throw await res.json()
                         }
+                    } catch (error) {
+                        handleFail(error)
                     }
+
                 }
             } >
                 <ProfilePicture />
@@ -129,7 +128,7 @@ let ProfileForm = ({ ...propsFromParent }) => {
                 <br />
 
                 <BankDetails />
-                
+
                 <p style={{ width: "100%", textAlign: "center" }}>
                     <Button disabled={false}
                         type="submit" variant="contained"

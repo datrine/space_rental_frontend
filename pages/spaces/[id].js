@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { SpaceDescription } from '../../comps/special/space/index_desc';
 import useSWR, { SWRConfig } from 'swr'
 import { session } from '../../utils/models/session';
-import React, { createContext } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { space } from '../../utils/models/space';
 
@@ -39,11 +39,11 @@ let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     }
     if (loading) {
         return <>
-        <p>Loading...</p>
+            <p>Loading...</p>
         </>
     }
     return <>
-    <SpaceDescription spaceDataProps={spaceDataFromServer} />
+        <SpaceDescription spaceDataProps={spaceDataFromServer} />
     </>
 }
 

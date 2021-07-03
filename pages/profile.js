@@ -29,7 +29,7 @@ let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
     }
     return <>
         <ProfileContext.Provider value={{
-            profile: data.profile,
+            profile: data,
             changeContext: () => { }
         }}>
             <PlaceHolder csrfToken={csrfToken} callbackUrl={callbackUrl} />
@@ -40,10 +40,7 @@ let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
 
 function PlaceHolder({ csrfToken, callbackUrl, ...otherProps }) {
     let { profile } = useContext(ProfileContext)
-    let [profileState, changeProfileState] = useState(profile)
-    //console.log("profile")
-    console.log(profileState)
-    //console.log("profile")
+    let [profileState, changeProfileState] = useState(profile);
     return <>
         <ProfileContext.Provider value={{
             profile: profileState,

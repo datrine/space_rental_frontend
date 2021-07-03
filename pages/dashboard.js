@@ -32,7 +32,7 @@ let Dashboard = ({ csrfToken, callbackUrl, ...otherProps }) => {
     }
     return <>
         <ProfileContext.Provider value={{
-            profile: data.profile
+            profile: data
         }}>
             <Comp_Dashboard csrfToken={csrfToken} callbackUrl={callbackUrl} />
         </ProfileContext.Provider>

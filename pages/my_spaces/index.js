@@ -1,59 +1,126 @@
+import _ from 'lodash';
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { OrderComp } from '../../comps/special/order';
+import View from '../../comps/view';
+import { UserSessionContext } from '../_app'
+import useSWR from "swr"
+import { renter } from '../../utils/models/renter';
+import { SpaceContext } from '../../comps/resuables/contextInterfaces';
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Input, InputAdornment,
-    makeStyles, MenuItem, Select, Table, TableCell, TableContainer, TableHead, TableRow
+    Button, Container, Dialog, DialogActions, DialogContent, DialogTitle,
+    makeStyles, MenuItem, Select,
 } from "@material-ui/core";
-import React, { useContext } from "react";
-import { useEffect, useState } from "react";
-import View from "../../view";
-import { ProfileMenu } from "../dashboard/resuables";
-import { useStyles } from "../profile/styles";
-import { SpaceForm } from "./comps/spaceform";
-import AlignItemsList from "./comps/roomlist";
-import { useRouter } from "next/router";
-import _ from "lodash";
+import { useStyles } from '../../comps/special/profile/styles';
+import AlignItemsList from '../../comps/special/space/comps/roomlist';
+import { SpaceItem } from '../../comps/special/space/space_item';
+import { ProfileMenu } from '../../comps/special/dashboard/resuables';
 
-export let spaceDataDefault = {
-    nameOfSpace: "",
-    descOfSpace: "",
-    typeOfSpace: "",
-    spaceInfo: {
-        houseType: "", spaceCategory: "", spaceCondition: "",
-        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
-    },
-    flatmateInfo: [],
-    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
-    locationInfo: {},
-    space_pics: [],
-    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
-    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
-    spaceAmenities: [{ id: "", desc: "Shared Living Room" }]
-};
 
-export const SpaceContext = React.createContext({ spaceData: _.cloneDeep(spaceDataDefault), changeSpaceContext: () => { } });
+export const RenterContext = createContext({
+    renterData: _.cloneDeep(renter),
+});
 
-function SpaceProps(params) {
-    let { query } = useRouter()
-    let { spaceData } = useContext(SpaceContext)
-    spaceData = { ...spaceData, ...urlCleanup(query) }
-    let [spaceDataState, changeSpaceContext] = useState({ ...spaceData })
-
+function MySpacesPage() {
     return <>
-        <SpaceContext.Provider value={{ spaceData: spaceDataState, changeSpaceContext }} >
-            <View mobileView={<MobileView />} />
-        </SpaceContext.Provider>
+        <RenterContextProvider>
+            <MySpaces />
+        </RenterContextProvider>
     </>
 }
 
-function MobileView() {
+function MySpaces() {
+    let { renterData: { id } } = useContext(RenterContext);
+    let { spacesFromServer, error, loading } = spacesFetcher(id);
+    let mobileView = <MobileView
+        spacesProp={spacesFromServer}
+        errorProp={error}
+        loadingProp={loading} />
     return <>
-        <ProfileMenu />
-        <Banner />
-        <ControlPanel />
-        <SpaceDetails />
+        <View mobileView={mobileView} />
     </>
 }
+
+function RenterContextProvider({ children }) {
+    let { session: { user } } = useContext(UserSessionContext);
+    let { renterFromServer, error, loading } = renterFetcher(user.id);
+    let view = null;
+    if (loading) {
+        view = <>{children} </>
+    }
+
+    if (error) {
+        view = <>{children}</>
+    }
+
+    if (renterFromServer) {
+        view = <>
+            <RenterContext.Provider value={{ renterData: renterFromServer }}>
+                {children}
+            </RenterContext.Provider>
+        </>
+    }
+    return <>
+        {view}
+    </>
+}
+
+
+function MobileView({ loadingProp, errorProp, spacesProp }) {
+    let view = null;
+    if (loadingProp) {
+        view = <>
+            <p>Loading</p>
+        </>
+    }
+    if (errorProp) {
+        view = <>
+            <p>Error loading</p>
+        </>
+    }
+    if (spacesProp) {
+        view = <>
+            {spacesProp.map((spaceData, index) => <SpaceContext.Provider
+                value={{ spaceData }}
+                key={index} >
+                <SpaceItem />
+            </SpaceContext.Provider>)}
+
+        </>
+    }
+    return <>
+    <ProfileMenu/>
+        {view}
+    </>
+}
+
+function renterFetcher(userId) {
+    let { data, error, isValidating } = useSWR(`/api/renters?userId=${userId}`, fetcher,{
+        revalidateOnFocus: false,})
+    if (data) {
+        if (Array.isArray(data)) {
+            data = data[0]
+        }
+    }
+    return { renterFromServer: data, error, loading: isValidating }
+}
+
+function spacesFetcher(renterId) {
+    let { data, error, isValidating } = useSWR(`/api/spaces?renterId=${renterId}`, fetcher, {
+        revalidateOnFocus: false,
+    })
+    //console.log(data || error || isValidating)
+    return { spacesFromServer: data, error, loading: isValidating }
+}
+
+
+let fetcher = (url) => fetch(url).then(async res => {
+    if (!res.ok) throw await res.json()
+    return res.json()
+});
+
+export default MySpacesPage;
 
 function Banner() {
     return <>
@@ -93,21 +160,6 @@ function ControlPanel(params) {
     </>
 }
 
-function SpaceDetails({ }) {
-    return <>
-        <Container style={{ marginTop: "20px" }}>
-            <Container
-                style={{ borderWidth: 1, borderStyle: "solid", borderColor: "#60941a", padding: 0 }}>
-                <h3 style={{
-                    color: "white", backgroundColor: "#60941a",
-                    paddingTop: "5px", paddingLeft: "5px"
-                }}>Space Detail</h3>
-
-                <SpaceForm />
-            </Container>
-        </Container>
-    </>
-}
 
 function SetRoomTemplateMode({ roomTemplate, hookChangeTemplateState }) {
     let classes = useStyles()
@@ -160,24 +212,3 @@ let SpaceList = ({ openRoomListDialog, hookRoomListDialog }) => {
         </Dialog>
     </>
 }
-
-let urlCleanup = (queryObj) => {
-    let { spaceType, } = queryObj
-    let typeOfSpace = "";
-    switch (spaceType) {
-        case "residence":
-            typeOfSpace = "residence"
-            break;
-
-        case "office":
-            typeOfSpace = "office"
-            break;
-
-        default:
-            typeOfSpace = "residence"
-            break;
-    }
-    return { typeOfSpace }
-}
-
-export { SpaceProps }

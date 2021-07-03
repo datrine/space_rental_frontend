@@ -4,6 +4,8 @@ import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
 import { uniqueId } from "lodash";
 import { space } from "./models/space";
+import {buildDateInfo,dateRangeFromDateStrings,dateStringsFromDateRange,datesFromStrings,
+    stringsFromDates,daysSorter,rangeFromDates,listOfDatesBetween,numberOfDays} from "./dateFns"
 
 export let appColor = "#60941a"
 
@@ -142,7 +144,7 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
         formData.set("field", opts.field)
         formData.set("ref", opts.ref)
         formData.set("refId", opts.refId)
-        //formData.set("path", opts.path)
+        formData.set("path", opts.path)
         formData.set("source", opts.source)
         let res = await fetch(url, {
             method: "POST",
@@ -160,7 +162,7 @@ let uploader = async (opts = { files, formData, field, path, url, ref, refId, so
         return { data }
     } catch (err) {
         // console.log(err)
-        return { err }
+        throw err
     }
 
 }
@@ -224,81 +226,6 @@ let getImgUrl = (obj, format) => {
     return imgObj?.url;
 }
 
-let buildDateInfo = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
-    if (dateMode === "asRange") {
-        return { dateMode, dateRangeStrings }
-    } else if (dateMode === "asSingles") {
-        return { dateMode, singleDatesStrings }
-    }
-}
-
-let numberOfDays = ({ dateMode, singleDatesStrings, dateRangeStrings }) => {
-    if (dateMode === "asRange") {
-        return listOfDatesBetween(dateRangeFromDateStrings(dateRangeStrings)).length
-    } else if (dateMode === "asSingles") {
-        return singleDatesStrings.length
-    }
-}
-
-let daysSorter = (dayToSortA, dayToSortB) => {
-    if (DateUtils.isDayBefore(dayToSortA, dayToSortB)) {
-        return -1
-    }
-    else if (DateUtils.isSameDay(dayToSortA, dayToSortB)) {
-        return 0
-    }
-    else if (DateUtils.isDayAfter(dayToSortA, dayToSortB)) {
-        return 1
-    }
-}
-
-let listOfDatesBetween = ({ from, to }) => {
-    if (!(to instanceof DateTime)) {
-        to = DateTime.fromJSDate(to)
-    }
-    if (!(from instanceof DateTime)) {
-        from = DateTime.fromJSDate(from)
-    }
-    let days = []
-    let dayPlus = from
-    let dayPluser = 0
-    let daysBetwen =
-        Interval.fromDateTimes(from, to).count("days");
-    while (daysBetwen > dayPluser) {
-        let newDay = dayPlus.plus({ day: dayPluser }).toJSDate()
-        days.push(newDay)
-        dayPluser++
-    }
-    //console.log(days.length)
-    return days
-}
-
-let datesFromStrings = (array = []) => array.map((ds) => {
-    return new Date(ds)
-})
-
-let stringsFromDates = (array = [new Date()]) => array.map((date) => date.toDateString())
-
-let dateRangeFromDateStrings = (dateRangeStrings) => {
-
-    return {
-        from: new Date(dateRangeStrings.from),
-        to: new Date(dateRangeStrings.to)
-    };
-}
-
-let dateStringsFromDateRange = (dateRangeStrings) => {
-    return {
-        from: (new Date(dateRangeStrings.from)).toDateString(),
-        to: (new Date(dateRangeStrings.to)).toDateString()
-    };
-}
-
-let rangeFromDates = (days = []) => {
-    days = days.sort(daysSorter);
-    //console.log(days)
-    return { from: days[0], to: days[days.length - 1] }
-}
 
 let IdObj = (obj) => {
     if (typeof obj !== "object") {
@@ -314,7 +241,7 @@ let IdObj = (obj) => {
 let spaceB = space.spaceBills
 /**
  * 
- * @param {spaceB} spaceData 
+ * @param {spaceB} spaceBills 
  */
 let billEstimator = (spaceBills, lengthOfStay) => {
     let billEstimate = 0;
@@ -332,11 +259,10 @@ let billEstimator = (spaceBills, lengthOfStay) => {
                 billEstimate = (Number(lengthOfStay) / 31) *
                     Number(spaceBills.charge)
             }
-    billEstimate = Number(billEstimate + Number(spaceBills.otherBills) || 0)
+    billEstimate = (Number(billEstimate + Number(spaceBills.otherBills) || 0)).toFixed(2)
     console.log('billEstimate: ' + billEstimate);
     return billEstimate
 }
-
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
     generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,

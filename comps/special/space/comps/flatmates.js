@@ -2,7 +2,7 @@ import { Button, Container, } from "@material-ui/core";
 import { MyInput, } from "../../../resuables/index";
 import GenderSelect from "../../profile/gender";
 import { useContext, useState } from "react";
-import { SpaceContext } from "..";
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 import { Delete } from "@material-ui/icons";
 import React from "react";
 import { IdObj } from "../../../../utils/utilFns";

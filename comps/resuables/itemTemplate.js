@@ -59,7 +59,7 @@ function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
                 <p style={{ textAlign: "center" }}>
                     <SaveBtn />
                     <a style={{ backgroundColor: appColor,color:"white" }}
-                        className="w3-btn" href={`${pathname}/${id}`} >Book</a>
+                        className="w3-btn" href={`${itemPath}/${id}`} >Book</a>
                 </p>
             </Container>
         </Container>

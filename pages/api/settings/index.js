@@ -30,10 +30,8 @@ export default async function handler(req, res) {
                     "Authorization": `Bearer ${user.jwt}`
                 }
             })
-
-            let spaces = response.data
-            console.log(spaces.length)
-            return res.json(spaces);
+            let settings = response.data
+            return res.json(settings);
 
         } catch (error) {
             let errObj = serverError(error)

@@ -1,4 +1,7 @@
+import profile from "./profile"
+
 export let tenant = {
+    ...profile,
     "id": null,
     "userId": null,
     "published_at": "",

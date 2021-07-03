@@ -4,7 +4,7 @@ import _ from "lodash";
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
 import { IdObj } from "../../../../utils/utilFns";
-import { SpaceContext } from "..";
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 
 function SpaceAmenityDiv(params) {
     return <>

@@ -11,26 +11,23 @@ const cors = Cors({
 export default async function handler(req, res) {
     let session = await getSession({ req })
     let { user } = session
-    console.log(req.method)
     try {
         if (req.method === "GET") {
             let { id } = req.query
-            if(!id){
-                throw "No id"
+            if (!Number.isInteger(Number(id))) {
+                throw "Id is not a number"
             }
-            
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/settings/${id}`,
+                url: `${process.env.CMS_URL}/orders/${id}`,
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.jwt}`
+                    "Content-Type": "application/json"
                 }
             })
-            let settingsObj = response.data
-            console.log(settingsObj)
-            return res.json(settingsObj);
+            let order = response.data
+            //console.log(space)
+            return res.json(order);
         }
         else if (req.method === "PUT") {
             let { id } = req.query
@@ -38,7 +35,7 @@ export default async function handler(req, res) {
             //console.log(data)
             await middlewareRunner(req, res, cors);
             let response = await axios({
-                url: `${process.env.CMS_URL}/settings/${id}`,
+                url: `${process.env.CMS_URL}/orders/${id}`,
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -46,8 +43,8 @@ export default async function handler(req, res) {
                 },
                 data
             })
-            let settingsObj = response.data
-            return res.json(settingsObj);
+            let order = response.data
+            return res.json(order);
         }
     } catch (error) {
         let errObj = serverError(error)

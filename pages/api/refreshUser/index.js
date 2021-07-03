@@ -22,9 +22,10 @@ export default async function handler(req, res) {
                 }
             })
 
-            let data =await response.json()
-            let user = data
-            return res.json({ user });
+            let data =await response.json();
+
+            let profile = data
+            return res.json({ profile });
 
         } catch (error) {
             let errObj = serverError(error)

@@ -50,7 +50,7 @@ let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
     }
     return <>
         <ProfileContext.Provider value={{
-            profile: dataForProfile.profile
+            profile: dataForProfile
         }}>
             <OrdersView />
         </ProfileContext.Provider>

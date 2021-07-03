@@ -7,35 +7,28 @@ import {
     buildDateInfo, datesFromStrings, daysSorter, listOfDatesBetween,
     stringsFromDates, rangeFromDates, dateRangeFromDateStrings, dateStringsFromDateRange
 } from "../../../../utils/utilFns";
-import { SpaceContext } from "..";
+import { SpaceContext } from "../../../resuables/contextInterfaces"
 import { useContext } from "react";
 import { MySelect } from "../../../resuables/index";
+import { listAllDatesAsDateObjs } from "../../../../utils/dateFns";
 
 export function RangeOfSpace({ }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
     let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
-    let datesInfo = spaceAvailabiltyInfo?.datesInfo
-    datesInfo.dateMode = datesInfo?.dateMode || "asRange"
-    if (datesInfo.dateMode === "asRange") {
-        datesInfo.dateRangeStrings = (datesInfo.dateRangeStrings || {
-            from: (new Date()).toDateString(),
-            to: (new Date()).toDateString(),
-        })
-    }
+    let datesInfo = spaceAvailabiltyInfo.datesInfo
 
-    let { dateRangeStrings, singleDatesStrings, dateMode } = datesInfo;
-    let dateRange = dateRangeStrings ? dateRangeFromDateStrings(dateRangeStrings) : undefined;
-    let daysSelected = (datesInfo && dateMode === "asSingles") ?
-        datesFromStrings(singleDatesStrings) : (listOfDatesBetween(dateRange));
-        spaceAvailabiltyInfo.lengthOfStay=daysSelected.length;
-        console.log("Default length of stay: "+ spaceAvailabiltyInfo.lengthOfStay)
+    //let { dateRangeStrings, singleDatesStrings, dateMode } = datesInfo;
+    //datesInfo.dateRange = dateRangeStrings && dateRangeFromDateStrings(dateRangeStrings);
+    let daysSelected = listAllDatesAsDateObjs(datesInfo);
+   // console.log(spaceData)
     return (
         <Container>
             <DatesSelectFormat />
             <DayPicker onDayClick={
                 (day, { selected, disabled }) => {
                     let days = [...daysSelected]
+                    let dateMode = datesInfo.dateMode
                     if (disabled) {
                         return
                     }
@@ -47,10 +40,11 @@ export function RangeOfSpace({ }) {
                         if (selected) {
                             let indexOfDate = days.findIndex(dayInArray =>
                                 DateUtils.isSameDay(dayInArray, day))
-                            days.splice(indexOfDate, 1)
+                            days.splice(indexOfDate, 1);
                             spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                                 dateMode,
-                                dateRange, singleDatesStrings: stringsFromDates(days)
+                                //dateRange, 
+                                singleDatesStrings: stringsFromDates(days)
                             })
                             return changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                         }
@@ -58,11 +52,13 @@ export function RangeOfSpace({ }) {
                         days.sort(daysSorter)
                         spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                             dateMode,
-                            dateRange, singleDatesStrings: stringsFromDates(days)
+                            //dateRange, 
+                            singleDatesStrings: stringsFromDates(days)
                         })
                         changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }
                     else if (dateMode === "asRange") {
+                        let dateRange = dateRangeFromDateStrings(datesInfo.dateRangeStrings)
                         days = []
                         if (DateUtils.isDayBefore(day, dateRange.from)) {
                             dateRange.from = day;
@@ -73,12 +69,12 @@ export function RangeOfSpace({ }) {
                         else if (DateUtils.isDayAfter(day, dateRange.to)) {
                             dateRange.to = day;
                         }
-                        days = listOfDatesBetween(dateRange)
+                        // days = listOfDatesBetween(dateRange)
                         spaceAvailabiltyInfo.datesInfo = buildDateInfo({
                             dateMode,
                             dateRangeStrings: dateStringsFromDateRange(dateRange),
-                            singleDatesStrings: daysSelected
-                        })
+                            // singleDatesStrings: daysSelected
+                        });
                         changeSpaceContext({ ...spaceData, spaceAvailabiltyInfo })
                     }
                 }

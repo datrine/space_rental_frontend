@@ -11,7 +11,8 @@ import { getSession } from 'next-auth/client';
 import { Loading, LogoSVG } from '../../../resuables/index';
 import { Container, Grid } from '@material-ui/core';
 import { getImgUrl } from '../../../../utils/utilFns';
-import { SpaceContext, spaceDataDefault } from '../index';
+import { UserSessionContext } from '../../../../pages/_app';
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +28,9 @@ const useStyles = makeStyles((theme) => ({
 export default function AlignItemsList({ hookRoomListDialog }) {
     const classes = useStyles();
     let [spacesState, changeSpacesState] = useState([])
-    let [loadingState, changeLoadingState] = useState(false)
+    let [loadingState, changeLoadingState] = useState(false);
+    let {session}=useContext(UserSessionContext)
+    let {user}=session
     useEffect(() => {
         (async () => {
             changeLoadingState(true)
@@ -35,7 +38,8 @@ export default function AlignItemsList({ hookRoomListDialog }) {
             let res = await fetch(`/api/spaces?userId_eq=${user.userId}`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization":`Bearer ${user.jwt}`
                 }
             }, []);
             changeLoadingState(false)
@@ -43,7 +47,6 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                 let data = await res.json();
                 let spaces= data;
                 if (spaces) {
-                    console.log(spaces)
                     changeSpacesState(spaces)
                 }
             }
@@ -59,7 +62,6 @@ export default function AlignItemsList({ hookRoomListDialog }) {
                     spacesState.map(({ nameOfSpace, descOfSpace, id, spaceInfo, space_pics, created_at }, index) => <React.Fragment key={index}>
                         <ListItem onClick={
                             e => {
-                                console.log("list selected")
                                 changeSpaceContext({ ...spacesState[index] })
                                 hookRoomListDialog(false)
                             }

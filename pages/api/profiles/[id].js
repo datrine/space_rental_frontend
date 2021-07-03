@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         let { id } = req.query
         let data = req.body
         let session = await getSession({ req });
-        console.log(session.user.email)
+        console.log("id: "+id)
         let jwt = session.user.jwt
         await middlewareRunner(req, res, cors);
         let response;
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
             })
         }
         let profile = response.data
-        return res.json({ profile });
+        return res.json(profile);
     } catch (error) {
         let errObj = serverError(error)
         let { err, ...errRest } = errObj;

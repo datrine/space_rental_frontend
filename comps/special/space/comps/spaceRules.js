@@ -3,7 +3,7 @@ import { Add, Delete } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
 import { IdObj } from "../../../../utils/utilFns";
-import { SpaceContext } from "..";
+import {SpaceContext} from "../../../resuables/contextInterfaces"
 
 function SpaceRulesDiv(params) {
     return <>

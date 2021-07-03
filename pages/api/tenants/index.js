@@ -31,9 +31,8 @@ export default async function handler(req, res) {
                 }
             })
 
-            let spaces = response.data
-            console.log(spaces.length)
-            return res.json(spaces);
+            let tenants = response.data
+            return res.json(tenants);
 
         } catch (error) {
             let errObj = serverError(error)
@@ -59,8 +58,8 @@ export default async function handler(req, res) {
                 data
             })
 
-            let space = response.data
-            return res.json({ space });
+            let tenant = response.data
+            return res.json(tenant);
 
         } catch (error) {
             let errorObj = serverError(error)

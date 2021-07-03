@@ -1,6 +1,7 @@
 import profile from "./profile"
 
 export let renter = {
+    ...profile,
     /**
      * @type {number}
      */

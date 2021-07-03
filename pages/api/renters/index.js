@@ -3,6 +3,7 @@ import Cors from "cors"
 import axios from 'axios';
 import qs from "qs";
 import { getSession } from "next-auth/client";
+import { serverError } from "../../../utils/errors";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],

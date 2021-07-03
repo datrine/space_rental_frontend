@@ -1,8 +1,8 @@
 import { Container, FormControl, FormControlLabel, Input, makeStyles, Radio, RadioGroup, } from "@material-ui/core";
-import React, { useState } from "react";
-import { SpaceContext } from "..";
-import { useContext } from "react";
+import React, { useState, useContext } from "react";
+import { SpaceContext } from "../../../resuables/contextInterfaces"
 import { DateTime } from "luxon";
+import { billEstimator } from "../../../../utils/utilFns";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -102,8 +102,7 @@ function SpaceChargeFormat(params) {
                 billEstimate = (Number(spaceData.spaceAvailabiltyInfo.lengthOfStay) / 31) *
                     Number(spaceBills.charge)
             }
-    spaceBills.billEstimate = Number(billEstimate + Number(spaceBills.otherBills) || 0)
-    console.log('billEstimate: ' + spaceBills.billEstimate);
+    spaceBills.billEstimate = Number(billEstimate + Number(spaceBills.otherBills) || 0);
     return <> <SpaceContext.Provider value={spaceBills} >
         <FormControl fullWidth>
             <h5>Select Payment Format</h5>

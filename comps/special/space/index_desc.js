@@ -31,7 +31,7 @@ import { UserSessionContext } from "../../../pages/_app";
 export const SpaceToBookContext = createContext({
     spaceToBookData: _.clone({
         spaceId: 0,
-        renterId:undefined,
+        renterId: undefined,
         spaceMeta: {
             datesToStayInfo: {
                 dateMode: "asRange",

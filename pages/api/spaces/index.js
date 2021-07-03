@@ -19,7 +19,6 @@ export default async function handler(req, res) {
             const myURL = new URL(`${process.env.CMS_URL}/spaces`);
             let params = new URLSearchParams(filter)
             myURL.search = params;
-            console.log(myURL.href)
 
             await middlewareRunner(req, res, cors);
             let response = await axios({
@@ -32,7 +31,6 @@ export default async function handler(req, res) {
             })
 
             let spaces = response.data
-            console.log(spaces.length)
             return res.json(spaces);
 
         } catch (error) {
@@ -60,7 +58,7 @@ export default async function handler(req, res) {
             })
 
             let space = response.data
-            return res.json({ space });
+            return res.json( space);
 
         } catch (error) {
             let errorObj = serverError(error)

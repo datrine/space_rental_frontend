@@ -22,7 +22,7 @@ function MyCalendar({ }) {
                     e => {
                         changeRoomListDialog(true)
                     }
-                } >Show Dates Available</Button>
+                } >Show Dates Ordered</Button>
             </Grid>
         <DateAvailableView openRoomListDialog={openRoomListDialog}
             hookRoomListDialog={changeRoomListDialog} />
