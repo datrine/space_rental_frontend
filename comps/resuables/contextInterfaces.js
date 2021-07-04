@@ -5,6 +5,17 @@ import { space } from "../../utils/models/space";
 import useSWR from "swr"
 import { UserSessionContext } from "../../pages/_app";
 
+
+
+export const IPanelContext=createContext({
+    dataOfPanel:{
+        disablePrev: false,
+        disableNext:false,
+        limit:2,
+        offset:0
+    },changeContext:()=>{}
+});
+
 export const ISearchContext = createContext({
     params: {
         lowerBudget: 200,

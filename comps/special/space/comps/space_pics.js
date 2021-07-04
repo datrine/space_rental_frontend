@@ -18,7 +18,7 @@ function AddImageView({ }) {
                     <Image width={300} height={300} src="/camera_placeholder.jpg" />}
             </Grid>
         </Container>
-        <Container style={{ width: 300, marginTop: 20 }} >
+        <Container style={{  marginTop: 20 ,padding:0}} >
             <Grid justify="space-evenly" container >
                 <AddBtn index={0} />
                 <AddBtn index={1} />
@@ -31,10 +31,11 @@ function AddImageView({ }) {
 }
 
 function Caroo({ imgObjUrls = [] }) {
+    let screenWidth = window.screen.width
     return <>
         <Carousel>
             {imgObjUrls.map((imgObj, index) => imgObj ? <Carousel.Item key={index} >
-                <img width={300} height={300} src={getImgUrl(imgObj)} />
+                <img width={Math.min((screenWidth * 80 / 100), 300)} height={300} src={getImgUrl(imgObj)} />
             </Carousel.Item> : null)}
         </Carousel>
     </>
@@ -43,8 +44,8 @@ function Caroo({ imgObjUrls = [] }) {
 function AddBtn({ index, }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
-    let {space_pics}  = spaceData
-    let [isPic, changeIsPic] = useState((space_pics[index] &&space_pics[index].id )? true : false);
+    let { space_pics } = spaceData
+    let [isPic, changeIsPic] = useState((space_pics[index] && space_pics[index].id) ? true : false);
     let [uploadingState, changeUploadingState] = useState(isPic ? "success" : "none");
     let view = null;
     switch (uploadingState) {
@@ -58,7 +59,7 @@ function AddBtn({ index, }) {
                             let { data: dataUploaded, err } = await uploader({
                                 files,
                                 ref: "file",
-                                refId: index,
+                                refId: spaceData.id || index,
                                 path: "spaces",
                                 field: "space_pics",
                                 source: "upload",

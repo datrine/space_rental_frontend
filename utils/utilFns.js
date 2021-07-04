@@ -4,8 +4,11 @@ import { nanoid } from "nanoid";
 import { DateUtils } from "react-day-picker";
 import { uniqueId } from "lodash";
 import { space } from "./models/space";
-import {buildDateInfo,dateRangeFromDateStrings,dateStringsFromDateRange,datesFromStrings,
-    stringsFromDates,daysSorter,rangeFromDates,listOfDatesBetween,numberOfDays} from "./dateFns"
+import {
+    buildDateInfo, dateRangeFromDateStrings, dateStringsFromDateRange, datesFromStrings,
+    stringsFromDates, daysSorter, rangeFromDates, listOfDatesBetween, numberOfDays
+} from "./dateFns"
+import profile from "./models/profile";
 
 export let appColor = "#60941a"
 
@@ -263,9 +266,13 @@ let billEstimator = (spaceBills, lengthOfStay) => {
     console.log('billEstimate: ' + billEstimate);
     return billEstimate
 }
+let isProfileComplete = ({ f_name, l_name, gender }) => {
+    return !!f_name && !!l_name && !!gender
+}
+
 export {
     middlewareRunner, memoFn, screenMgr, stateMgr, procMulFiles, uploader,
     generalPutAPI, autoSignIn, imgObjProcessor, getImgUrl, buildDateInfo, daysSorter,
     listOfDatesBetween, datesFromStrings, stringsFromDates, numberOfDays, IdObj, rangeFromDates,
-    dateRangeFromDateStrings, dateStringsFromDateRange, billEstimator
+    dateRangeFromDateStrings, dateStringsFromDateRange, billEstimator,isProfileComplete
 };

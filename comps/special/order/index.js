@@ -15,10 +15,14 @@ export const TenantContext = createContext({
 });
 
 function OrderComp({ }) {
+    let { orderData, changeContext } = useContext(OrderContext)
+    let [orderState, changeOrderState] = useState(orderData)
     return <>
-        <TenantContextProvider>
-            <RecombinedWithSpace />
-        </TenantContextProvider>
+        <OrderContext.Provider value={{ orderData: orderState, changeContext: changeOrderState }}>
+            <TenantContextProvider>
+                <RecombinedWithSpace />
+            </TenantContextProvider>
+        </OrderContext.Provider>
     </>
 }
 
@@ -33,13 +37,81 @@ function RecombinedWithSpace({ }) {
 }
 
 function MobileView() {
+    let { orderData } = useContext(OrderContext);
+    let { state } = orderData
+    let view = null
+    switch (state) {
+        case "begun":
+            view = <>
+                <Grid justify="center" direction="column" container >
+                    <Paper style={{ width: "300px" }}>
+                        <TenantBio />
+                        <DemTemplates />
+                        <Container>
+                            <Grid container justify="space-between" >
+                                <DeclineBtn />
+                                <AcceptBtn />
+                            </Grid>
+                        </Container>
+                    </Paper>
+                </Grid>
+            </>
+            break;
+
+        case "accepted":
+            view = <>
+                <p>Order accepted...</p>
+            </>
+            break;
+            
+        case "declined":
+            view = <>
+                <p>Order Declined</p>
+            </>
+            break;
+        default:
+            break;
+    }
     return <>
         <Grid justify="center" direction="column" container >
             <Paper style={{ width: "300px" }}>
                 <TenantBio />
                 <DemTemplates />
+                <Container>
+                    <Grid container justify="space-between" >
+                        <DeclineBtn />
+                        <AcceptBtn />
+                    </Grid>
+                </Container>
             </Paper>
         </Grid>
+    </>
+}
+
+function DeclineBtn(params) {
+    let { orderData, changeContext } = useContext(OrderContext)
+    return <>
+        <button onClick={
+            async e => {
+                let res = await fetch(`/api/orders/${orderData.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ state: "declined" })
+                });
+                if (res.ok) {
+                    changeContext({ ...orderData, state: "declined" })
+                }
+            }
+        } >Decline</button>
+    </>
+}
+
+
+function AcceptBtn(params) {
+    return <>
+        <button></button>
     </>
 }
 

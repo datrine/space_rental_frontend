@@ -1,10 +1,13 @@
 import { Container, Grid, Button, Paper, Typography } from "@material-ui/core";
 import Link from 'next/link';
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import View from '../view';
 import { ProfileMenu } from './dashboard/resuables';
+import { isProfileComplete } from "../../utils/utilFns";
+import { UserSessionContext } from "../../pages/_app";
+import { profileFetcher } from "../resuables/my_useswr";
 
 
 let PostAdsIndex = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
@@ -20,9 +23,39 @@ let PostAdsIndex = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
 }
 
 function MobileView() {
+    let { session } = useContext(UserSessionContext);
+    let { profileFromServer, loading, error } = profileFetcher(session.user.id);
+    let view = null
+    if (loading) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Loading profile data</p>
+        </>
+    }
+    else if (error) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Error loading profile data</p>
+        </>
+    }
+    else if (!profileFromServer) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Profile data not found</p>
+        </>
+    }
+    else if (profileFromServer) {
+        let complete = isProfileComplete(profileFromServer)
+        view = <>{complete ? <PostView /> :
+            <Container style={{ textAlign: "center", marginTop: "100px" }}>
+                <p style={{ textAlign: "center" }}>Complete your profile</p>
+                <p style={{ textAlign: "center" }}>
+                    <a href="/profile" >Return to complete your profile</a>
+                </p>
+            </Container>}
+
+        </>
+    }
     return <>
         <ProfileMenu />
-        <PostView />
+        {view}
     </>
 }
 

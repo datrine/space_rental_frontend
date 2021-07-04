@@ -6,9 +6,13 @@ import order from '../../utils/models/order';
 import { UserSessionContext } from '../_app'
 import useSWR from "swr"
 import { renter } from '../../utils/models/renter';
+import { ProfileMenu } from '../../comps/special/dashboard/resuables';
+import { Container, Grid } from '@material-ui/core';
+import { JustAPanel } from '../../comps/resuables';
 
 export const OrderContext = createContext({
     orderData: _.cloneDeep(order),
+    changeContext:()=>{}
 });
 
 export const RenterContext = createContext({
@@ -29,7 +33,8 @@ function MyOrders() {
     let mobileView = <MobileView
         ordersProp={ordersFromServer}
         errorProp={error}
-        loadingProp={loading} />
+        loadingProp={loading}
+         />
     return <>
         <View mobileView={mobileView} />
     </>
@@ -67,12 +72,17 @@ function MobileView({ loadingProp, errorProp, ordersProp }) {
             <p>Loading</p>
         </>
     }
-    if (errorProp) {
+    else if (errorProp) {
         view = <>
             <p>Error loading</p>
         </>
     }
-    if (ordersProp) {
+   else if (!ordersProp.length>0) {
+        view = <>
+            <p>No orders...</p>
+        </>
+    }
+   else if (ordersProp) {
         view = <>
             {ordersProp.map((orderData, index) => <OrderContext.Provider value={{ orderData }} key={index} >
                 <OrderComp />
@@ -81,7 +91,23 @@ function MobileView({ loadingProp, errorProp, ordersProp }) {
         </>
     }
     return <>
-        {view}
+        <ProfileMenu />
+        <Container style={{ marginTop: 70, padding: 0, position: "fixed" }} >
+            <Grid justify="center" container
+                style={{ width: 300, margin: "auto", backgroundColor: "whitesmoke" }} >
+                <JustAPanel />
+            </Grid>
+            <Container style={{ marginTop: 40, overflow: "auto", height: "65vh" }}>
+                {view}
+            </Container>
+            <Container
+                style={{ bottom: "10px", position: "fixed", paddingTop: "10px" }} >
+                <Grid justify="center" container
+                    style={{ width: 300, margin: "auto", backgroundColor: "whitesmoke" }} >
+                    <JustAPanel />
+                </Grid>
+            </Container>
+        </Container>
     </>
 }
 

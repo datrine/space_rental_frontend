@@ -7,10 +7,11 @@ import View from "../../view";
 import _ from "lodash";
 import { space, session } from "../../../utils/models/exportModels";
 import { SpaceContext } from "../../../pages/spaces/[id]";
-import { ItemTemplate } from "../../resuables/";
+import { ItemTemplate, JustAPanel } from "../../resuables/";
 import MobileFilter from "../../filterApp";
 import { SearchContext } from "../../searchNfilter";
 import { Filter } from "@material-ui/icons";
+import { ProfileMenu } from "../dashboard/resuables";
 
 /**
  * 
@@ -77,8 +78,10 @@ function SpaceToBookContextProvider({ children }) {
 
 function MobileView({ itemComps }) {
     return <>
-        <Container style={{ padding: 0 }} >
+        <ProfileMenu />
+        <Container style={{ padding: 0,marginTop:70 }} >
             <SearchSpaces />
+        <JustAPanel/>
             <Grid container justify="center" >
                 {itemComps.
                     map((item, index) => <div key={index} className="w3-padding" >{item}</div>)}

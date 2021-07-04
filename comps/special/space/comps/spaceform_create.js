@@ -18,12 +18,15 @@ import {
     DescOfSpace, KitchenNumber, BedroomNumber, SpaceCategory, SpaceCondition, TypeOfStay,
     apartments, residenceTypes, officeTypes
 } from "./prop_reusable"
+import { spaceDataDefault } from "../index_create";
 
 function SpaceForm({ }) {
     let [responseView, changeResponseView] = useState(null)
     let ctx = useContext(SpaceContext)
     let handleSuccess = (user) => {
-        let view = <SuccessSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
+        let view = <SuccessSavedRoom openDialog={true} 
+        hookChangeResponseView={changeResponseView} />
+         ctx.changeSpaceContext({ ...spaceDataDefault })
         changeResponseView(view)
     }
     let handleFail = (err) => {
@@ -40,7 +43,6 @@ function SpaceForm({ }) {
                         ...ctx.spaceData
                     }
                     let res;
-                    console.log(ctx.spaceData)
                     //no space info exists for current space=>mode:edit
                     if (ctx.spaceData.id) {
                         res = await fetch(`/api/spaces/${ctx.spaceData.id}`, {
@@ -87,7 +89,7 @@ function SpaceForm({ }) {
                 }
             }} >
             <AddImageView />
-            <Container style={{ marginTop: "20px" }}>
+            <Container style={{ marginTop: "20px",padding:0 }}>
                 <NameOfSpace />
                 <TypeOfStay />
                 <DescOfSpace />

@@ -38,7 +38,6 @@ let SpaceState = () => {
         }, 5000);
 
     });
-    console.log(counter);
     return <>
         <SpaceContext.Provider value={{
             spaceData: spaceDataState,

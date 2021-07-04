@@ -15,21 +15,33 @@ import { useRouter } from "next/router";
 import _ from "lodash";
 import { SpaceContext } from "../../resuables/contextInterfaces";
 import { Delete, Edit } from "@material-ui/icons";
+import { getImgUrl } from "../../../utils/utilFns";
 
 function SpaceItem() {
-   let {spaceData}= useContext(SpaceContext)
-   console.log(spaceData)
+    let { spaceData } = useContext(SpaceContext)
+    let { nameOfSpace,descOfSpace,locationInfo, space_pics } = spaceData
     return <>
-    <Paper >
-        <Grid container>
-            <Grid item container xs={3} ></Grid>
-            <Grid item container xs={6} ></Grid>
-            <Grid item container direction="column" alignItems="center" xs={3} >
-                <a className="w3-btn" href={`/my_spaces/${spaceData.id}`} ><Edit/></a>
-                <button className="w3-btn" ><Delete/></button>
-            </Grid>
-        </Grid>
-    </Paper>
+        <Paper >
+            <Container>
+                <Grid container>
+                    <Grid item container justify="center" xs={3} >
+                        {space_pics.map((imgUrl, index) => <img key={index} className="w3-circle" 
+                        height={40} width={40}
+                            src={getImgUrl(imgUrl)} />)}
+                    </Grid>
+                    <Grid item container xs={6} direction="column" >
+                        {nameOfSpace ?
+                            <span>{nameOfSpace}</span> : <i>No name given</i>}
+                            {descOfSpace ?
+                                <span>{descOfSpace}</span> : <i>No description given</i>}
+                    </Grid>
+                    <Grid item container direction="column" alignItems="flex-end" xs={3} >
+                        <a className="w3-btn" href={`/my_spaces/${spaceData.id}`} ><Edit /></a>
+                        <button className="w3-btn" ><Delete /></button>
+                    </Grid>
+                </Grid>
+            </Container>
+        </Paper>
     </>
 }
 

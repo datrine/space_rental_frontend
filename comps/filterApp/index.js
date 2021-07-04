@@ -31,7 +31,7 @@ function MobileView({ openSearchApp, hookOpenFilterApp }) {
             paddingTop: 2, paddingBottom: 2,
             backgroundColor: "#474545"
         }} >
-            <Grid style={{}} >
+            <Grid container style={{}} >
                 <Grid item container xs={10} ><h3 style={{ color: "white" }} >Search</h3> </Grid>
                 <Grid item container xs={2} >
                     <Button onClick={handleClose} color="primary" autoFocus>

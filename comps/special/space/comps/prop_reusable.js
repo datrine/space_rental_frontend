@@ -209,11 +209,12 @@ function BathroomNumber({ }) {
     </>
 }
 
-let SuccessSavedRoom = ({ openDialog, hookChangeResponseView }) => {
-    let [open, setOpen] = useState(openDialog)
+let SuccessSavedRoom = ({ openDialog, hookChangeResponseView ,textToShow}) => {
+    let [open, setOpen] = useState(openDialog);
+    textToShow=textToShow||"A Room Ad Has Been Successfully Added"
     let ctx = useContext(SpaceContext)
     let handleClose = (e) => {
-        ctx.changeSpaceContext({ ...spaceDataDefault })
+       // ctx.changeSpaceContext({ ...spaceDataDefault })
         hookChangeResponseView(null)
     }
     return <>
@@ -230,7 +231,7 @@ let SuccessSavedRoom = ({ openDialog, hookChangeResponseView }) => {
                     <h3 style={{ textAlign: "center" }} >
                         <CheckCircle fontSize="large" style={{ color: "green" }} />
                     </h3>
-                    <h4 style={{ textAlign: "center" }}>A Room Ad Has Been Successfully Added</h4>
+                    <h4 style={{ textAlign: "center" }}>{textToShow}</h4>
                 </Container>
             </DialogContent>
             <DialogActions>

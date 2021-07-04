@@ -22,7 +22,8 @@ function SpaceFormEdit({ }) {
     let [responseView, changeResponseView] = useState(null)
     let ctx = useContext(SpaceContext)
     let handleSuccess = (user) => {
-        let view = <SuccessSavedRoom openDialog={true} hookChangeResponseView={changeResponseView} />
+        let view = <SuccessSavedRoom  openDialog={true} 
+        hookChangeResponseView={changeResponseView} textToShow="Room details updated" />
         changeResponseView(view)
     }
     let handleFail = (err) => {
@@ -33,10 +34,8 @@ function SpaceFormEdit({ }) {
     return <>
         <form onSubmit={
             async e => {
-                e.preventDefault()
-                let values = {
-                    ...ctx.spaceData
-                }
+                e.preventDefault();
+                let {id,...whatToUpdate}=ctx.spaceData
                 //no space info exists for current space=>mode:edit
                 if (!ctx.spaceData.id) {
                     throw "No space Id"
@@ -46,7 +45,7 @@ function SpaceFormEdit({ }) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(values)
+                    body: JSON.stringify(whatToUpdate)
                 });
                 if (res.ok) {
                     let data = await res.json();
@@ -57,14 +56,6 @@ function SpaceFormEdit({ }) {
                     }
                     if (space) {
                         handleSuccess(space);
-                        let renterId = space.renterId;
-                        let session = await getSession()
-                        session.user.renterId = renterId
-                        await signIn("credentials", {
-                            callbackUrl: window.location.pathname,
-                            isQuickReload: true,
-                            sessionInString: JSON.stringify(session)
-                        })
                     }
                 }
             }} >

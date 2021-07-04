@@ -5,6 +5,7 @@ import React, { createContext } from 'react';
 import _ from 'lodash';
 import { space } from '../../utils/models/space';
 import { Spaces } from '../../comps/special/spaces';
+import qs from 'qs';
 
 export let spaceDataDefault = {
     nameOfSpace: "",
@@ -29,7 +30,7 @@ export const SpaceContext = createContext({
 
 let SpacesPage = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     let { query: { id } } = useRouter();
-    let { spacesFromServer, error, loading } = spaceFetcher(id);
+    let { spacesFromServer, error, loading } = spacesFetcher({lowerBudget:1});
     if (error) {
         return <>
             <p>Error loading data...</p>
@@ -45,8 +46,11 @@ let SpacesPage = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     </>
 }
 
-function spaceFetcher() {
-    let { data, error, isValidating } = useSWR(`/api/spaces?`, fetcher)
+function spacesFetcher(opts) {
+   let queryString= qs.stringify(opts)
+    let { data, error, isValidating } = useSWR(`/api/spaces?${queryString}`, fetcher,{
+        revalidateOnFocus:false
+    })
     console.log(data || error || isValidating)
     return { spacesFromServer: data, error, loading: isValidating }
 }

@@ -24,6 +24,9 @@ let Profile = ({ csrfToken, callbackUrl, ...otherProps }) => {
     if (error) {
         return <><p>Error loading view...</p></>
     }
+    if (loading) {
+        return <><p>Loading...</p></>
+    }
     if (!data) {
         return <><p>No user found...</p></>
     }

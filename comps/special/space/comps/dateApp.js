@@ -23,7 +23,7 @@ export function RangeOfSpace({ }) {
     let daysSelected = listAllDatesAsDateObjs(datesInfo);
    // console.log(spaceData)
     return (
-        <Container>
+        <Container style={{padding:0}} >
             <DatesSelectFormat />
             <DayPicker onDayClick={
                 (day, { selected, disabled }) => {

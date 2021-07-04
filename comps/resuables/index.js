@@ -3,6 +3,7 @@ import { ArrowUpward } from "@material-ui/icons";
 import View from "../view";
 import {ItemTemplate} from "./itemTemplate"
 import { Loading, LogoSVG } from "./loading"
+import JustAPanel from "./move_panel";
 import QuickAlert from "./quickAlert";
 import SliderComp from "./sliderComp";
 
@@ -120,4 +121,6 @@ function MyInput(props = {
     </>
 }
 
-export {ItemTemplate,Loading,LogoSVG,ToTheTop,MySelect,MyInput,View,SliderComp,QuickAlert}
+
+export {ItemTemplate,Loading,LogoSVG,ToTheTop,MySelect,MyInput,View,SliderComp,
+    QuickAlert,JustAPanel}
