@@ -1,4 +1,4 @@
-import { faDoorOpen, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faDoorOpen, faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Container, Grid, Input } from "@material-ui/core";
 import React, { createContext, useContext } from "react";
@@ -9,7 +9,6 @@ import { space, session } from "../../../utils/models/exportModels";
 import { SpaceContext } from "../../../pages/spaces/[id]";
 import { ItemTemplate, JustAPanel } from "../../resuables/";
 import MobileFilter from "../../filterApp";
-import { SearchContext } from "../../searchNfilter";
 import { Filter } from "@material-ui/icons";
 import { ProfileMenu } from "../dashboard/resuables";
 
@@ -36,7 +35,7 @@ export const SpaceToBookContext = createContext({
 });
 
 function Spaces({ spacesDataProps }) {
-    let [showSearchAppState, changeShowSearchAppState] = useState(false);
+    //let [showSearchAppState, changeShowSearchAppState] = useState(false);
     let params = {
         lowerBudget: 800,
         upperBudget: 1000,
@@ -50,11 +49,9 @@ function Spaces({ spacesDataProps }) {
             <SpaceToBookContextProvider>
                 <ItemTemplate />
             </SpaceToBookContextProvider>
-        </SpaceContext.Provider>)
+        </SpaceContext.Provider>);
     return <>
-        <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
-            <View mobileView={<MobileView itemComps={itemsWithContexts} />} />
-        </SearchContext.Provider>
+        <View mobileView={<MobileView itemComps={itemsWithContexts} />} />
     </>
 }
 
@@ -79,12 +76,13 @@ function SpaceToBookContextProvider({ children }) {
 function MobileView({ itemComps }) {
     return <>
         <ProfileMenu />
-        <Container style={{ padding: 0,marginTop:70 }} >
+        <Container style={{ padding: 0, marginTop: 70 }} >
             <SearchSpaces />
-        <JustAPanel/>
+            <JustAPanel />
             <Grid container justify="center" >
                 {itemComps.
                     map((item, index) => <div key={index} className="w3-padding" >{item}</div>)}
+                {itemComps.length >= 1 ? <p>No items...</p> : null}
             </Grid>
         </Container>
     </>
@@ -93,7 +91,6 @@ function MobileView({ itemComps }) {
 function SearchSpaces() {
     let [showSearchAppState, changeShowSearchAppState] = useState(false);
     return <>
-
         <div style={{ textAlign: "center", marginTop: "50px" }} >
             <div style={{
                 width: "80vw", marginLeft: "10vw",
@@ -118,7 +115,7 @@ function SearchSpaces() {
                 changeShowSearchAppState(true)
             }
         } >
-            <Filter />
+            <FontAwesomeIcon icon={faFilter} />
         </Button>
         {showSearchAppState ? <MobileFilter openSearchApp={showSearchAppState}
             hookOpenFilterApp={changeShowSearchAppState} /> : null

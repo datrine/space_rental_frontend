@@ -8,7 +8,6 @@ import View from "../view";
 import SliderComp from "../resuables/sliderComp";
 import { SearchContext, } from "../searchNfilter";
 export default function MobileFilter({ SrchCtx, openSearchApp, hookOpenFilterApp }) {
-    console.log(hookOpenFilterApp)
     return <>
         <View
             mobileView={<MobileView openSearchApp={openSearchApp}
@@ -17,11 +16,16 @@ export default function MobileFilter({ SrchCtx, openSearchApp, hookOpenFilterApp
 }
 
 function MobileView({ openSearchApp, hookOpenFilterApp }) {
-    console.log("openSearchApp " + openSearchApp)
     let handleClose = () => {
-        console.log("openSearchApp " + openSearchApp)
         hookOpenFilterApp(false)
     }
+    let { params, changeParams } = useContext(SearchContext);
+    let [paramsState, changeParamsState] = useState(params);
+
+    useEffect(()=>{
+        console.log(paramsState)
+    },[])
+
     return <> <Dialog
         open={true}
         onClose={handleClose}
@@ -31,7 +35,7 @@ function MobileView({ openSearchApp, hookOpenFilterApp }) {
             paddingTop: 2, paddingBottom: 2,
             backgroundColor: "#474545"
         }} >
-            <Grid container style={{}} >
+            <Grid container >
                 <Grid item container xs={10} ><h3 style={{ color: "white" }} >Search</h3> </Grid>
                 <Grid item container xs={2} >
                     <Button onClick={handleClose} color="primary" autoFocus>
@@ -40,7 +44,18 @@ function MobileView({ openSearchApp, hookOpenFilterApp }) {
             </Grid>
         </DialogTitle>
         <DialogContent>
-            <SliderComp />
+            <Grid justify="center" container >
+                <SearchContext.Provider value={{params:paramsState,changeParams:changeParamsState}} >
+                    <Grid item container >
+                        <SliderComp />
+                    </Grid>
+                </SearchContext.Provider>
+                <button className="w3-btn" onClick={
+                    e=>{
+                        changeParams({...paramsState})
+                    }
+                } >Search</button>
+            </Grid>
         </DialogContent>
     </Dialog>
 

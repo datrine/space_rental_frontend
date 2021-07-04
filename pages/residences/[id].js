@@ -49,7 +49,9 @@ let Space = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
 }
 
 function residenceFetcher(residenceId) {
-    let { data, error, isValidating } = useSWR(`/api/residences/${residenceId}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/residences/${residenceId}`, fetcher,{
+        revalidateOnFocus:false
+    })
     return { spaceDataFromServer: data, error, loading: isValidating }
 }
 
