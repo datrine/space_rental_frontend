@@ -41,7 +41,7 @@ export default async function handler(req, res) {
             let data = req.body
             data.trackingId = nanoid();
             data.userId = user.userId;
-            console.log(data)
+            console.log(`${fetchHost}/orders`)
             await middlewareRunner(req, res, cors);
             let response = await axios({
                 url: `${fetchHost}/orders`,
