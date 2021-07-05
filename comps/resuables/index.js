@@ -1,11 +1,10 @@
 import { FormControl, Input, makeStyles, MenuItem, Select } from "@material-ui/core";
 import { ArrowUpward } from "@material-ui/icons";
 import View from "../view";
-import {ItemTemplate} from "./itemTemplate"
+import {ItemTemplate, MiniItemTemplate} from "./itemTemplate"
 import { Loading, LogoSVG } from "./loading"
 import JustAPanel from "./move_panel";
 import QuickAlert from "./quickAlert";
-import SliderComp from "./sliderComp";
 
 function ToTheTop() {
     let body = document.body;
@@ -122,5 +121,5 @@ function MyInput(props = {
 }
 
 
-export {ItemTemplate,Loading,LogoSVG,ToTheTop,MySelect,MyInput,View,SliderComp,
+export {ItemTemplate,MiniItemTemplate,Loading,LogoSVG,ToTheTop,MySelect,MyInput,View,
     QuickAlert,JustAPanel}

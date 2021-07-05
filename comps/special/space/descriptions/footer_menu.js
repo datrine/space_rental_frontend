@@ -58,14 +58,13 @@ function FooterMenu({ }) {
     let loggedIn = !!user.id;
     let [showAccountApp, toggleShowAccountApp] = useState(false);
 
-    useEffect(() => {
-    }, [user.id]);
 
-    let summaryView = <><h5>Dates:</h5>
+    let summaryView = <><h5>You selected the following dates:</h5>
         {dateMode === "asRange" ? <p>
-            {dateRangeStrings.from} to {dateRangeStrings.to}
+            {new Date(dateRangeStrings.from).toDateString()} to
+            {new Date(dateRangeStrings.to).toDateString()}
         </p> : <Grid  >{singleDatesStrings.map((dateStr, index) => <p key={index} >
-            {dateStr}</p>)}
+            {new Date(dateStr).toDateString()}</p>)}
         </Grid>}</>
     let view = null;
     switch (modeState) {
@@ -92,7 +91,7 @@ function FooterMenu({ }) {
     return <>
         <Grid container style={{ position: "fixed", height: 50, bottom: 0, backgroundColor: "grey" }} >
             {loggedIn ? <>
-                <Grid item container xs={12} >
+                <Grid item container xs={12} justify="center" >
                     <Button onClick={e => {
                         changeClickedBtnState("save")
                         changeRoomListDialog(true)
@@ -101,7 +100,7 @@ function FooterMenu({ }) {
                         color: clickedBtnState === "save" ? appColor : "black",
                         backgroundColor: clickedBtnState === "save" ? "white" : "inherit",
                     }} >
-                        <AddShoppingCart />
+                        Book
                     </Button>
                 </Grid>
             </> : <>

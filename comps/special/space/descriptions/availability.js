@@ -44,7 +44,7 @@ function DateAvailableView({ openRoomListDialog, hookRoomListDialog }) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
             <DialogTitle id="alert-dialog-title">Dates Available</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ padding: 2 }}>
                 <Container style={{ padding: 0 }} >
                     <DatesSelectFormat />
                     <Calendar />
@@ -60,52 +60,39 @@ function DateAvailableView({ openRoomListDialog, hookRoomListDialog }) {
 }
 
 export function Calendar({ }) {
-    let { spaceData } = useContext(SpaceContext)
-    let { spaceToBookData, changeContext } = useContext(SpaceToBookContext)
-    let { spaceAvailabiltyInfo: { datesInfo } } = spaceData
-    let { datesToStayInfo } = spaceToBookData.spaceMeta
-    datesToStayInfo.dateMode = datesToStayInfo?.dateMode || "asRange"
-    if (datesToStayInfo.dateMode === "asRange") {
-        datesToStayInfo.dateRangeStrings = (datesToStayInfo.dateRangeStrings || {
-            from: (new Date()).toISOString(),
-            to: (new Date()).toISOString(),
-        })
+    let { spaceData:
+        { spaceAvailabiltyInfo: { datesInfo: renterDatesInfo } } }
+        = useContext(SpaceContext);
+    let { spaceToBookData, changeContext: changeSpaceContext } = useContext(SpaceToBookContext);
+    let { spaceMeta } = spaceToBookData;
+
+    let rentersDays = listAllDatesAsDateObjs(renterDatesInfo);
+    let daysSelected= listAllDatesAsDateObjs(spaceMeta.datesToStayInfo)
+    let past = { before: new Date() };
+    let future = { after: rentersDays[rentersDays.length - 1] };
+    let modifiers = {
+        rentersDays,
     }
-
-    let { dateRangeStrings: renterDateRangeStrings, singleDatesStrings: renterSingleDatesStrings,
-        dateMode: renterDateMode } = datesInfo;
-    let { dateRangeStrings, singleDatesStrings, dateMode } = datesToStayInfo;
-
-    let renterDateRange = renterDateRangeStrings ? dateRangeFromDateStrings(renterDateRangeStrings) : undefined;
-    let renterdaysSelected = (datesInfo && dateMode === "asSingles") ?
-        datesFromStrings(renterSingleDatesStrings) : (listOfDatesBetween(renterDateRange));
-
-    let dateRange = dateRangeStrings && dateRangeFromDateStrings(dateRangeStrings);
-    let daysSelected = listAllDatesAsDateObjs(datesInfo);
-    const modifiers = {
-        renterdaysSelected: renterDateMode === "asRange" ?
-            dateRangeFromDateStrings(renterDateRangeStrings) :
-            listOfDatesBetween(renterSingleDatesStrings)
-    };
-    const modifiersStyles = {
-        renterdaysSelected: {
-            color: appColor,
-            //backgroundColor: '#fffdee',
+    let modifiersStyles = {
+        rentersDays: {
+            color: "red"
         },
-        daysSelected: {
-            color: appColor,
-            backgroundColor: '#affd5e',
+        past: {
+            color: "#d3d3d3"
         },
-        outside: {
-            backgroundColor: 'white',
-        },
-    };
+        future: {
+            color: "#d3d3d3"
+        }
+    }
     return (
-        <Container>
-            <DayPicker modifiers={modifiers} modifiersStyles={modifiersStyles}
-                fromMonth={new Date()} selectedDays={daysSelected} onDayClick={
+        <Container style={{ padding: 0 }} >
+            <DayPicker disabledDays={[past, future]}
+                modifiers={modifiers} modifiersStyles={modifiersStyles}
+                fromMonth={new Date()} onDayClick={
                     (day, { selected, disabled }) => {
                         let days = [...daysSelected]
+                        let { datesToStayInfo } = spaceMeta
+                        let dateMode = datesToStayInfo.dateMode
                         if (disabled) {
                             return
                         }
@@ -117,25 +104,25 @@ export function Calendar({ }) {
                             if (selected) {
                                 let indexOfDate = days.findIndex(dayInArray =>
                                     DateUtils.isSameDay(dayInArray, day))
-                                days.splice(indexOfDate, 1)
-                                datesToStayInfo = buildDateInfo({
+                                days.splice(indexOfDate, 1);
+                                spaceMeta.datesToStayInfo = buildDateInfo({
                                     dateMode,
-                                    dateRange, singleDatesStrings: stringsFromDates(days)
+                                    //dateRange, 
+                                    singleDatesStrings: stringsFromDates(days)
                                 })
-                                return changeContext({
-                                    ...spaceToBookData,
-                                    spaceMeta: { ...spaceToBookData.spaceMeta, datesToStayInfo }
-                                })
+                                return changeSpaceContext({ ...spaceToBookData, spaceMeta });
                             }
                             days.push(day)
                             days.sort(daysSorter)
-                            datesToStayInfo = buildDateInfo({
+                            spaceMeta.datesToStayInfo = buildDateInfo({
                                 dateMode,
-                                dateRange, singleDatesStrings: stringsFromDates(days)
-                            })
-                            changeContext({ ...spaceToBookData, datesToStayInfo })
+                                //dateRange, 
+                                singleDatesStrings: stringsFromDates(days)
+                            });
+                            changeSpaceContext({ ...spaceToBookData, spaceMeta });
                         }
                         else if (dateMode === "asRange") {
+                            let dateRange = dateRangeFromDateStrings(datesToStayInfo.dateRangeStrings)
                             days = []
                             if (DateUtils.isDayBefore(day, dateRange.from)) {
                                 dateRange.from = day;
@@ -146,19 +133,16 @@ export function Calendar({ }) {
                             else if (DateUtils.isDayAfter(day, dateRange.to)) {
                                 dateRange.to = day;
                             }
-                            days = listOfDatesBetween(dateRange)
-                            datesToStayInfo = buildDateInfo({
+                            // days = listOfDatesBetween(dateRange)
+                            spaceMeta.datesToStayInfo = buildDateInfo({
                                 dateMode,
                                 dateRangeStrings: dateStringsFromDateRange(dateRange),
-                                singleDatesStrings: daysSelected
+                                // singleDatesStrings: daysSelected
                             });
-                            changeContext({
-                                ...spaceToBookData,
-                                spaceMeta: { ...spaceToBookData.spaceMeta, datesToStayInfo }
-                            })
+                            changeSpaceContext({ ...spaceToBookData, spaceMeta })
                         }
                     }
-                } />
+                } selectedDays={daysSelected} />
         </Container>
     );
 }

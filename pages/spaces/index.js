@@ -39,9 +39,6 @@ let SpacesPage = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     }
     let [paramsState, changeParamsState] = useState(params);
     let { spacesFromServer, error, loading } = spacesFetcher({...paramsState});
-    useEffect(()=>{
-        console.log(paramsState);
-    },[]);
     if (error) {
         return <>
             <p>Error loading data...</p>

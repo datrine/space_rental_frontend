@@ -16,12 +16,8 @@ export function RangeOfSpace({ }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
     let spaceAvailabiltyInfo = spaceData.spaceAvailabiltyInfo
-    let datesInfo = spaceAvailabiltyInfo.datesInfo
-
-    //let { dateRangeStrings, singleDatesStrings, dateMode } = datesInfo;
-    //datesInfo.dateRange = dateRangeStrings && dateRangeFromDateStrings(dateRangeStrings);
+    let datesInfo = spaceAvailabiltyInfo.datesInfo;
     let daysSelected = listAllDatesAsDateObjs(datesInfo);
-   // console.log(spaceData)
     return (
         <Container style={{padding:0}} >
             <DatesSelectFormat />

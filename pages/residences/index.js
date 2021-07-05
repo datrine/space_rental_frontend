@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWR, { SWRConfig } from 'swr'
-import React, { createContext } from 'react';
+import React, { createContext, useState } from 'react';
 import _ from 'lodash';
 import { space } from '../../utils/models/space';
 import { Spaces } from '../../comps/special/spaces';
+import qs from 'qs';
+import { SearchContext } from '../../comps/searchNfilter';
 
 export let spaceDataDefault = {
     nameOfSpace: "",
@@ -28,7 +30,14 @@ export const SpaceContext = createContext({
 });
 
 let Residences = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
-    let { spacesFromServer, error, loading } = spacesFetcher();
+    let params = {
+        lowerBudget: 100,
+        upperBudget: 20000,
+        typeOfSpace: "",
+        cityOrTown: "",
+    }
+    let [paramsState, changeParamsState] = useState(params);
+    let { spacesFromServer, error, loading } = spacesFetcher({...paramsState});
     if (error) {
         return <>
             <p>Error loading data...</p>
@@ -39,13 +48,21 @@ let Residences = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
         <p>Loading...</p>
         </>
     }
+    if (!spacesFromServer) {
+        return <>
+        <p>No spaces found...</p>
+        </>
+    }
     return <>
+    <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
     <Spaces spacesDataProps={spacesFromServer} />
+        </SearchContext.Provider>
     </>
 }
 
-function spacesFetcher() {
-    let { data, error, isValidating } = useSWR(`/api/residences?`, fetcher)
+function spacesFetcher(opts) {
+    let queryString= qs.stringify(opts)
+    let { data, error, isValidating } = useSWR(`/api/residences?${queryString}`, fetcher)
     console.log(data || error || isValidating)
     return { spacesFromServer: data, error, loading: isValidating }
 }

@@ -1,21 +1,27 @@
 import { Container, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Input, AppBar, Toolbar, Slider, Typography } from "@material-ui/core";
-import {  Cancel } from "@material-ui/icons";
-import { useContext,  useState } from "react";
+import { Cancel } from "@material-ui/icons";
+import { useContext, useState } from "react";
 import { appColor } from "../../utils/utilFns";
-import { MySelect ,SliderComp} from "../resuables";
+import { ItemTemplate, MiniItemTemplate, MySelect } from "../resuables";
+import SliderComp from "./sliderComp";
+import { BtnsToggle } from "./search_city";
 import { SearchContext, Search_N_FilterContextProvider } from "../searchNfilter";
+import { ISpaceContext } from "../resuables/contextInterfaces";
 export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
     let handleClose = () => {
         hookOpenSearchApp(false)
     }
     let [contentState, changeContentState] = useState("search")
+    let [resultsState, changeResultState] = useState([])
     let contentView = null;
     switch (contentState) {
         case "search":
-            contentView = <SearchView hookChangeContentState={changeContentState} />
+            contentView = <SearchView hookChangeResultState={changeResultState}
+                hookChangeContentState={changeContentState} />
             break;
         case "results":
-            contentView = <ResultsView hookChangeContentState={changeContentState} />
+            contentView = <ResultsView resultsProp={resultsState}
+                hookChangeContentState={changeContentState} />
             break;
 
         default:
@@ -30,8 +36,10 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
             paddingTop: 2, paddingBottom: 2,
             backgroundColor: "#474545"
         }} >
-            <Grid container style={{}} >
-                <Grid item container xs={10} ><h3 style={{ color: "white" }} >Search</h3> </Grid>
+            <Grid container style={{width:"70vw"}} >
+                <Grid item container xs={10} >
+                    <h3 style={{ color: "white" }} >Search</h3>
+                </Grid>
                 <Grid item container xs={2} >
                     <Button onClick={handleClose} color="primary" autoFocus>
                         <Cancel style={{ color: "red" }} />
@@ -46,65 +54,7 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
     </>
 }
 
-function BtnsToggle(params) {
-    let [currentBtnIndex, changeCurrentBtnIndex] = useState(0)
-    return <>
-        <Grid container justify="space-between" style={{ backgroundColor: "#E0DEDE" }} >
-            <Button style={{
-                backgroundColor: currentBtnIndex === 0 ? appColor : "inherit",
-                color: currentBtnIndex === 0 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(0)
-                }
-            } >Rent</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 1 ? appColor : "inherit",
-                color: currentBtnIndex === 1 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(1)
-                }
-            } >Buy</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 2 ? appColor : "inherit",
-                color: currentBtnIndex === 2 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(2)
-                }
-            } >Invest</Button>
-            <Button style={{
-                backgroundColor: currentBtnIndex === 3 ? appColor : "inherit",
-                color: currentBtnIndex === 3 ? "white" : "inherit"
-            }} onClick={
-                e => {
-                    changeCurrentBtnIndex(3)
-                }
-            } >Flatmate</Button>
-
-        </Grid>
-    </>
-}
-
-function Categories() {
-    let { params, changeParams } = useContext(SearchContext)
-    console.log(params)
-    return <>
-        <MySelect labelTitle="Type of Space" valueProps={params.typeOfSpace || "office"}
-            selectMenuArr={[
-                { value: "residence", text: "Residence" },
-                { value: "office", text: "Office" },
-            ]} handleChangeProps={
-                e => {
-                    params.typeOfSpace = e.target.value;
-                    changeParams({ ...params });
-                }
-            } />
-    </>
-}
-
-function SearchView({ hookChangeContentState }) {
+function SearchView({ hookChangeContentState, hookChangeResultState }) {
     let { params, changeParams } = useContext(SearchContext)
     let [paramsState, changeParamsState] = useState(params)
     return <>
@@ -126,33 +76,58 @@ function SearchView({ hookChangeContentState }) {
                 </Container>
                 <br />
                 <SliderComp />
-                <p style={{ textAlign: "center" }}>
-                    <button className="w3-btn" onClick={
-                        async e => {
-                            try {
-
-                                let searchParams = new URLSearchParams(paramsState);
-                                console.log(searchParams.toString())
-                                let res = await fetch(`api/search/space?${searchParams.toString()}`);
-                                if (res.ok) {
-
-                                }
-                            } catch (error) {
-                                console.log(error)
-                            }
-                        }
-                    }
-                        style={{ color: "white", backgroundColor: appColor }} >Search</button>
-                </p>
             </Container>
         </Search_N_FilterContextProvider>
+        <p style={{ textAlign: "center" }}>
+            <button className="w3-btn" onClick={
+                async e => {
+                    try {
+                        let searchParams = new URLSearchParams(paramsState);
+                        console.log(searchParams.toString())
+                        let res = await fetch(`api/spaces?${searchParams.toString()}`);
+                        if (res.ok) {
+                            hookChangeContentState("results");
+                            let results = await res.json();
+                            console.log(results)
+                            hookChangeResultState(results);
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            }
+                style={{ color: "white", backgroundColor: appColor }} >Search</button>
+        </p>
+
     </>
 }
 
-function ResultsView({ hookChangeContentState }) {
+function ResultsView({ hookChangeContentState, resultsProp }) {
     return <>
-        <Container>
-
+        <Container style={{padding:0}} >
+            {resultsProp.map((result) => <>
+                <ISpaceContext.Provider value={{ spaceData: result }} >
+                    <MiniItemTemplate />
+                </ISpaceContext.Provider>
+                <br />
+            </>)}
         </Container>
+    </>
+}
+
+function Categories() {
+    let { params, changeParams } = useContext(SearchContext)
+    console.log(params)
+    return <>
+        <MySelect labelTitle="Type of Space" valueProps={params.typeOfSpace || "office"}
+            selectMenuArr={[
+                { value: "residence", text: "Residence" },
+                { value: "office", text: "Office" },
+            ]} handleChangeProps={
+                e => {
+                    params.typeOfSpace = e.target.value;
+                    changeParams({ ...params });
+                }
+            } />
     </>
 }

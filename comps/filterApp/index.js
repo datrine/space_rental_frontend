@@ -5,7 +5,7 @@ import {
 import { ArrowLeftRounded, ArrowRightRounded, Cancel } from "@material-ui/icons";
 import { createContext, useContext, useEffect, useState } from "react";
 import View from "../view";
-import SliderComp from "../resuables/sliderComp";
+import SliderComp from "../searchApp/sliderComp";
 import { SearchContext, } from "../searchNfilter";
 export default function MobileFilter({ SrchCtx, openSearchApp, hookOpenFilterApp }) {
     return <>
@@ -23,7 +23,7 @@ function MobileView({ openSearchApp, hookOpenFilterApp }) {
     let [paramsState, changeParamsState] = useState(params);
 
     useEffect(()=>{
-        console.log(paramsState)
+        console.log(paramsState);
     },[])
 
     return <> <Dialog

@@ -1,22 +1,77 @@
 import Link from 'next/link';
-import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { SpaceDescription } from '../../comps/special/space/index_desc';
-import  { SWRConfig } from 'swr'
-import { session } from '../../utils/models/session';
-import React from 'react';
+import useSWR, { SWRConfig } from 'swr'
+import React, { createContext, useState } from 'react';
 import _ from 'lodash';
+import { space } from '../../utils/models/space';
+import { Spaces } from '../../comps/special/spaces';
+import qs from 'qs';
+import { SearchContext } from '../../comps/searchNfilter';
 
+export let spaceDataDefault = {
+    nameOfSpace: "",
+    descOfSpace: "",
+    typeOfSpace: "",
+    spaceInfo: {
+        houseType: "", spaceCategory: "", spaceCondition: "",
+        bedroomNumber: 1, bathroomNumber: 1, kitchenNumber: 0, sittingNumber: 0
+    },
+    flatmateInfo: [],
+    spaceRules: [{ desc: "Pets allowed" }, { desc: "Smoking allowed" }, { desc: "Couple allowed" }],
+    locationInfo: {},
+    space_pics: [],
+    spaceAvailabiltyInfo: { lengthOfStay: 1, datesInfo: {} },
+    spaceBills: { charge: 0, otherBills: 0, billFormat: "day" },
+    spaceAmenities: [{ id: "", desc: "Shared Living Room" }], ...space
+};
 
-let Residences = ({ csrfToken, callbackUrl,session, ...otherProps }) => {
-    //console.log("here in login")
+export const SpaceContext = createContext({
+    spaceData: _.cloneDeep(space),
+});
+
+let Offices = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
+    let params = {
+        lowerBudget: 100,
+        upperBudget: 20000,
+        typeOfSpace: "",
+        cityOrTown: "",
+    }
+    let [paramsState, changeParamsState] = useState(params);
+    let { spacesFromServer, error, loading } = spacesFetcher({...paramsState});
+    if (error) {
+        return <>
+            <p>Error loading data...</p>
+        </>
+    }
+    if (loading) {
+        return <>
+        <p>Loading...</p>
+        </>
+    }
+    if (!spacesFromServer) {
+        return <>
+        <p>No spaces found...</p>
+        </>
+    }
     return <>
-        <SWRConfig value={{
-            fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-        }}  >
-            <SpaceDescription />
-        </SWRConfig>
+    <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
+    <Spaces spacesDataProps={spacesFromServer} />
+        </SearchContext.Provider>
     </>
 }
 
-export default Residences;
+function spacesFetcher(opts) {
+    let queryString= qs.stringify(opts)
+    let { data, error, isValidating } = useSWR(`/api/offices?${queryString}`, fetcher,{
+        revalidateOnFocus:true
+    })
+    console.log(data || error || isValidating)
+    return { spacesFromServer: data, error, loading: isValidating }
+}
+
+let fetcher = (url) => fetch(url).then(async res => {
+    if (!res.ok) throw await res.json()
+    return res.json()
+});
+
+export default Offices;

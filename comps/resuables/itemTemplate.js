@@ -11,6 +11,7 @@ import { SpaceContext, Spaces } from "../special/spaces";
 import { appColor, getImgUrl } from "../../utils/utilFns";
 import { useRouter } from "next/router";
 import { UserSessionContext } from "../../pages/_app";
+import { ISpaceContext } from "./contextInterfaces";
 
 function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
     let { pathname } = useRouter();
@@ -58,6 +59,57 @@ function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
             <Container style={{}} >
                 <p style={{ textAlign: "center" }}>
                     <SaveBtn />
+                    <a style={{ backgroundColor: appColor,color:"white" }}
+                        className="w3-btn" href={`${itemPath}/${id}`} >Book</a>
+                </p>
+            </Container>
+        </Container>
+    </>
+}
+
+function MiniItemTemplate({ imgProps: { width = 250, height = 200 } = {} }) {
+    let { pathname } = useRouter();
+    let itemPath = "spaces"
+    switch (pathname) {
+        case "/spaces":
+            itemPath = "spaces"
+            break;
+        case "/offices":
+            itemPath = "offices"
+            break;
+        case "/residences":
+            itemPath = "residences"
+            break;
+        default:
+            break;
+    }
+    let { spaceData:
+        { id, locationInfo, space_pics, spaceInfo,
+            nameOfSpace, spaceBills, typeOfSpace } } = useContext(ISpaceContext)
+    let imgSrc = space_pics.map((data) => getImgUrl(data))
+        || "/room_placeholder.jpeg"
+    return <>
+        <Container style={{
+            borderWidth: 1, borderStyle: "solid",
+            borderColor: "green", borderRadius: "20px", paddingTop: "10px"
+        }}>
+            <div >
+                {Array.isArray(imgSrc) && imgSrc.length > 0 ? <Carousel>
+                    {imgSrc.map((src, index) => <Carousel.Item key={index} >
+                        <Image layout="responsive" width={width} height={height}
+                            src={src ? src : "/room_placeholder.jpeg"} />
+                    </Carousel.Item>)}
+
+                </Carousel> :
+                    <Image layout="responsive" width={width} height={height}
+                        src="/room_placeholder.jpeg" />}
+                <Grid container direction="column" >
+                    <span>{nameOfSpace || spaceInfo.houseType} @ {locationInfo.cityOrTown}</span>
+                    <span>₦{spaceBills.charge} per {spaceBills.billFormat}</span>
+                </Grid>
+            </div>
+            <Container style={{}} >
+                <p style={{ textAlign: "center" }}>
                     <a style={{ backgroundColor: appColor,color:"white" }}
                         className="w3-btn" href={`${itemPath}/${id}`} >Book</a>
                 </p>
@@ -151,5 +203,5 @@ ItemTemplate.propTypes = {
 }
 
 export {
-    ItemTemplate,
+    ItemTemplate, MiniItemTemplate
 }
