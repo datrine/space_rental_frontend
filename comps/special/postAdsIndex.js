@@ -11,13 +11,6 @@ import { profileFetcher } from "../resuables/my_useswr";
 
 
 let PostAdsIndex = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
-    let [session, loading] = useSession()
-    let view = null
-    view = <><div className="">Fetching...</div></>
-    if (session) {
-        view = <View mobileView={<MobileView />} />
-        return view
-    }
     return <><View mobileView={<MobileView />} />
     </>
 }
@@ -47,7 +40,7 @@ function MobileView() {
             <Container style={{ textAlign: "center", marginTop: "100px" }}>
                 <p style={{ textAlign: "center" }}>Complete your profile</p>
                 <p style={{ textAlign: "center" }}>
-                    <a href="/profile" >Return to complete your profile</a>
+                    <a className="w3-btn w3-cyan" href="/profile" >Return to complete your profile</a>
                 </p>
             </Container>}
 

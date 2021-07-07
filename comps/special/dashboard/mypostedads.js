@@ -14,7 +14,7 @@ export default function MyPostedAds({ }) {
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
                 <h3 >My Posted Ads</h3>
                 <IconButton>
-                    <a href="/profile" >
+                    <a href="/postads" >
                         <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
                     </a>
                 </IconButton>
