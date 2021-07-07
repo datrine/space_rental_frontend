@@ -53,7 +53,7 @@ function MobileView() {
 
 function SpaceDetails({ }) {
     return <>
-        <Container style={{ marginTop: "20px",padding:0 }}>
+        <Container style={{ marginTop: "20px"}}>
             <Container
                 style={{ borderWidth: 1, borderStyle: "solid",
                  borderColor: "#60941a", padding: 0 }}>
