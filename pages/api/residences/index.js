@@ -13,10 +13,8 @@ export default async function handler(req, res) {
     let session = await getSession({ req })
     if (session) {
         let { user } = session
-        userFromSession=user
+        userFromSession = user
     }
-    //console.log(user)
-    //get a (filtered) list of spaces
     if (req.method === "GET") {
         try {
             let filter = req.query
@@ -26,12 +24,16 @@ export default async function handler(req, res) {
             console.log(myURL.href)
 
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${myURL}`,
                 method: "get",
-                headers: {
-                    "Content-Type": "application/json",
-                }
+                headers
             })
 
             let spaces = response.data
@@ -50,7 +52,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             if (!userFromSession) {
-                res.status=403;
+                res.status = 403;
                 throw "No Auth"
             }
             let data = req.body

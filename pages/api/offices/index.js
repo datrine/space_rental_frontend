@@ -25,12 +25,16 @@ export default async function handler(req, res) {
             console.log(myURL.href)
 
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${myURL}`,
                 method: "get",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                headers
             })
 
             let spaces = response.data
@@ -54,13 +58,16 @@ export default async function handler(req, res) {
                 throw "No Auth"
             }
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/offices`,
                 method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${userFromSession.jwt}`
-                },
+                headers,
                 data
             })
 

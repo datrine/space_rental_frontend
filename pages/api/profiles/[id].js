@@ -16,33 +16,42 @@ const cors = Cors({
  * @returns 
  */
 export default async function handler(req, res) {
+    let userFromSession;
+    let session = await getSession({ req })
+    if (session) {
+        let { user } = session
+        userFromSession = user
+    }
     try {
         let { id } = req.query
         let data = req.body
-        let session = await getSession({ req });
-        console.log("id: "+id)
-        let jwt = session.user.jwt
         await middlewareRunner(req, res, cors);
         let response;
+        let headers = {
+            "Content-Type": "application/json",
+        }
+        if (userFromSession) {
+            headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+        }
         if (req.method === "GET") {
             response = await axios({
                 url: `${process.env.CMS_URL}/userprofiles/${id}`,
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwt}`
-                },
+                headers,
                 data
             });
         }
         else if (req.method === "PUT") {
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             response = await axios({
                 url: `${process.env.CMS_URL}/userprofiles/${id}`,
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwt}`
-                },
+                headers,
                 data
             })
         }

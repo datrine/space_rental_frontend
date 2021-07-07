@@ -2,23 +2,34 @@ import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
 import { serverError } from "../../../utils/errors";
+import { getSession } from "next-auth/client";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
 });
 
 export default async function handler(req, res) {
+    let userFromSession;
+    let session = await getSession({ req })
+    if (session) {
+        let { user } = session
+        userFromSession = user
+    }
     if (req.method === "GET") {
         try {
             let { id } = req.query
             let data = req.body
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/renters/${id}`,
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers,
                 data
             })
             let renter = response.data
@@ -36,12 +47,16 @@ export default async function handler(req, res) {
             let { id } = req.query
             let data = req.body
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/renters/${id}`,
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers,
                 data
             })
             let renter = response.data

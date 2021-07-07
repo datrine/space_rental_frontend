@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     let session = await getSession({ req })
     if (session) {
         let { user } = session
-        userFromSession=user
+        userFromSession = user
     }
     try {
         if (req.method === "GET") {
@@ -21,14 +21,17 @@ export default async function handler(req, res) {
             if(!id){
                 throw "No id"
             }
-            console.log("id of residence: "+id)
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/residences/${id}`,
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                headers
             })
             let space = response.data
             //console.log(space)

@@ -10,20 +10,27 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
+    let userFromSession;
     let session = await getSession({ req })
-    let { user } = session
+    if (session) {
+        let { user } = session
+        userFromSession = user
+    }
     if (req.method === "GET") {
         try {
             let { query } = req
             let params = qs.stringify(query)
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${fetchHost}/renters?${params}`,
                 method: "get",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.jwt}`
-                },
+                headers,
             });
             let renters = response.data
             console.log(renters)
@@ -39,12 +46,16 @@ export default async function handler(req, res) {
         try {
             let data = req.body
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/renters/`,
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers,
                 data
             })
             let user = response.data

@@ -11,7 +11,6 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             let data = req.body
-            console.log(data.account_number)
             await middlewareRunner(req, res, cors);
             let response = await axios(
                 {

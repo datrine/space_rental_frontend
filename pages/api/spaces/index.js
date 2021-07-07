@@ -9,10 +9,12 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
+    let userFromSession;
     let session = await getSession({ req })
-    let { user } = session
-    //console.log(user)
-    //get a (filtered) list of spaces
+    if (session) {
+        let { user } = session
+        userFromSession = user
+    }
     if (req.method === "GET") {
         try {
             let filter = req.query
@@ -21,13 +23,16 @@ export default async function handler(req, res) {
             myURL.search = params;
 
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${myURL}`,
                 method: "get",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.jwt}`
-                }
+                headers
             })
 
             let spaces = response.data
@@ -47,13 +52,16 @@ export default async function handler(req, res) {
             let data = req.body
             console.log(data)
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/spaces`,
                 method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.jwt}`
-                },
+                headers,
                 data
             })
 
