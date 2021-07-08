@@ -82,7 +82,7 @@ function MobileView({ itemComps }) {
             <Grid container justify="center" >
                 {itemComps.
                     map((item, index) => <div key={index} className="w3-padding" >{item}</div>)}
-                {itemComps.length <= 1 ? <p>No items...</p> : null}
+                {itemComps.length < 1 ? <p>No items...</p> : null}
             </Grid>
         </Container>
     </>
