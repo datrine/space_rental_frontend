@@ -4,6 +4,8 @@ import { ISpaceContext } from "../../resuables/contextInterfaces";
 import { useContext, useState } from "react";
 import { MyCalendar } from "../../resuables/myCalendar";
 import { billEstimator, numberOfDays } from "../../../utils/utilFns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbsDown, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 export default function DemTemplates(params) {
     let { orderData } = useContext(OrderContext)
@@ -41,19 +43,22 @@ export default function DemTemplates(params) {
             {spaceItem("City or town:", locationInfo.cityOrTown)}
             {spaceItem("Bill estimate: ₦",
                 billEstimator(spaceBills, numberOfDays(spaceMeta.datesToStayInfo)))}
-            <Grid container >
+            <Grid container justify="space-between" >
                 <DeclineBtn />
+                <AcceptBtn />
             </Grid>
         </Grid>
     </>
 }
 
 function DeclineBtn(params) {
-    let { orderData } = useContext(OrderContext)
+    let { orderData, changeContext } = useContext(OrderContext)
     let { id, trackingId, spaceMeta, } = orderData
     let [showDialog, toggleShowDialog] = useState(false);
-    let onSuccessHandler = async () => { }
-    let onFailureHandler = async () => { }
+    let onSuccessHandler = async () => {
+    }
+    let onFailureHandler = async () => {
+    }
     let declineFn = async () => {
         try {
             let res = await fetch(`/api/orders/${id}`, {
@@ -64,9 +69,10 @@ function DeclineBtn(params) {
                 body: JSON.stringify({ state: "declined" })
             });
             if (res.ok) {
-                return res.json()
+                let orderServed = await res.json();
+                changeContext({ ...orderData, ...orderServed });
             } else {
-                throw res.json()
+                throw await res.json()
             }
         } catch (error) {
             console.log(error)
@@ -78,23 +84,73 @@ function DeclineBtn(params) {
             e => {
                 toggleShowDialog(true)
             }
-        } >Decline</Button>
-        {showDialog ? <MyDialog
+        } >Decline
+        <FontAwesomeIcon className="w3-text-red" icon={faThumbsDown} />
+        </Button>
+        {<MyDialog
             dialogText="Decline booking request"
             onSuccess={onSuccessHandler}
             onFailure={onFailureHandler}
             fnToRun={declineFn}
-        /> : null}
+            showDialogProp={showDialog}
+            hookToggleShowDialog={toggleShowDialog}
+        />}
     </>
 }
 
+function AcceptBtn(params) {
+    let { orderData, changeContext } = useContext(OrderContext)
+    let { id, trackingId, spaceMeta, } = orderData
+    let [showDialog, toggleShowDialog] = useState(false);
+    let onSuccessHandler = async () => {
+    }
+    let onFailureHandler = async () => {
+    }
+    let acceptFn = async () => {
+        try {
+            let res = await fetch(`/api/orders/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ state: "accepted" })
+            });
+            if (res.ok) {
+                let orderServed = await res.json();
+                changeContext({ ...orderData, ...orderServed });
+            } else {
+                throw await res.json()
+            }
+        } catch (error) {
+            console.log(error)
+            throw error;
+        }
+    }
+    return <>
+        <Button onClick={
+            e => {
+                toggleShowDialog(true)
+            }
+        } >Accept
+        <FontAwesomeIcon className="w3-text-green" icon={faThumbsUp} />
+        </Button>
+        {<MyDialog
+            dialogText="Accept booking request"
+            onSuccess={onSuccessHandler}
+            onFailure={onFailureHandler}
+            fnToRun={acceptFn}
+            showDialogProp={showDialog}
+            hookToggleShowDialog={toggleShowDialog}
+        />}
+    </>
+}
 
-function MyDialog({ dialogText = "", onSuccess, onFailure, fnToRun = async () => { } }) {
-    let [openState, changeOpenState] = useState(true);
+function MyDialog({ showDialogProp, hookToggleShowDialog, dialogText = "",
+    onSuccess, onFailure, fnToRun = async () => { } }) {
     let { orderData } = useContext(OrderContext)
     let { id, trackingId, spaceMeta, } = orderData
     let handleClose = (e) => {
-        changeOpenState(false)
+        hookToggleShowDialog(false)
     }
     let handleContinue = async (e) => {
         try {
@@ -104,12 +160,12 @@ function MyDialog({ dialogText = "", onSuccess, onFailure, fnToRun = async () =>
             console.log(error);
             onFailure(error)
         } finally {
-            changeOpenState(false)
+            hookToggleShowDialog(false)
         }
     }
     return <>
         <Dialog
-            open={openState}
+            open={showDialogProp}
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">

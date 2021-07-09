@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { csrfToken, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
-import { Comp_Dashboard } from '../comps/special/dashboard';
+import { Comp_Dashboard } from '../../comps/special/dashboard';
 import _ from 'lodash';
-import {profile} from '../utils/models/exportModels';
+import { profile } from '../../utils/models/exportModels';
 import useSWR from "swr";
-import { UserSessionContext } from './_app';
+import { UserSessionContext } from '../_app';
 import { createContext, useContext } from 'react';
-import PaymentApp from '../comps/special/payments';
+import PaymentApp from '../../comps/special/payments';
 
 /**
  * 
@@ -58,7 +58,7 @@ let Payments = ({ csrfToken, callbackUrl, ...otherProps }) => {
 }
 
 let OrdersView = ({ csrfToken, callbackUrl, ...otherProps }) => {
-    let { session:{user} } = useContext(UserSessionContext)
+    let { session: { user } } = useContext(UserSessionContext)
     let { data: dataForOrders, loading: loadingOrders, error: errorForOrdersFetch } =
         ordersFetcher(user.userId);
     if (loadingOrders) {
@@ -79,13 +79,18 @@ let OrdersView = ({ csrfToken, callbackUrl, ...otherProps }) => {
 }
 
 function profileFetcher(id) {
-    let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher, {
+        revalidateOnFocus: false
+    })
     //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }
 
 function ordersFetcher(id) {
-    let { data, error, isValidating } = useSWR(`/api/orders?userId=${id}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/orders?userId=${id}&state=accepted`,
+        fetcher, {
+        revalidateOnFocus: false
+    })
     //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }

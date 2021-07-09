@@ -9,10 +9,12 @@ const cors = Cors({
 });
 
 export default async function handler(req, res) {
+    let userFromSession;
     let session = await getSession({ req })
-    let { user } = session
-    //console.log(user)
-    //get a (filtered) list of spaces
+    if (session) {
+        let { user } = session
+        userFromSession = user
+    }
     if (req.method === "GET") {
         try {
             let filter = req.query
@@ -22,6 +24,12 @@ export default async function handler(req, res) {
             console.log(myURL.href)
 
             await middlewareRunner(req, res, cors);
+            let headers = {
+                "Content-Type": "application/json",
+            }
+            if (userFromSession) {
+                headers["Authorization"] = `Bearer ${userFromSession.jwt}`
+            }
             let response = await axios({
                 url: `${myURL}`,
                 method: "get",

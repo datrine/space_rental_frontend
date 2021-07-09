@@ -1,6 +1,6 @@
 import { Container } from "@material-ui/core";
 import { useContext, useState } from "react";
-import { ProfileContext } from "../../../pages/payments";
+import { ProfileContext } from "../../../pages/my_payments";
 import { BillingInfo } from "./billingInfo"
 import { PaymentOpts } from "./paymentOpts";
 import { Orders } from "./orders";
@@ -85,7 +85,9 @@ export function SpaceDataProvider({ children, spaceId }) {
 }
 
 function spaceFetcher(spaceId) {
-    let { data, error, isValidating } = useSWR(`/api/spaces/${spaceId}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/spaces/${spaceId}`, fetcher,{
+        revalidateOnFocus:false
+    })
     //console.log(data || error || isValidating)
     return { spaceDataFromServer: data, error, loading: isValidating }
 }

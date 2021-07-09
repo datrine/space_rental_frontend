@@ -42,10 +42,11 @@ function MySpacesPage() {
 }
 
 function MySpaces() {
+    let { session: { user: { userId } } } = useContext(UserSessionContext);
     let { renterData: { id } } = useContext(RenterContext);
     let { dataOfPanel, changeContext } = useContext(IPanelContext);
     let { offset, limit } = dataOfPanel
-    let { spacesFromServer, error, loading } = spacesFetcher(id, { offset, limit });
+    let { spacesFromServer, error, loading } = spacesFetcher({ renterId: id, userId, offset, limit });
     let mobileView = <MobileView
         spacesProp={spacesFromServer}
         errorProp={error}
@@ -114,19 +115,21 @@ function MobileView({ loadingProp, errorProp, spacesProp }) {
     return <>
         <ProfileMenu />
         <Container style={{ marginTop: 70, padding: 0, position: "fixed" }} >
-            <Grid justify="center" container 
-            style={{ width: 300, margin: "auto",backgroundColor:"whitesmoke" }} >
+            <Grid justify="center" container
+                style={{ width: 300, margin: "auto", backgroundColor: "whitesmoke" }} >
                 <JustAPanel />
             </Grid>
             <Container style={{ marginTop: 40, overflow: "auto", height: "65vh" }}>
-                {view}
+                <Grid container justify="space-evenly" >
+                        {view}
+                </Grid>
             </Container>
             <Container
-                style={{bottom: "10px", position: "fixed",paddingTop:"10px"}} >
-            <Grid justify="center" container
-                style={{ width: 300, margin: "auto",backgroundColor:"whitesmoke" }} >
-                <JustAPanel />
-            </Grid></Container>
+                style={{ bottom: "10px", position: "fixed", paddingTop: "10px" }} >
+                <Grid justify="center" container
+                    style={{ width: 300, margin: "auto", backgroundColor: "whitesmoke" }} >
+                    <JustAPanel />
+                </Grid></Container>
         </Container>
     </>
 }
@@ -143,8 +146,8 @@ function renterFetcher(userId) {
     return { renterFromServer: data, error, loading: isValidating }
 }
 
-function spacesFetcher(renterId, opts) {
-    let queryString = qs.stringify({ renterId, ...opts })
+function spacesFetcher(opts) {
+    let queryString = qs.stringify({ ...opts })
     let { data, error, isValidating } = useSWR(`/api/spaces?${queryString}`, fetcher, {
         revalidateOnFocus: false,
     })

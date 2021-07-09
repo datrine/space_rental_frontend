@@ -19,29 +19,25 @@ import { getImgUrl } from "../../../utils/utilFns";
 
 function SpaceItem() {
     let { spaceData } = useContext(SpaceContext)
-    let { nameOfSpace,descOfSpace,locationInfo, space_pics } = spaceData
+    let { nameOfSpace, descOfSpace, locationInfo, space_pics } = spaceData
     return <>
-        <Paper >
-            <Container>
-                <Grid container>
-                    <Grid item container justify="center" xs={3} >
-                        {space_pics.map((imgUrl, index) => <img key={index} className="w3-circle" 
-                        height={40} width={40}
-                            src={getImgUrl(imgUrl)} />)}
-                    </Grid>
-                    <Grid item container xs={6} direction="column" >
-                        {nameOfSpace ?
-                            <span>{nameOfSpace}</span> : <i>No name given</i>}
-                            {descOfSpace ?
-                                <span>{descOfSpace}</span> : <i>No description given</i>}
-                    </Grid>
-                    <Grid item container direction="column" alignItems="flex-end" xs={3} >
-                        <a className="w3-btn" href={`/my_spaces/${spaceData.id}`} ><Edit /></a>
-                        <button className="w3-btn" ><Delete /></button>
-                    </Grid>
-                </Grid>
-            </Container>
-        </Paper>
+        <Grid item container style={{ marginBottom: 20 }} className="w3-card" sm={5} >
+            <Grid item container justify="center" xs={3} >
+                {space_pics.map((imgUrl, index) => <img key={index} className="w3-circle"
+                    height={40} width={40}
+                    src={getImgUrl(imgUrl)} />)}
+            </Grid>
+            <Grid item container xs={6} sm={3} direction="column" >
+                {nameOfSpace ?
+                    <span>{nameOfSpace}</span> : <i>No name given</i>}
+                {descOfSpace ?
+                    <span>{descOfSpace}</span> : <i>No description given</i>}
+            </Grid>
+            <Grid item container direction="column" alignItems="flex-end" xs={3} >
+                <a className="w3-btn" href={`/my_spaces/${spaceData.id}`} ><Edit /></a>
+                <button className="w3-btn" ><Delete /></button>
+            </Grid>
+        </Grid>
     </>
 }
 

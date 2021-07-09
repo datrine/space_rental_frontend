@@ -12,7 +12,7 @@ import { JustAPanel } from '../../comps/resuables';
 
 export const OrderContext = createContext({
     orderData: _.cloneDeep(order),
-    changeContext:()=>{}
+    changeContext: () => { }
 });
 
 export const RenterContext = createContext({
@@ -28,13 +28,14 @@ function MyOrdersPage() {
 }
 
 function MyOrders() {
+    let { session: { user } } = useContext(UserSessionContext);
     let { renterData: { id } } = useContext(RenterContext);
-    let { ordersFromServer, error, loading } = ordersFetcher(id);
+    let { ordersFromServer, error, loading } = ordersFetcher(id,user.userId);
     let mobileView = <MobileView
         ordersProp={ordersFromServer}
         errorProp={error}
         loadingProp={loading}
-         />
+    />
     return <>
         <View mobileView={mobileView} />
     </>
@@ -77,14 +78,15 @@ function MobileView({ loadingProp, errorProp, ordersProp }) {
             <p>Error loading</p>
         </>
     }
-   else if (!ordersProp.length>0) {
+    else if (!ordersProp.length > 0) {
         view = <>
             <p>No orders...</p>
         </>
     }
-   else if (ordersProp) {
+    else if (ordersProp) {
         view = <>
-            {ordersProp.map((orderData, index) => <OrderContext.Provider value={{ orderData }} key={index} >
+            {ordersProp.map((orderData, index) => <OrderContext.Provider
+                value={{ orderData }} key={index} >
                 <OrderComp />
             </OrderContext.Provider>)}
 
@@ -123,8 +125,8 @@ function renterFetcher(userId) {
     return { renterFromServer: data, error, loading: isValidating }
 }
 
-function ordersFetcher(renterId) {
-    let { data, error, isValidating } = useSWR(`/api/orders?renterId=${renterId}`, fetcher, {
+function ordersFetcher(renterId, userId) {
+    let { data, error, isValidating } = useSWR(`/api/orders?renterId=${renterId}&userId=${userId}`, fetcher, {
         revalidateOnFocus: false,
     });
     //console.log(data || error || isValidating)

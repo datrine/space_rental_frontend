@@ -6,7 +6,7 @@ import { IPanelContext } from "./contextInterfaces"
 export default function JustAPanel(params) {
     useContext(IPanelContext)
     return <>
-        <Grid container justify="space-between" >
+        <Grid container justify="space-between"  >
             <Prev />
             <Limit />
             <Next />

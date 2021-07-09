@@ -47,12 +47,6 @@ function MobileView() {
                     <Paper style={{ width: "300px" }}>
                         <TenantBio />
                         <DemTemplates />
-                        <Container>
-                            <Grid container justify="space-between" >
-                                <DeclineBtn />
-                                <AcceptBtn />
-                            </Grid>
-                        </Container>
                     </Paper>
                 </Grid>
             </>
@@ -75,43 +69,9 @@ function MobileView() {
     return <>
         <Grid justify="center" direction="column" container >
             <Paper style={{ width: "300px" }}>
-                <TenantBio />
-                <DemTemplates />
-                <Container>
-                    <Grid container justify="space-between" >
-                        <DeclineBtn />
-                        <AcceptBtn />
-                    </Grid>
-                </Container>
+                {view}
             </Paper>
         </Grid>
-    </>
-}
-
-function DeclineBtn(params) {
-    let { orderData, changeContext } = useContext(OrderContext)
-    return <>
-        <button onClick={
-            async e => {
-                let res = await fetch(`/api/orders/${orderData.id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ state: "declined" })
-                });
-                if (res.ok) {
-                    changeContext({ ...orderData, state: "declined" })
-                }
-            }
-        } >Decline</button>
-    </>
-}
-
-
-function AcceptBtn(params) {
-    return <>
-        <button></button>
     </>
 }
 

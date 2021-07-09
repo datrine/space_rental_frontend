@@ -3,7 +3,7 @@ import { Email } from "@material-ui/icons";
 import _ from "lodash";
 import { createContext, useEffect } from "react";
 import { useContext } from "react";
-import { OrdersContext } from "../../../pages/payments";
+import { OrdersContext } from "../../../pages/my_payments/";
 import order from "../../../utils/models/order";
 import { billEstimator, numberOfDays } from "../../../utils/utilFns";
 import { SpaceContext } from "../space/index_desc";
@@ -25,7 +25,7 @@ export function Orders({ paymentProp, hookChangePaymentProp, }) {
     let { presentOrder, changeContext: changePresetOrderContext } = useContext(PresentOrderContext)
     return <>
         <Container>
-            {orders.length > 0 ? <h3>Choose Space to Pay</h3> : <h3>No Spaces Booked</h3>}
+            {orders.length > 0 ? <h3>Choose Order to Pay</h3> : <h3>No Orders Yet accepted</h3>}
             {orders.map((order, index) =><OrderContext.Provider key={index} value={{ order }}>
                 <SpaceDataProvider spaceId={order.spaceId}>
                     <Paper style={{ paddingTop: "10px", paddingBottom: "10px", maxWidth: "500px" }} >

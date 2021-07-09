@@ -81,7 +81,7 @@ function MyApp({ Component, pageProps }) {
 
 function authList() {
   return ["/admin", "/dashboard", "/wallet", "/profile", "/chats",
-    "/payment", "/postads", "/my_spaces", "/my_rents","/my_rents"]
+    "/my_payments", "/postads", "/my_spaces", "/my_rents","/my_rents"]
 }
 
 function sessionFetcher() {
