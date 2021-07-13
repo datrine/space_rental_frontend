@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -13,7 +13,10 @@ import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-sv
 import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
 import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
 import { LogoSVG } from '../resuables/reusables';
+import SearchBtn from './searchBtn';
 import SearchApp from '../searchApp';
+import { UserSessionContext } from '../../pages/_app';
+import { getImgUrl } from '../../utils/utilFns';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -37,7 +40,9 @@ const useStyles = makeStyles((theme) => ({
 let Comp_Mob_Header = ({ ...propsFromParent }) => {
     let classes = useStyles();
     let [expandedMenuState, changeExpandedMenu] = useState(false)
-    let [session, loading] = useSession()
+    let { session } = useContext(UserSessionContext);
+    let { user } = session
+    let prof_pic = getImgUrl(user?.prof_pic) || ""
     return <>
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
@@ -45,42 +50,25 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
             </Box>
             <SearchBtn />
             <Box component="button" className={classes.btnStacked}>
-                {session ? <Link href="/account"><AccountCircle style={{ color: "green" }} />
-                </Link> :
-                    <Link href="/account"><AccountCircle style={{ color: "grey" }} /></Link>
-                }  </Box>
+                <Link href="/acccount" >
+                    {user.id ? (prof_pic ?
+                        <img height={50} width={50} src={prof_pic} className="w3-circle" /> : <AccountCircle
+                            style={{
+                                color: "green",
+                                fontSize: "2.5em"
+                            }} />) :
+                        <AccountCircle
+                            style={{
+                                color: "black",
+                                fontSize: "2.5em"
+                            }} />
+                    }
+                </Link> </Box>
             <Box component="button" className={classes.btnStacked} >
                 <HamburgerMenu hookChangeExpandedMenu={changeExpandedMenu} expandedProps={expandedMenuState} />
             </Box>
         </AppBar>
         {expandedMenuState ? <ExpandedMenu hookToggleExpanded={changeExpandedMenu} /> : null}
-    </>
-}
-
-let SearchBtn = () => {
-    let classes = useStyles();
-    let [viewState, changeViewState] = useState(false);
-    let [showSearchAppState, changeShowSearchAppState] = useState(false);
-    return <>
-        <TextField onFocus={
-            e => {
-                changeShowSearchAppState(true)
-                e.currentTarget.blur()
-            }
-        } size="small" variant="outlined" InputLabelProps={{ shrink: true }} style={{
-            visibility: viewState ? "hidden" : "visible", marginRight: "10px", marginTop: "10px"
-        }} />
-        <Box onClick={
-            e => {
-                changeViewState(!viewState)
-            }
-        } component="button" className={classes.btnStacked}>
-            <span><Search /></span>
-        </Box>
-        {showSearchAppState ?
-            <SearchApp openSearchApp={showSearchAppState}
-                hookOpenSearchApp={changeShowSearchAppState} /> : null
-        }
     </>
 }
 

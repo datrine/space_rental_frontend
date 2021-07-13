@@ -11,7 +11,7 @@ import AlignItemsList from "../comps/roomlist";
 
 function Banner() {
     return <>
-        <Container style={{ backgroundColor: "#60941a", marginTop: "70px" }} >
+        <Container style={{ backgroundColor: "#60941a"}} >
             <h3 style={{ textAlign: "center", color: "white", paddingTop: "10px" }} >
                 <FontAwesomeIcon icon={faDoorOpen} /> <strong>Room Ads</strong></h3>
             <p style={{ textAlign: "center", color: "white", paddingBottom: "10px" }} >

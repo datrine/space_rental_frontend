@@ -89,7 +89,7 @@ function MiniItemTemplate({ imgProps: { width = 250, height = 200 } = {} }) {
     let imgSrc = space_pics.map((data) => getImgUrl(data))
         || "/room_placeholder.jpeg"
     return <>
-        <Container style={{
+        <Container style={{maxWidth:300,marginBottom:10,
             borderWidth: 1, borderStyle: "solid",
             borderColor: "green", borderRadius: "20px", paddingTop: "10px"
         }}>

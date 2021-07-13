@@ -1,4 +1,4 @@
-import { Container, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Input, AppBar, Toolbar, Slider, Typography } from "@material-ui/core";
+import { Container, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Input, AppBar, Toolbar, Slider, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
 import { useContext, useState } from "react";
 import { appColor } from "../../utils/utilFns";
@@ -27,7 +27,7 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
         default:
             break;
     }
-    return <> <Dialog
+    return <> <Dialog maxWidth="md" fullWidth={true}
         open={true}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -36,14 +36,15 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
             paddingTop: 2, paddingBottom: 2,
             backgroundColor: "#474545"
         }} >
-            <Grid container style={{width:"70vw"}} >
+            <Grid container>
                 <Grid item container xs={10} >
                     <h3 style={{ color: "white" }} >Search</h3>
                 </Grid>
                 <Grid item container xs={2} >
                     <Button onClick={handleClose} color="primary" autoFocus>
                         <Cancel style={{ color: "red" }} />
-                    </Button></Grid>
+                    </Button>
+                </Grid>
             </Grid>
         </DialogTitle>
         <DialogContent>
@@ -103,15 +104,17 @@ function SearchView({ hookChangeContentState, hookChangeResultState }) {
 }
 
 function ResultsView({ hookChangeContentState, resultsProp }) {
+    resultsProp = [...resultsProp, ...resultsProp, ...resultsProp]
     return <>
-        <Container style={{padding:0}} >
-            {resultsProp.map((result) => <>
-                <ISpaceContext.Provider value={{ spaceData: result }} >
-                    <MiniItemTemplate />
-                </ISpaceContext.Provider>
-                <br />
-            </>)}
-        </Container>
+            <Grid container justify="space-between"  >
+                {resultsProp.map((result) => <>
+                    <ISpaceContext.Provider value={{ spaceData: result }} >
+                        <MiniItemTemplate />
+                    </ISpaceContext.Provider>
+                    <br />
+                </>)}
+                {resultsProp.length < 1 ? <p>Search returned no results</p> : null}
+            </Grid>
     </>
 }
 

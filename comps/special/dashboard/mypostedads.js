@@ -9,7 +9,7 @@ import { UserSessionContext } from "../../../pages/_app";
 export default function MyPostedAds({ }) {
 
     return <>
-        <Container style={{ marginTop: "30px" }}>
+        <Container>
             <Grid container direction="row" justify="space-between" alignItems="center" container
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
                 <h3 >My Posted Ads</h3>

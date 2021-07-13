@@ -1,27 +1,19 @@
 import Link from 'next/link';
 import Image from "next/image"
-import { useState, useEffect, useContext } from "react"
-import { signIn, signOut, useSession } from "next-auth/client";
-import { useRouter } from 'next/router';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Dialog, DialogTitle, Grid, IconButton, Input, InputAdornment, Typography } from "@material-ui/core"
-import { Announcement, ArrowBack, Chat, Edit, Label, Person, PowerOff, Settings, } from "@material-ui/icons"
+import { useContext } from "react"
+import { Container, Grid, IconButton, } from "@material-ui/core"
 import View from '../../view';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faFile, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Loading, LogoSVG, SessionState } from '../../resuables/reusables';
-import { uploader, stateMgr, getImgUrl } from '../../../utils/utilFns';
-import { OpenedMenu } from "./opened_menu"
 import { ProfileMenu } from './resuables';
 import HiWelcomer from './hiwelcomer';
 import MyProfile from './myprofile';
 import MyPostedAds from './mypostedads';
 import { QuickAlert } from '../../resuables';
 import { UserSessionContext } from '../../../pages/_app';
+import { PCViewTemplate } from '../../general/pcview';
 
 let Comp_Dashboard = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
     return <>
-        <View mobileView={<MobileView />} />
+        <View mobileView={<MobileView />} pcView={<PCView />} />
         <Alerts />
     </>
 }
@@ -35,7 +27,7 @@ function Alerts() {
     </>
     let isCompleteProfile = user.l_name && user.f_name;
     if (!isCompleteProfile) {
-        profileAlert =  <QuickAlert msg="Profile is not complete" timerLimit={5000} />
+        profileAlert = <QuickAlert msg="Profile is not complete" timerLimit={5000} />
     }
     return <>
         {profileAlert}
@@ -43,20 +35,40 @@ function Alerts() {
 }
 
 
-function MobileView() {
-    return <>
-        <ProfileMenu />
+
+function PCView() {
+    let compToPC = <Container>
         <HiWelcomer />
         <MyProfile />
         <MyChats />
         <MyPostedAds />
+    </Container>
+
+    return <>
+        <PCViewTemplate comp={compToPC} />
+    </>
+}
+
+function MobileView() {
+    return <>
+        <ProfileMenu />
+        <Container disableGutters={true} style={{ marginTop: "70px" }}>
+            <HiWelcomer />
+            <Grid container direction="column"
+                justify="space-evenly"
+                alignItems="center" style={{ height: "600px" }} >
+                <MyProfile />
+                <MyChats />
+                <MyPostedAds />
+            </Grid>
+        </Container>
     </>
 }
 
 
 function MyChats({ userProp = {} }) {
     return <>
-        <Container style={{ marginTop: "40px" }}>
+        <Container>
             <Grid container direction="row" justify="space-between" alignItems="center" container
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
                 <h3><a href="/chats" >My Chats</a></h3>

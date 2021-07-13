@@ -44,7 +44,6 @@ function MobileView(props) {
             view = <BillingInfo {...props} />
             break;
         case 2:
-            console.log("Here: " + 2)
             view = <PaymentOpts {...props} />
             break;
         default:

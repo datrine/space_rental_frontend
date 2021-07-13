@@ -40,7 +40,9 @@ let Dashboard = ({ csrfToken, callbackUrl, ...otherProps }) => {
 }
 
 function profileFetcher(id) {
-    let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/profiles/${id}`, fetcher,{
+        revalidateOnFocus:false
+    })
     //console.log(data || error || isValidating)
     return { data, error, loading: isValidating }
 }

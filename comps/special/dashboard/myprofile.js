@@ -7,7 +7,7 @@ export default function MyProfile({ }) {
     let { profile } = useContext(ProfileContext);
     let { f_name, l_name, email, gender, occupation } = profile
     return <>
-        <Container style={{ marginTop: "30px" }}>
+        <Container>
             <Grid container direction="row" justify="space-between" alignItems="center" container
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
                 <h3 >My Profile</h3>

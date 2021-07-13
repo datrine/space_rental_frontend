@@ -24,7 +24,7 @@ export default function HiWelcomer({ }) {
      */
     //changeLoadingState(states.Loaded)
     return <>
-        <Container style={{ marginTop: "70px" }}>
+        <Container>
             <Grid container>
                 <Grid direction="column" item container xs={6} >
                     <h3>Hi {session.user.username}</h3>

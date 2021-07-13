@@ -8,10 +8,54 @@ import { ProfileMenu } from './dashboard/resuables';
 import { isProfileComplete } from "../../utils/utilFns";
 import { UserSessionContext } from "../../pages/_app";
 import { profileFetcher } from "../resuables/my_useswr";
+import { PCViewTemplate } from "../general/pcview";
 
 
 let PostAdsIndex = ({ csrfToken, hookChangeRegState, callbackUrl }) => {
-    return <><View mobileView={<MobileView />} />
+    return <><View mobileView={<MobileView />} pcView={<PCView />} />
+    </>
+}
+
+function PCView() {
+    let { session } = useContext(UserSessionContext);
+    let { profileFromServer, loading, error } = profileFetcher(session.user.id);
+    let view = null
+    if (loading) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Loading profile data</p>
+        </>
+    }
+    else if (error) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Error loading profile data</p>
+        </>
+    }
+    else if (!profileFromServer) {
+        view = <>
+            <p style={{ textAlign: "center", marginTop: "100px" }}>Profile data not found</p>
+        </>
+    }
+    else if (profileFromServer) {
+        let complete = isProfileComplete(profileFromServer)
+        view = <>{complete ? <PostView /> :
+            <Container style={{ textAlign: "center", }}>
+                <p style={{ textAlign: "center" }}>Complete your profile</p>
+                <p style={{ textAlign: "center" }}>
+                    <a className="w3-btn w3-cyan" href="/profile" >Return to complete your profile</a>
+                </p>
+            </Container>}
+
+        </>
+    }
+    let comp = <>
+        <Grid item container >
+            <Grid md={4} item >
+                {view}
+            </Grid>
+        </Grid>
+    </>
+    return <>
+        <PCViewTemplate comp={comp} />
     </>
 }
 
@@ -56,7 +100,7 @@ function PostView(params) {
     return <>
         <h2 style={{ color: "#60941A", textAlign: "center", marginTop: "50px" }}>Post An Ad</h2>
         <Grid direction="column" alignItems="center" justify="space-around" container
-            style={{ height: "80vh", width: "100vw", }} >
+            style={{ height: "80vh", }} >
 
             <Link href="/postads/space?spaceType=residence" ><Paper style={{ width: "80vw", paddingLeft: 10, paddingTop: 5, paddingBottom: 5 }}>
 
