@@ -104,7 +104,7 @@ function SearchView({ hookChangeContentState, hookChangeResultState }) {
 }
 
 function ResultsView({ hookChangeContentState, resultsProp }) {
-    resultsProp = [...resultsProp, ...resultsProp, ...resultsProp]
+   // resultsProp = [...resultsProp, ...resultsProp, ...resultsProp]
     return <>
             <Grid container justify="space-between"  >
                 {resultsProp.map((result) => <>

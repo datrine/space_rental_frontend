@@ -50,7 +50,7 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
             </Box>
             <SearchBtn />
             <Box component="button" className={classes.btnStacked}>
-                <Link href="/acccount" >
+                <Link href="/account" >
                     {user.id ? (prof_pic ?
                         <img height={50} width={50} src={prof_pic} className="w3-circle" /> : <AccountCircle
                             style={{

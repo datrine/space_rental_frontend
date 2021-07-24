@@ -89,7 +89,7 @@ function SpaceForm({ }) {
                 }
             }} >
             <AddImageView />
-            <Container style={{ marginTop: "20px",padding:0 }}>
+            <Container style={{ marginTop: "20px", }}>
                 <NameOfSpace />
                 <TypeOfStay />
                 <DescOfSpace />
