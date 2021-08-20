@@ -9,7 +9,6 @@ import { space, session } from "../../../utils/models/exportModels";
 import { SpaceContext } from "../../../pages/spaces/[id]";
 import { ItemTemplate, JustAPanel } from "../../resuables/";
 import MobileFilter from "../../filterApp";
-import { Filter } from "@material-ui/icons";
 import { ProfileMenu } from "../dashboard/resuables";
 
 /**
@@ -35,14 +34,13 @@ export const SpaceToBookContext = createContext({
 });
 
 function Spaces({ spacesDataProps }) {
-    //let [showSearchAppState, changeShowSearchAppState] = useState(false);
     let params = {
         lowerBudget: 800,
         upperBudget: 1000,
         typeOfSpace: "",
         cityOrTown: "",
     }
-    let [paramsState, changeParamsState] = useState(params)
+    //let [paramsState, changeParamsState] = useState(params)
     let itemsWithContexts =
         spacesDataProps.map((spaceDataItem) => <SpaceContext.Provider
             value={{ spaceData: spaceDataItem }}>
@@ -51,7 +49,10 @@ function Spaces({ spacesDataProps }) {
             </SpaceToBookContextProvider>
         </SpaceContext.Provider>);
     return <>
-        <View mobileView={<MobileView itemComps={itemsWithContexts} />} />
+        <View
+            mobileView={<MobileView itemComps={itemsWithContexts} />}
+            pcView={<PCView itemComps={itemsWithContexts} />}
+        />
     </>
 }
 
@@ -88,19 +89,33 @@ function MobileView({ itemComps }) {
     </>
 }
 
+function PCView({ itemComps }) {
+    return <>
+        <ProfileMenu />
+        <Container style={{ padding: 0, marginTop: 70 }} >
+                    <SearchSpaces />
+            <JustAPanel />
+            <Grid container justify="center" >
+                {itemComps.
+                    map((item, index) => <div key={index} className="w3-padding" >{item}</div>)}
+                {itemComps.length < 1 ? <p>No items...</p> : null}
+            </Grid>
+        </Container>
+    </>
+}
+
 function SearchSpaces() {
     let [showSearchAppState, changeShowSearchAppState] = useState(false);
     return <>
         <div style={{ textAlign: "center", marginTop: "50px" }} >
-            <div style={{
-                width: "80vw", marginLeft: "10vw",
-                borderRadius: "20px", borderStyle: "solid",
-                borderColor: "green", borderWidth: 0.5, textShadow: "2px 2px"
-            }} >
-                <Grid container >
+            <Grid container justify="center">
+                <Grid xs={8} sm={4} item container justify="center" style={{
+                    borderRadius: "20px", borderStyle: "solid",
+                    borderColor: "green", borderWidth: 0.5, textShadow: "2px 2px"
+                }} >
                     <Grid xs={1} item container ></Grid>
                     <Grid xs={9} item container>
-                        <Input fullWidth />
+                        <Input fullWidth placeholder="Search..." style={{border:"none"}} />
                     </Grid>
                     <Grid xs={2} item container>
                         <button className="w3-btn" >
@@ -108,14 +123,14 @@ function SearchSpaces() {
                         </button>
                     </Grid>
                 </Grid>
-            </div>
+            </Grid>
         </div>
         <Button onClick={
             e => {
                 changeShowSearchAppState(true)
             }
         } >
-            <FontAwesomeIcon icon={faFilter} />
+            Filter
         </Button>
         {showSearchAppState ? <MobileFilter openSearchApp={showSearchAppState}
             hookOpenFilterApp={changeShowSearchAppState} /> : null

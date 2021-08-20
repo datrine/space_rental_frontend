@@ -55,7 +55,7 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
     </>
 }
 
-function SearchView({ hookChangeContentState, hookChangeResultState }) {
+export function SearchView({ hookChangeContentState, hookChangeResultState }) {
     let { params, changeParams } = useContext(SearchContext)
     let [paramsState, changeParamsState] = useState(params)
     return <>
@@ -64,13 +64,7 @@ function SearchView({ hookChangeContentState, hookChangeResultState }) {
             <Container style={{ padding: 0 }} >
                 <BtnsToggle />
                 <br />
-                <Container>
-                    <Input value={paramsState.cityOrTown} onChange={
-                        e => {
-                            changeParamsState({ ...paramsState, cityOrTown: e.target.value })
-                        }
-                    } placeholder="City, town or area" fullWidth />
-                </Container>
+                <SearchByLocation />
                 <br />
                 <Container>
                     <Categories />
@@ -103,24 +97,37 @@ function SearchView({ hookChangeContentState, hookChangeResultState }) {
     </>
 }
 
-function ResultsView({ hookChangeContentState, resultsProp }) {
-   // resultsProp = [...resultsProp, ...resultsProp, ...resultsProp]
+export function SearchByLocation() {
+    let { params, changeParams } = useContext(SearchContext)
+    let [paramsState, changeParamsState] = useState(params)
     return <>
-            <Grid container justify="space-between"  >
-                {resultsProp.map((result) => <>
-                    <ISpaceContext.Provider value={{ spaceData: result }} >
-                        <MiniItemTemplate />
-                    </ISpaceContext.Provider>
-                    <br />
-                </>)}
-                {resultsProp.length < 1 ? <p>Search returned no results</p> : null}
-            </Grid>
+        <Container>
+            <Input value={paramsState.cityOrTown} onChange={
+                e => {
+                    changeParamsState({ ...paramsState, cityOrTown: e.target.value })
+                }
+            } placeholder="City, town or area" fullWidth />
+        </Container>
+    </>
+}
+
+function ResultsView({ hookChangeContentState, resultsProp }) {
+    // resultsProp = [...resultsProp, ...resultsProp, ...resultsProp]
+    return <>
+        <Grid container justify="space-between"  >
+            {resultsProp.map((result) => <>
+                <ISpaceContext.Provider value={{ spaceData: result }} >
+                    <MiniItemTemplate />
+                </ISpaceContext.Provider>
+                <br />
+            </>)}
+            {resultsProp.length < 1 ? <p>Search returned no results</p> : null}
+        </Grid>
     </>
 }
 
 function Categories() {
     let { params, changeParams } = useContext(SearchContext)
-    console.log(params)
     return <>
         <MySelect labelTitle="Type of Space" valueProps={params.typeOfSpace || "office"}
             selectMenuArr={[

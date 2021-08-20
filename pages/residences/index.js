@@ -62,7 +62,9 @@ let Residences = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
 
 function spacesFetcher(opts) {
     let queryString= qs.stringify(opts)
-    let { data, error, isValidating } = useSWR(`/api/residences?${queryString}`, fetcher)
+    let { data, error, isValidating } = useSWR(`/api/residences?${queryString}`, fetcher,{
+        revalidateOnFocus:false
+    })
     console.log(data || error || isValidating)
     return { spacesFromServer: data, error, loading: isValidating }
 }

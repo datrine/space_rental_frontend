@@ -1,6 +1,5 @@
 import { Container, Grid, Button, Paper, Typography } from "@material-ui/core";
 import Link from 'next/link';
-import Image from "next/image"
 import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession } from "next-auth/client";
 import View from '../view';
@@ -111,7 +110,7 @@ function PostView(params) {
                           </Typography>
                     </Grid>
                     <Grid xs={3} item container justify="center"  >
-                        <Image height={50} width={50} src="/icons/postads/ic_baseline-bedroom-parent.svg" />
+                        <img height={50} width={50} src="/icons/postads/ic_baseline-bedroom-parent.svg" />
                     </Grid>
                 </Grid>
             </Paper></Link>
@@ -125,7 +124,7 @@ function PostView(params) {
                           </Typography>
                     </Grid>
                     <Grid xs={3} item container justify="center"  >
-                        <Image height={50} width={50} src="/icons/postads/fa-solid_house-user.svg" />
+                        <img height={50} width={50} src="/icons/postads/fa-solid_house-user.svg" />
                     </Grid>
                 </Grid>
             </Paper>
@@ -141,7 +140,7 @@ function PostView(params) {
                           </Typography>
                         </Grid>
                         <Grid xs={3} item container justify="center" >
-                            <Image height={50} width={50} src="/icons/postads/icomoon-free_office.svg" />
+                            <img height={50} width={50} src="/icons/postads/icomoon-free_office.svg" />
                         </Grid>
                     </Grid>
                 </Paper>

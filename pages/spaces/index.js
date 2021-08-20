@@ -38,7 +38,7 @@ let SpacesPage = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
         cityOrTown: "",
     }
     let [paramsState, changeParamsState] = useState(params);
-    let { spacesFromServer, error, loading } = spacesFetcher({...paramsState});
+    let { spacesFromServer, error, loading } = spacesFetcher({ ...paramsState });
     if (error) {
         return <>
             <p>Error loading data...</p>
@@ -46,25 +46,27 @@ let SpacesPage = ({ csrfToken, callbackUrl, session, ...otherProps }) => {
     }
     if (loading) {
         return <>
-        <p>Loading...</p>
+            <p>Loading...</p>
         </>
     }
     if (!spacesFromServer) {
         return <>
-        <p>No spaces found...</p>
+            <p>No spaces found...</p>
         </>
     }
     return <>
-    <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
-    <Spaces spacesDataProps={spacesFromServer} />
+        <SearchContext.Provider value={{
+            params: paramsState, changeParams: changeParamsState
+        }} >
+            <Spaces spacesDataProps={spacesFromServer} />
         </SearchContext.Provider>
     </>
 }
 
 function spacesFetcher(opts) {
-   let queryString= qs.stringify(opts)
-    let { data, error, isValidating } = useSWR(`/api/spaces?${queryString}`, fetcher,{
-        revalidateOnFocus:false
+    let queryString = qs.stringify(opts)
+    let { data, error, isValidating } = useSWR(`/api/spaces?${queryString}`, fetcher, {
+        revalidateOnFocus: false
     });
     return { spacesFromServer: data, error, loading: isValidating }
 }

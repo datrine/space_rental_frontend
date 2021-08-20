@@ -1,5 +1,4 @@
 import { Container, Grid, Button, Paper, Typography } from "@material-ui/core";
-import Image from "next/image";
 import { createContext, useContext } from "react";
 import { ProfileContext } from "../../../pages/dashboard";
 import { tenant, profile } from "../../../utils/models/exportModels";

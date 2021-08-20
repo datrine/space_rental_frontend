@@ -1,5 +1,4 @@
 import { Container, Grid } from "@material-ui/core"
-import Image from "next/image"
 import { useContext } from "react"
 import { TenantContext } from "."
 import { getImgUrl } from "../../../utils/utilFns"

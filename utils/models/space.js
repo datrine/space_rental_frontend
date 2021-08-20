@@ -3,6 +3,7 @@ import { img } from "./img";
 export let space={
   id: undefined,
   "payment_format": null,
+  "space_mode":"rentable",
   "spaceInfo": {
     "houseType": "",
     "spaceCategory": "",

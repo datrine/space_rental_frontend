@@ -12,7 +12,6 @@ import { Comp_Register } from './comp_register';
 import { Comp_Logout } from './comp_logout';
 import { LogoSVG } from '../resuables/reusables';
 import { appColor } from '../../utils/utilFns';
-import Image from 'next/image';
 
 let Comp_Account = ({ ...propsFromParent }) => {
     return <>
@@ -35,7 +34,7 @@ function AccountView({ callbackUrl, ...props }) {
     return <>
         <Container className="pt-4 mt-5 mb-3 pb-3">
             <h4 style={{ textAlign: "center", marginBottom: "0px" }}>
-                <Image src="/myspace_32x32.svg" height={50} width={50} />
+                <img src="/myspace_32x32.svg" height={50} width={50} />
             </h4>
             <h3
                 style={{

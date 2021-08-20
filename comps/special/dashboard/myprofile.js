@@ -1,4 +1,4 @@
-import Image from "next/image"
+
 import { Container, Grid, IconButton, } from "@material-ui/core"
 import { useContext } from "react";
 import { ProfileContext } from "../../../pages/dashboard";
@@ -13,7 +13,7 @@ export default function MyProfile({ }) {
                 <h3 >My Profile</h3>
                 <IconButton>
                     <a href="/profile" >
-                        <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
+                        <img src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
                     </a>
                 </IconButton>
             </Grid>

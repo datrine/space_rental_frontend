@@ -1,18 +1,6 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect } from "react"
-import { signIn, signOut, useSession } from "next-auth/client";
-import { useRouter } from 'next/router';
-import clsx from 'clsx';
-import { Tabs, TextField, makeStyles, Box, Button, CssBaseline, Input } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
-import { useFormik } from 'formik';
-import { TabPanel } from '@material-ui/lab';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
-import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
-import { LogoSVG } from '../resuables/reusables';
+import { Tabs, TextField, makeStyles, } from '@material-ui/core';
+
 import SearchApp from '../searchApp';
 
 const useStyles = makeStyles((theme) => ({

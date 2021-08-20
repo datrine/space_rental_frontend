@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { Accordion, AccordionDetails, AccordionSummary, Button, Container, Dialog, DialogTitle, Grid, IconButton, Input, InputAdornment, Typography } from "@material-ui/core"
 import { Announcement, ArrowBack, Chat, Edit, Help, Home, Label, Person, Power, PowerOff, PowerOffRounded, Settings, } from "@material-ui/icons"
 
@@ -14,7 +13,7 @@ function OpenedMenu() {
             zIndex: 499, backgroundColor: "white"
         }}>
             <Grid justify="center" container >
-                <Image src={"/myspace_32x32.svg"} width={40} height={40} />
+                <img src={"/myspace_32x32.svg"} width={40} height={40} />
             </Grid>
             <h3 style={{ textAlign: "center" }}><a href="/"
                 style={{ textDecoration: "none", color: "green", fontStyle: "VAGRounded BT" }}>MySpace4You</a></h3>
@@ -50,7 +49,7 @@ function OpenedMenu() {
                             id="panel1a-header">
                             <Grid container>
                                 <Grid item container xs={2}>
-                                    <Image src="/dashboard/postads.svg" height={30} width={30} />
+                                    <img src="/dashboard/postads.svg" height={30} width={30} />
                                 </Grid>
                                 <Grid item container xs={10}><h4>Post Ads</h4></Grid>
                             </Grid>
@@ -59,7 +58,7 @@ function OpenedMenu() {
                             <Grid container direction="column" alignItems="stretch">
                                 <Grid container>
                                     <Grid item container xs={2}>
-                                        <Image src="/dashboard/localfeeds.svg" height={30} width={30} />
+                                        <img src="/dashboard/localfeeds.svg" height={30} width={30} />
                                     </Grid>
                                     <br />
                                     <Grid item container xs={10}>
@@ -67,7 +66,7 @@ function OpenedMenu() {
                                 </Grid>
                                 <Grid container>
                                     <Grid item container xs={2}>
-                                        <Image src="/dashboard/savedads.svg" height={30} width={30} />
+                                        <img src="/dashboard/savedads.svg" height={30} width={30} />
                                     </Grid>
                                     <Grid item container xs={10}><h5>Saved Ads</h5></Grid>
                                 </Grid>
@@ -153,7 +152,7 @@ function PurseTemplatee({title="",iconLeft}) {
                 <h3 >{title}</h3>
                 <IconButton>
                     <a href="/profile" >
-                        <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
+                        <img src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
                     </a>
                 </IconButton>
             </Grid>

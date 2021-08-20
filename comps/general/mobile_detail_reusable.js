@@ -1,6 +1,5 @@
 
 import { Carousel } from "react-bootstrap";
-import Image from "next/image";
 import { Button, Grid, Container } from "@material-ui/core";
 
 function LowerBandBtn() {
@@ -24,7 +23,7 @@ function FullCarouseler({ imgurls = ["/Rectangle_80.png"] }) {
     return <>
         <Carousel>
             {imgurls.map(url => <Carousel.Item>
-                <Image layout="responsive" src={url} width={width} height={height} />
+                <img layout="responsive" src={url} width={width} height={height} />
             </Carousel.Item>)}
 
         </Carousel>
@@ -42,7 +41,7 @@ function QuickBio({ name = "John Silver", occupation = "", gender = "Male", area
         <Container>
             <Grid container >
                 <Grid item xs={3}>
-                    <Image src={imgurl} width={70} height={70} />
+                    <img src={imgurl} width={70} height={70} />
                 </Grid>
                 <Grid item xs={8} container direction="column">
                     <span>{name}</span>
@@ -118,14 +117,14 @@ function Overview() {
                 <Grid key={index} container
                     style={{ marginBottom: "20px" }} >
                     <Grid item xs={2}>
-                        <Image src={icon} width={30} height={30} />
+                        <img src={icon} width={30} height={30} />
                     </Grid>
                     <Grid item direction="column" container xs={10}>
                         <h5 style={{ marginBottom: "5px" }}>{label}</h5>
                         {isMore ? <Button component="span"> <span>{info}</span></Button> : <span>{info}</span>}
                     </Grid>
                     {isMap ? <Grid item xs={12}>
-                       {mapUrl? <Image layout="responsive" width={screen.width} height={400} src={mapUrl}/>:null}
+                       {mapUrl? <img width={screen.width} height={400} src={mapUrl}/>:null}
                     </Grid> : null}
                 </Grid></>)}
 

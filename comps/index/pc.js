@@ -9,6 +9,7 @@ import { Container, Grid } from '@material-ui/core';
 import View from '../view';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
+import { Tiles } from './reusables';
 
 
 
@@ -38,6 +39,15 @@ let IndexBody = () => {
                 }} >
                     Share & Find Amazing Tenants,Rooms, Offices & Real Estate Investments
                 </h3>
+            </Grid>
+
+            <Grid container justify="center" alignItems="center"
+                style={{
+                    backgroundColor: "rgba(250,250,250,0.7)", width: "100vw",paddingTop:"40px"
+                }} >
+                    <Grid  md={8} >
+                <Tiles />
+                </Grid>
             </Grid>
         </div>
     </>

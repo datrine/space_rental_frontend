@@ -1,7 +1,6 @@
 import { faMapMarker, faMoneyCheck, faSearchLocation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid } from "@material-ui/core";
-import Image from "next/image";
 import { useContext } from "react";
 import { TenantContext } from "../../../pages/tenants";
 import { getImgUrl } from "../../../utils/utilFns";
@@ -17,7 +16,7 @@ function MobileView() {
     return <>
         <Container>
             <Grid direction="column" alignItems="center" justify="center" container >
-                <Image layout="fixed" src={imgURL} height={250} width={250} />
+                <img src={imgURL} height={250} width={250} />
                 <Grid container style={{ width: 250 }} >
                     <Grid container style={{marginBottom:"20px"}} >
                         <Grid item xs={2} >

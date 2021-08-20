@@ -1,7 +1,6 @@
 import { faMapMarker, faMoneyCheck, faSearchLocation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid } from "@material-ui/core";
-import Image from "next/image";
 import View from "../../view";
 
 export default function Renter(params) {
@@ -13,7 +12,7 @@ function MobileView() {
     return <>
         <Container>
             <Grid direction="column" justify="center" >
-                <Image src={imgURL} height={200} width={200} />
+                <img src={imgURL} height={200} width={200} />
                 <Container>
                     <Grid container >
                         <Grid container>

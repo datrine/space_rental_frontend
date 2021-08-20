@@ -20,7 +20,7 @@ export default async function handler(req, res) {
                 headers: {
                     "Authorization": `Bearer ${strapiToken}`
                 }
-            })
+            });
 
             let data =await response.json();
 

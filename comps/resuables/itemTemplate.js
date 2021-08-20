@@ -4,7 +4,6 @@ import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Info, Star, StarHalf } from "@material-ui/icons";
 import Carousel from 'react-bootstrap/Carousel';
-import Image from "next/image"
 import PropTypes from "prop-types"
 import { useEffect, useState, Fragment, useContext } from "react";
 import { SpaceContext, Spaces } from "../special/spaces";
@@ -43,12 +42,12 @@ function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
             <div >
                 {Array.isArray(imgSrc) && imgSrc.length > 0 ? <Carousel>
                     {imgSrc.map((src, index) => <Carousel.Item key={index} >
-                        <Image layout="responsive" width={width} height={height}
+                        <img width={width} height={height}
                             src={src ? src : "/room_placeholder.jpeg"} />
                     </Carousel.Item>)}
 
                 </Carousel> :
-                    <Image layout="responsive" width={width} height={height}
+                    <img width={width} height={height}
                         src="/room_placeholder.jpeg" />}
                 <Rating />
                 <Grid container direction="column" >
@@ -96,12 +95,12 @@ function MiniItemTemplate({ imgProps: { width = 250, height = 200 } = {} }) {
             <div >
                 {Array.isArray(imgSrc) && imgSrc.length > 0 ? <Carousel>
                     {imgSrc.map((src, index) => <Carousel.Item key={index} >
-                        <Image layout="responsive" width={width} height={height}
+                        <img width={width} height={height}
                             src={src ? src : "/room_placeholder.jpeg"} />
                     </Carousel.Item>)}
 
                 </Carousel> :
-                    <Image layout="responsive" width={width} height={height}
+                    <img width={width} height={height}
                         src="/room_placeholder.jpeg" />}
                 <Grid container direction="column" >
                     <span>{nameOfSpace || spaceInfo.houseType} @ {locationInfo.cityOrTown}</span>

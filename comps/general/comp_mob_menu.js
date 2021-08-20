@@ -1,20 +1,10 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect, useContext } from "react"
-import { signIn, signOut, useSession } from "next-auth/client";
-import { useRouter } from 'next/router';
-import clsx from 'clsx';
-import { Tabs, TextField, makeStyles, Box, Button, CssBaseline, Input } from '@material-ui/core';
+import { Tabs, TextField, makeStyles, Box,} from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import { useFormik } from 'formik';
-import { TabPanel } from '@material-ui/lab';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { AccountCircle, AlarmOn, Dashboard, Message, PersonRounded, Search } from '@material-ui/icons';
+import { AccountCircle, } from '@material-ui/icons';
 import { ExpandedMenu, HamburgerMenu } from './comp_hamburger';
-import { LogoSVG } from '../resuables/reusables';
 import SearchBtn from './searchBtn';
-import SearchApp from '../searchApp';
 import { UserSessionContext } from '../../pages/_app';
 import { getImgUrl } from '../../utils/utilFns';
 
@@ -46,7 +36,7 @@ let Comp_Mob_Header = ({ ...propsFromParent }) => {
     return <>
         <AppBar className={classes.appBar} position="fixed">
             <Box component="button" className={classes.btnStacked} >
-                <Image src="/myspace_32x32.svg" height={30} width={30} />
+                <img src="/myspace_32x32.svg" height={30} width={30} />
             </Box>
             <SearchBtn />
             <Box component="button" className={classes.btnStacked}>

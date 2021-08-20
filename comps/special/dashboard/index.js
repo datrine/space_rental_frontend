@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import Image from "next/image"
 import { useContext } from "react"
 import { Container, Grid, IconButton, } from "@material-ui/core"
 import View from '../../view';
@@ -73,7 +71,7 @@ function MyChats({ userProp = {} }) {
                 style={{ padding: 5, borderWidth: 1, borderStyle: "solid", }} >
                 <h3><a href="/chats" >My Chats</a></h3>
                 <IconButton>
-                    <Image src={"/dashboard/bx_bx-message-dots.png"} width={30} height={30} />
+                    <img src={"/dashboard/bx_bx-message-dots.png"} width={30} height={30} />
                 </IconButton>
             </Grid>
             <Grid direction="column" container

@@ -4,7 +4,6 @@ import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowUpward, Info, Search, Star, StarHalf } from "@material-ui/icons";
 import Carousel from 'react-bootstrap/Carousel';
-import Image from "next/image"
 import PropTypes from "prop-types"
 import { useEffect, useState, Fragment } from "react";
 import View from "../view";

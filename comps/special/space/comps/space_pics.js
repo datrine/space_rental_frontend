@@ -2,7 +2,6 @@ import { faCheckCircle, faExclamationCircle, faPlus, faSpinner, faUserCheck } fr
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid, Input, } from "@material-ui/core";
 import { Carousel } from "react-bootstrap";
-import Image from "next/image";
 import React, { useContext, useState } from "react";
 import { getImgUrl, uploader } from "../../../../utils/utilFns";
 import { SpaceContext } from "../../../resuables/contextInterfaces"
@@ -15,7 +14,7 @@ function AddImageView({ }) {
         <Container>
             <Grid justify="center" container >
                 {space_pics.length > 0 ? <Caroo imgObjUrls={space_pics} /> :
-                    <Image width={300} height={300} src="/camera_placeholder.jpg" />}
+                    <img width={300} height={300} src="/camera_placeholder.jpg" />}
             </Grid>
         </Container>
         <Container style={{  marginTop: 20 ,padding:0}} >

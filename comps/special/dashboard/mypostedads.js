@@ -1,8 +1,5 @@
-import Image from "next/image"
 import { Container, Grid, IconButton, } from "@material-ui/core"
 import { createContext, useContext } from "react";
-import { ProfileContext } from "../../../pages/dashboard";
-import { space } from "../../../utils/models/space";
 import useSWR from "swr";
 import { UserSessionContext } from "../../../pages/_app";
 
@@ -15,7 +12,7 @@ export default function MyPostedAds({ }) {
                 <h3 >My Posted Ads</h3>
                 <IconButton>
                     <a href="/postads" >
-                        <Image src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
+                        <img src={"/dashboard/bx_bx-edit.png"} width={30} height={30} />
                     </a>
                 </IconButton>
             </Grid>

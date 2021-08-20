@@ -2,7 +2,6 @@ import { faArrowCircleRight, faArrowLeft, faBars, faFunnelDollar, faHome, faPlus
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { AppBar, Box, Container, Grid, IconButton, Link, makeStyles, Typography } from "@material-ui/core"
 import { AccountCircle, AlarmOn, Dashboard, Search } from "@material-ui/icons";
-import Image from "next/image";
 import { useContext, useEffect, useState } from "react"
 import { UserSessionContext } from "../../pages/_app";
 import { appColor, getImgUrl } from "../../utils/utilFns";
@@ -43,7 +42,7 @@ let PCMenu = () => {
                 <Grid item container md={4}>
                     <Grid item container md={6} justify="space-around" alignItems="center"
                     >
-                        <Image src="/myspace_32x32.svg" height={50} width={50} />
+                        <img src="/myspace_32x32.svg" height={50} width={50} />
                         <Typography style={{ color: appColor, fontSize: "1.5em" }} >
                             MySpace4You
                             </Typography>
@@ -86,7 +85,7 @@ let PCMenu = () => {
                     </Grid>
 
                     <Grid item container md={2} justify="space-around" alignItems="center"  >
-                        <Link href="/acccount" >
+                        <Link href="/account" >
                             {user.id ? (prof_pic ? 
                             <img height={50} width={50} src={prof_pic} className="w3-circle" /> : <AccountCircle
                                 style={{

@@ -1,7 +1,6 @@
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Container, Grid, IconButton } from "@material-ui/core"
-import Image from "next/image"
 import { useState } from "react"
 import { LogoSVG } from "../../resuables/reusables"
 import { OpenedMenu } from "./opened_menu"
@@ -24,7 +23,7 @@ function ProfileMenu() {
                 </Grid>
                 {isCollapsed ? <Grid xs={10} justify="flex-end" alignItems="center" item container >
                     <IconButton>
-                        <Image src="/myspace_32x32.svg" height={30} width={45} />
+                        <img src="/myspace_32x32.svg" height={30} width={45} />
                     </IconButton>
                     <span style={{ paddingRight: 10, fontWeight: "bolder", color: "#60941a" }} >MySpace4You</span>
                 </Grid> : null}

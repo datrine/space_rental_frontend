@@ -2,7 +2,6 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Grid, Input, } from "@material-ui/core";
 import { Carousel } from "react-bootstrap";
-import Image from "next/image";
 import React, { useContext, useState } from "react";
 import { SpaceContext } from "../index_desc";
 

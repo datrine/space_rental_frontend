@@ -1,10 +1,6 @@
-import Link from 'next/link';
-import Image from "next/image"
+
 import { useContext, useState, } from "react"
-import { useSession } from "next-auth/client";
 import { Container, Dialog, DialogTitle, Grid, } from "@material-ui/core"
-import { Announcement, ArrowBack, } from "@material-ui/icons"
-import View from '../../view';
 import { Loading, LogoSVG, SessionState } from '../../resuables/reusables';
 import { uploader, stateMgr, getImgUrl, appColor } from '../../../utils/utilFns';
 import { ProfileContext } from '../../../pages/dashboard';
