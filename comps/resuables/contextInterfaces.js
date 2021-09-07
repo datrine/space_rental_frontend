@@ -4,6 +4,7 @@ import userSettings from "../../utils/models/settings";
 import { space } from "../../utils/models/space";
 import useSWR from "swr"
 import { UserSessionContext } from "../../pages/_app";
+import order from "../../utils/models/order";
 
 
 
@@ -23,6 +24,11 @@ export const ISearchContext = createContext({
         typeOfSpace: "",
         cityOrTown: "",
     }, changeParams: () => { }
+});
+
+export const IOrderContext = createContext({
+    orderData: _.cloneDeep(order),
+    changeContext: () => { }
 });
 
 export const ISpaceContext = createContext({

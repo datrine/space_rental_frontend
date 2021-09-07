@@ -59,7 +59,7 @@ function SpaceDescription({ spaceDataProps }) {
                     spaceToBookData: spaceToBookDataState,
                     changeContext: changeSpaceToBookDataState
                 }} >
-                <View mobileView={<MobileView />} />
+                <View mobileView={<MobileView />} pcView={<MobileView />} />
             </SpaceToBookContext.Provider>
         </SpaceContext.Provider>
     </>
@@ -73,7 +73,19 @@ function MobileView() {
         isUserViewer = true;
     }
     return <>
-        <CaroImageView />
+        <ViewOn />
+    </>
+}
+
+function ViewOn() {
+    let { session: { user } } = useContext(UserSessionContext)
+    let { spaceData } = useContext(SpaceContext);
+    let { space_mode } = spaceData;
+    let isUserViewer = false;
+    if (user.id === spaceData.userId) {
+        isUserViewer = true;
+    }
+    let view = <>
         <Container>
             <RenterProfile />
             <Desc />
@@ -84,7 +96,26 @@ function MobileView() {
             <Flatmates />
             <Rules />
         </Container>
+    </>;
+    switch (space_mode) {
+        case "investable":
+            view = <>
+                <Container>
+                    <Desc />
+                    <Location />
+                    <Amenities />
+                </Container>
+            </>
+            break;
+
+        default:
+            break;
+    }
+    return <>
+        <CaroImageView />
+        {view}
         {isUserViewer ? null : <FooterMenu />}
     </>
 }
+
 export { SpaceDescription, SpaceContext }

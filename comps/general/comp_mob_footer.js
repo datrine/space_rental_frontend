@@ -8,7 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { useFormik } from 'formik';
 import { TabPanel } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faFunnelDollar, faHome, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AlarmOn, Dashboard } from '@material-ui/icons';
 import React from 'react';
 import { appColor } from '../../utils/utilFns';
@@ -66,11 +66,16 @@ let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
             </Box>
             </Link>
 
+            <Link href="/my_orders"><Box component="button" className={classes.btnStacked}>
+                <span><FontAwesomeIcon icon={faCartPlus} className="fa-2x" /></span>
+            </Box>
+            </Link>
+
             <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
                 <span style={{ fontSize: "12px" }}>Realty</span>
             </Box>
-            <NotifBtn />
+            {/*<NotifBtn />*/}
         </AppBar>
     </>
 }

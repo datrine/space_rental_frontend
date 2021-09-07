@@ -73,8 +73,8 @@ function MakeUnit({ element }) {
             <Typography style={{ marginLeft: "10px" }}>{element}</Typography>
         </>
     }
-    if (element instanceof React.Component) {
-        return null
+    if (React.isValidElement(element)) {
+        return <>{element}</>
     }
     if (Array.isArray(element)) {
         let view = []

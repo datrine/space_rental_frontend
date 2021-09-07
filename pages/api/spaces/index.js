@@ -58,6 +58,9 @@ export default async function handler(req, res) {
             if (userFromSession) {
                 headers["Authorization"] = `Bearer ${userFromSession.jwt}`
             }
+            if (req.headers["authorization"]) {
+                headers["Authorization"]=req.headers["authorization"]
+            }
             let response = await axios({
                 url: `${process.env.CMS_URL}/spaces`,
                 method: "post",

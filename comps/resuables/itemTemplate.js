@@ -29,10 +29,19 @@ function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
             break;
     }
     let { spaceData:
-        { id, locationInfo, space_pics, spaceInfo,
-            nameOfSpace, spaceBills, typeOfSpace } } = useContext(SpaceContext)
+        {space_mode, id, locationInfo, space_pics, spaceInfo,
+            nameOfSpace, spaceBills, typeOfSpace,unitInfo } } = useContext(SpaceContext)
     let imgSrc = space_pics.map((data) => getImgUrl(data))
         || "/room_placeholder.jpeg"
+    let btnName = "Book"
+    switch (space_mode) {
+        case "investable":
+            btnName="Buy Units"
+            break;
+
+        default:
+            break;
+    }
     return <>
         <Container style={{
             width: 300,
@@ -52,14 +61,19 @@ function ItemTemplate({ imgProps: { width = 200, height = 200 } = {} }) {
                 <Rating />
                 <Grid container direction="column" >
                     <span>{nameOfSpace || spaceInfo.houseType} @ {locationInfo.cityOrTown}</span>
-                    <span>₦{spaceBills.charge} per {spaceBills.billFormat}</span>
+                  {(space_mode==="")||(space_mode==="rentable") ?<> 
+                  <span>₦{spaceBills.charge} per {spaceBills.billFormat}</span>
+                  </>:null} 
+                  {(space_mode==="investable") ?<> 
+                  <span>{unitInfo.numberOfUnit} unit(s)</span>
+                  </>:null}
                 </Grid>
             </div>
             <Container style={{}} >
                 <p style={{ textAlign: "center" }}>
                     <SaveBtn />
-                    <a style={{ backgroundColor: appColor,color:"white" }}
-                        className="w3-btn" href={`${itemPath}/${id}`} >Book</a>
+                    <a style={{ backgroundColor: appColor, color: "white" }}
+                        className="w3-btn" href={`${itemPath}/${id}`} >{btnName}</a>
                 </p>
             </Container>
         </Container>
@@ -88,7 +102,8 @@ function MiniItemTemplate({ imgProps: { width = 250, height = 200 } = {} }) {
     let imgSrc = space_pics.map((data) => getImgUrl(data))
         || "/room_placeholder.jpeg"
     return <>
-        <Container style={{maxWidth:300,marginBottom:10,
+        <Container style={{
+            maxWidth: 300, marginBottom: 10,
             borderWidth: 1, borderStyle: "solid",
             borderColor: "green", borderRadius: "20px", paddingTop: "10px"
         }}>
@@ -109,7 +124,7 @@ function MiniItemTemplate({ imgProps: { width = 250, height = 200 } = {} }) {
             </div>
             <Container style={{}} >
                 <p style={{ textAlign: "center" }}>
-                    <a style={{ backgroundColor: appColor,color:"white" }}
+                    <a style={{ backgroundColor: appColor, color: "white" }}
                         className="w3-btn" href={`${itemPath}/${id}`} >Book</a>
                 </p>
             </Container>

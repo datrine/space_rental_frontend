@@ -1,9 +1,9 @@
 import { img } from "./img";
 
-export let space={
+export let space = {
   id: undefined,
   "payment_format": null,
-  "space_mode":"rentable",
+  "space_mode": "rentable",
   "spaceInfo": {
     "houseType": "",
     "spaceCategory": "",
@@ -37,17 +37,17 @@ export let space={
     "lengthOfStay": undefined,
     "datesInfo": {
       "dateMode": "asRange",
-      "dateRangeStrings":  {
+      "dateRangeStrings": {
         from: (new Date()).toISOString(),
         to: (new Date()).toISOString(),
-    }
+      }
     }
   },
   "spaceBills": {
     "charge": 0,
     "otherBills": 0,
     "billFormat": "day",
-    billEstimate:0
+    billEstimate: 0
   },
   "spaceAmenities": [
     {
@@ -63,5 +63,10 @@ export let space={
   "created_at": "",
   "updated_at": "",
   "typeOfSpace": "office",
-  "space_pics": [img]
+  "space_pics": [img],
+  "unitInfo": {
+    numberOfUnit: 1,
+    freeUnit: 0,
+    units: [{ renterId: undefined, }]
+  }
 }

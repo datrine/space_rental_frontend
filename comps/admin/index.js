@@ -3,8 +3,9 @@ import { useContext, useState } from "react"
 import { AdminContext } from "../../pages/admin"
 import SpacesAdmin from "./spaces";
 import CreateSpace from "./spaces/create";
-import { TransactionsIndex } from "./trasanctions";
-import OrdersAdmin from "./trasanctions/confirm_order";
+import OrdersAdmin from "./orders/index";
+import EmailAdmin from "./email";
+import ComposeEmail from "./email/compose";
 
 function AdminDashboard(params) {
     let ctx = useContext(AdminContext);
@@ -20,19 +21,22 @@ function ViewOfAdmin({ }) {
         case "index":
             tabView = <IndexTab hookChangeActiveTab={changeActiveTab} />
             break;
-        case "transactions":
-            tabView = <TransactionsIndex hookChangeActiveTab={changeActiveTab} />
-            break;
         case "orders":
             tabView = <OrdersAdmin hookChangeActiveTab={changeActiveTab} />
+            break;
+        case "email":
+            tabView = <EmailAdmin hookChangeActiveTab={changeActiveTab} />
+            break;
+        case "compose_email":
+            tabView = <ComposeEmail hookChangeActiveTab={changeActiveTab} />
             break;
         case "spaces":
             tabView = <SpacesAdmin hookChangeActiveTab={changeActiveTab} />
             break;
-            case "create_space":
-                tabView = <CreateSpace hookChangeActiveTab={changeActiveTab} />
-                break;
-            
+        case "create_space":
+            tabView = <CreateSpace hookChangeActiveTab={changeActiveTab} />
+            break;
+
         default:
             break;
     }
@@ -47,9 +51,9 @@ function ViewOfAdmin({ }) {
                     changeTabFn("index")
                 }} >Index</Button>
                 <CollapseBtn
-                    headBtnName="Transactions"
+                    headBtnName="Orders"
                     onClickHandler={(e) => {
-                        changeTabFn("transactions");
+                        changeTabFn("orders");
                     }}
                     subMenus={[
                         {
@@ -63,18 +67,30 @@ function ViewOfAdmin({ }) {
                             }, subMenus: []
                         },
                     ]} />
-                    <CollapseBtn
-                        headBtnName="Spaces"
-                        onClickHandler={(e) => {
-                            changeTabFn("spaces");
-                        }}
-                        subMenus={[
-                            {
-                                headBtnName: "Create Space", onClickHandler: (e) => {
-                                    changeTabFn("create_space")
-                                }, subMenus: []
-                            },
-                        ]} />
+                <CollapseBtn
+                    headBtnName="Spaces"
+                    onClickHandler={(e) => {
+                        changeTabFn("spaces");
+                    }}
+                    subMenus={[
+                        {
+                            headBtnName: "Create Space", onClickHandler: (e) => {
+                                changeTabFn("create_space")
+                            }, subMenus: []
+                        },
+                    ]} />
+                <CollapseBtn
+                    headBtnName="Email"
+                    onClickHandler={(e) => {
+                        changeTabFn("email");
+                    }}
+                    subMenus={[
+                        {
+                            headBtnName: "Compose Email", onClickHandler: (e) => {
+                                changeTabFn("compose_email")
+                            }, subMenus: []
+                        },
+                    ]} />
             </Grid>
             <Grid item container sm={10} >
                 <Container>
@@ -142,8 +158,8 @@ let tileList = [
         color: "blue"
     },
     {
-        name: "transactions",
-        desc: "Transactions",
+        name: "orders",
+        desc: "Orders",
         color: "red"
     },
 ]
@@ -151,7 +167,7 @@ let tileList = [
 
 let menus = [
     {
-        headBtnName: "Transactions", onClickHandler: (e) => { }, subMenus: [
+        headBtnName: "Orders", onClickHandler: (e) => { }, subMenus: [
             { headBtnName: "Orders", onClickHandler: (e) => { }, subMenus: [] },
             { headBtnName: "Payments", onClickHandler: (e) => { }, subMenus: [] },
         ]

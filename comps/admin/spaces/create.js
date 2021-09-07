@@ -1,4 +1,4 @@
-import { Grid,Button } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import { getSession } from "next-auth/client";
 import { useContext, useState } from "react";
 import { MyInput, MySelect } from "../../resuables";
@@ -18,7 +18,7 @@ function CreateSpace({ hookChangeActiveTab }) {
                     <SpaceMode />
                     <SpaceAmenityDiv />
                     <LocationDiv />
-
+                    <UnitsApp />
                     <p><Button variant="primary" onClick={async e => {
                         await saveSpace(spaceDataState)
                     }}>Create</Button></p>
@@ -40,7 +40,7 @@ function SpaceMode(params) {
             ]} handleChangeProps={
                 e => {
                     let newValue = e.target.value
-                    changeContext({ ...spaceData, space_mode: newValue })
+                    changeContext({ ...spaceData, space_mode: newValue, })
                 }
             } />
     </>
@@ -48,14 +48,19 @@ function SpaceMode(params) {
 
 async function saveSpace(space) {
     try {
-        let
-            res = await fetch("/api/spaces", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(space)
-            });
+        let sess = sessionStorage.getItem("myspaceAdminInfo")
+        let myspaceAdminInfo = sess && JSON.parse(sess);
+        if (!myspaceAdminInfo) {
+            throw "No session data..."
+        }
+        let res = await fetch("/api/spaces", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${myspaceAdminInfo.jwt}`
+            },
+            body: JSON.stringify(space)
+        });
 
         if (res.ok) {
             let data = await res.json();
@@ -67,13 +72,22 @@ async function saveSpace(space) {
             throw await res.json();
         }
     } catch (error) {
-
+        console.log(error)
     }
 }
 
-function UnitInfo(params) {
-    return<>
-    <MyInput/>
+function UnitsApp(params) {
+    let { spaceData, changeContext } = useContext(SpaceContext)
+    let { unitInfo } = spaceData
+    return <>{spaceData.space_mode === "investable" ? <>
+        <MyInput labelTitle="Number of unit" type="number"
+            valueProps={unitInfo.numberOfUnit}
+            handleChangeProps={e => {
+                unitInfo.numberOfUnit = Number(e.target.value);
+                unitInfo.freeUnit = unitInfo.numberOfUnit;
+                changeContext({ ...spaceData, unitInfo })
+            }}
+        /></> : null}
     </>
 }
 
