@@ -1,7 +1,7 @@
 import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
-import { serverError } from "../../../../utils/errors";
+import { serverError } from "../../../utils/errors";
 let fetchHost = process.env.CMS_URL
 const cors = Cors({
     methods: ['GET', 'HEAD', 'POST'],
