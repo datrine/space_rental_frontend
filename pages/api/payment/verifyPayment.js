@@ -1,4 +1,4 @@
-import { middlewareRunner } from "../../../../utils/utilFns"
+import { middlewareRunner } from "../../../utils/utilFns"
 import Cors from "cors"
 import axios from 'axios';
 import { serverError } from "../../../../utils/errors";
