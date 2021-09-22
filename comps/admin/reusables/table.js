@@ -31,7 +31,7 @@ const MyTable = ({ data = [] }) => {
                     <TableHead>
                         <TableRow>
                             {heads.map((head, index) =>
-                                <StyledTableCell key={index}>{head}</StyledTableCell>)}
+                                <StyledTableCell align="center" key={index}>{head}</StyledTableCell>)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -61,7 +61,7 @@ function FormatObj({ data, isCell = true }) {
 }
 
 function MakeCell({ element }) {
-    return <> <StyledTableCell align="right">
+    return <> <StyledTableCell align="center">
         <div> <MakeUnit element={element} /></div>
     </StyledTableCell>
     </>

@@ -13,8 +13,8 @@ function OrdersAdmin({ hookChangeActiveTab }) {
         case "index":
             view = <>
                 <Grid container>
-                    <h3>Orders</h3>
-                    <Grid>
+                    <h3 style={{textAlign:"center"}}>Orders View</h3>
+                    <Grid container>
                         <MyOrdersTable hookChangeViewType={changeViewType}
                         hookChangeOrderId={changeOrderIdState} />
                     </Grid>
@@ -74,15 +74,15 @@ let fetcher = (url) => fetch(url, {
 function fmtOrder({order, hookChangeViewType,hookChangeOrderId}) {
     let fmtd = {};
     fmtd.id = order.id;
-    fmtd["space metae"] = order.spaceMeta
+    //fmtd["space metae"] = order.spaceMeta
     fmtd.state = order.state;
-    fmtd.trackingId = order.trackingId;
-    fmtd.open = <button className="w3-btn" onClick={
+    fmtd["Tracking Id"] = order.trackingId;
+    fmtd["open"] = <button className="w3-btn" onClick={
         e => {
             hookChangeViewType("order");
             hookChangeOrderId(order.id)
         }
-    } >Open
+    } style={{textDecoration:"underline"}} >Open
     </button>
     return fmtd;
 }

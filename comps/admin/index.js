@@ -44,9 +44,10 @@ function ViewOfAdmin({ }) {
         changeActiveTab(tabName);
     }
 
-    return <>  <Container>
+    return <>  <Container disableGutters>
         <Grid container>
-            <Grid item container sm={2} direction="column" alignItems="flex-start" >
+            <Grid item container sm={2} direction="column" alignItems="flex-start"
+                style={{ backgroundColor: "#ccc",height:"98vh",color:"white" }} >
                 <Button onClick={e => {
                     changeTabFn("index")
                 }} >Index</Button>

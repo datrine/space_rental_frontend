@@ -8,6 +8,7 @@ import View from "../view";
 import SliderComp from "../searchApp/sliderComp";
 import { SearchContext, } from "../searchNfilter";
 import { SearchByLocation, } from "../searchApp";
+import { SearchTab } from "./tab_of_filter";
 
 export default function MobileFilter({ SrchCtx, openSearchApp, hookOpenFilterApp }) {
    /** */ return <>
@@ -49,15 +50,16 @@ function PCView({ openSearchApp, hookOpenFilterApp }) {
             <Grid justify="center" container >
                 <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
                     <Grid item container >
-                        <SearchByLocation />
-                        <SliderComp />
+                        <SearchTab />
                     </Grid>
                 </SearchContext.Provider>
+
                 <button className="w3-btn" onClick={
                     e => {
                         changeParams({ ...paramsState })
                     }
                 } >Search</button>
+
             </Grid>
         </DialogContent>
     </Dialog>

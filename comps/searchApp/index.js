@@ -3,10 +3,10 @@ import { Cancel } from "@material-ui/icons";
 import { useContext, useState } from "react";
 import { appColor } from "../../utils/utilFns";
 import { ItemTemplate, MiniItemTemplate, MySelect } from "../resuables";
-import SliderComp from "./sliderComp";
-import { BtnsToggle } from "./search_city";
 import { SearchContext, Search_N_FilterContextProvider } from "../searchNfilter";
 import { ISpaceContext } from "../resuables/contextInterfaces";
+import { SearchTab } from "../filterApp/tab_of_filter";
+
 export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
     let handleClose = () => {
         hookOpenSearchApp(false)
@@ -55,24 +55,21 @@ export default function SearchApp({ openSearchApp, hookOpenSearchApp }) {
     </>
 }
 
-export function SearchView({ hookChangeContentState, hookChangeResultState }) {
+export function SearchView({...props}) {
     let { params, changeParams } = useContext(SearchContext)
     let [paramsState, changeParamsState] = useState(params)
     return <>
         <Search_N_FilterContextProvider ctxValue={paramsState}
             hookChangeCtxValue={changeParamsState} >
-            <Container style={{ padding: 0 }} >
-                <BtnsToggle />
-                <br />
-                <SearchByLocation />
-                <br />
-                <Container>
-                    <Categories />
-                </Container>
-                <br />
-                <SliderComp />
-            </Container>
+                <SearchTab {...props} />
         </Search_N_FilterContextProvider>
+    </>
+}
+
+function SearchBtnForRent({ hookChangeContentState, hookChangeResultState}) {
+    let { params, changeParams } = useContext(SearchContext)
+    let [paramsState, changeParamsState] = useState(params)
+    return <>
         <p style={{ textAlign: "center" }}>
             <button className="w3-btn" onClick={
                 async e => {
@@ -93,7 +90,6 @@ export function SearchView({ hookChangeContentState, hookChangeResultState }) {
             }
                 style={{ color: "white", backgroundColor: appColor }} >Search</button>
         </p>
-
     </>
 }
 
@@ -126,18 +122,4 @@ function ResultsView({ hookChangeContentState, resultsProp }) {
     </>
 }
 
-function Categories() {
-    let { params, changeParams } = useContext(SearchContext)
-    return <>
-        <MySelect labelTitle="Type of Space" valueProps={params.typeOfSpace || "office"}
-            selectMenuArr={[
-                { value: "residence", text: "Residence" },
-                { value: "office", text: "Office" },
-            ]} handleChangeProps={
-                e => {
-                    params.typeOfSpace = e.target.value;
-                    changeParams({ ...params });
-                }
-            } />
-    </>
-}
+export {SearchBtnForRent }
