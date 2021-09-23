@@ -13,7 +13,9 @@ export let space = {
     "kitchenNumber": 0,
     "sittingNumber": 0
   },
-  "flatmateInfo": [],
+  "flatmateInfo": [
+    { ageRange: "20s", gender: "male", "occupation": "self-employed" }
+  ],
   "spaceRules": [
     {
       "desc": "Pets allowed",

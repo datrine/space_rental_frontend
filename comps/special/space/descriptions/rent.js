@@ -6,9 +6,9 @@ import { SpaceContext } from "../index_desc";
 
 function Rent({ }) {
     let ctx = useContext(SpaceContext)
-    let { spaceData, changeSpaceContext } = ctx
+    let { spaceData, changeSpaceContext } = ctx;
     let { spaceBills } = spaceData
-
+    spaceBills=spaceBills||{}
     return <>
         <Container style={{marginTop:"10px"}}  >
             <Grid container >

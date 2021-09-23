@@ -8,7 +8,7 @@ function Amenities({ }) {
     let ctx = useContext(SpaceContext)
     let { spaceData, changeSpaceContext } = ctx
     let { spaceAmenities } = spaceData
-
+    spaceAmenities=spaceAmenities||[]
     return <>
         <Container style={{ marginTop: "10px" }}  >
             <h4>Amenities</h4>

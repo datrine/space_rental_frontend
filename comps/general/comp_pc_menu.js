@@ -78,7 +78,7 @@ let PCMenu = () => {
                             <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
                             <span style={{ fontSize: "12px" }}>Realty</span>
                         </Box>
-                        <Box component="button" className={classes.btnStacked}>
+                        <Box style={{display:"none"}} component="button" className={classes.btnStacked}>
                             <span><AlarmOn /></span>
                             <span style={{ fontSize: "12px" }} >Notification</span>
                         </Box>

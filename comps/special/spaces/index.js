@@ -93,7 +93,7 @@ function PCView({ itemComps }) {
     return <>
         <ProfileMenu />
         <Container style={{ padding: 0, marginTop: 70 }} >
-                    <SearchSpaces />
+            <SearchSpaces />
             <JustAPanel />
             <Grid container justify="center" >
                 {itemComps.
@@ -115,7 +115,7 @@ function SearchSpaces() {
                 }} >
                     <Grid xs={1} item container ></Grid>
                     <Grid xs={9} item container>
-                        <Input fullWidth placeholder="Search..." style={{border:"none"}} />
+                        <Input fullWidth placeholder="Search..." style={{ border: "none" }} />
                     </Grid>
                     <Grid xs={2} item container>
                         <button className="w3-btn" >

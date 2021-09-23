@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { AppBar, Container, Tab, Typography, Tabs, Box, } from '@material-ui/core';
-import { SearchBtnForRent, SearchByLocation } from "../searchApp";
+import { SearchBtnForRent } from "../searchApp";
 import { Categories } from "../searchApp/categories";
 import SliderComp from "../searchApp/sliderComp";
+import { SearchByLocation } from "../searchApp/search_location";
 
-function SearchTab({...props }) {
+function SearchTab({SearchBtnForRent,...props }) {
     let [tabValue, changeTabValue] = useState("rent")
     return <>
         <Container className="">

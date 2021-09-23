@@ -7,8 +7,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import View from "../view";
 import SliderComp from "../searchApp/sliderComp";
 import { SearchContext, } from "../searchNfilter";
-import { SearchByLocation, } from "../searchApp";
 import { SearchTab } from "./tab_of_filter";
+import { SearchByLocation } from "../searchApp/search_location";
 
 export default function MobileFilter({ SrchCtx, openSearchApp, hookOpenFilterApp }) {
    /** */ return <>
@@ -48,25 +48,24 @@ function PCView({ openSearchApp, hookOpenFilterApp }) {
         </DialogTitle>
         <DialogContent>
             <Grid justify="center" container >
-                <SearchContext.Provider value={{ params: paramsState, changeParams: changeParamsState }} >
+                <SearchContext.Provider 
+                value={{ params: paramsState, changeParams: changeParamsState }} >
                     <Grid item container >
-                        <SearchTab />
+                        <SearchByLocation />
+                        <SliderComp />
                     </Grid>
                 </SearchContext.Provider>
-
                 <button className="w3-btn" onClick={
                     e => {
                         changeParams({ ...paramsState })
                     }
                 } >Search</button>
-
             </Grid>
         </DialogContent>
     </Dialog>
 
     </>
 }
-
 
 function MobileView({ openSearchApp, hookOpenFilterApp }) {
     let handleClose = () => {
@@ -91,7 +90,8 @@ function MobileView({ openSearchApp, hookOpenFilterApp }) {
                 <Grid item container xs={2} >
                     <Button onClick={handleClose} color="primary" autoFocus>
                         <Cancel style={{ color: "red" }} />
-                    </Button></Grid>
+                    </Button>
+                </Grid>
             </Grid>
         </DialogTitle>
         <DialogContent>

@@ -3,7 +3,7 @@ import { ItemTemplate, MySelect } from "../resuables";
 import { SearchContext, } from "../searchNfilter";
 
 
-function Categories() {
+export function Categories() {
     let { params, changeParams } = useContext(SearchContext)
     return <>
         <MySelect labelTitle="Type of Space" valueProps={params.typeOfSpace || "office"}
@@ -18,5 +18,3 @@ function Categories() {
             } />
     </>
 }
-
-export { Categories, }

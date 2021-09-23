@@ -18,7 +18,7 @@ let Tiles = () => {
         textOf: "Entire building, part of an office, & more",
         imgSrcOf: "/workspace_find.png"
     }, {
-        link: "/investments",
+        link: "/real_estate",
         titleOf: "Find a real estate investment",
         textOf: "long-term or short-term investment in real esteate space",
         imgSrcOf: "/investment_find.png"

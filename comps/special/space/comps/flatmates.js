@@ -1,11 +1,12 @@
 import { Button, Container, } from "@material-ui/core";
 import { MyInput, } from "../../../resuables/index";
-import GenderSelect from "../../profile/gender";
 import { useContext, useState } from "react";
 import {SpaceContext} from "../../../resuables/contextInterfaces"
 import { Delete } from "@material-ui/icons";
 import React from "react";
 import { IdObj } from "../../../../utils/utilFns";
+import GenderSelect from "../reusables/gender";
+import AgeRangeSelect from "../reusables/age_range";
 
 function FlatmateDiv(params) {
     let ctx = useContext(SpaceContext)
@@ -46,10 +47,6 @@ function Flatmate({ indexProp, }) {
     let oneFlatmateInfo = flatmateInfo[indexProp]
     let { name = "", gender = "", occupation = "" } = oneFlatmateInfo
 
-    let handerGender = (e) => {
-        oneFlatmateInfo.gender = e.target.value
-    }
-
     return <>
         <Container style={{ borderStyle: "solid", borderWidth: 1, borderColor: "#60941a", marginTop: 10 }} >
             <MyInput placeholder="Flatmate name" value={name} handleChangeProps={
@@ -60,7 +57,8 @@ function Flatmate({ indexProp, }) {
                 e => {
                     oneFlatmateInfo.occupation = e.target.value
                 }} />
-            <GenderSelect genderProps={gender} handleChangeProps={handerGender} />
+            <GenderSelect flatmateIndex={indexProp} />
+            <AgeRangeSelect flatmateIndex={indexProp}/>
             <Button onClick={
                 e => {
                     flatmateInfo.splice(indexProp, 1);

@@ -61,7 +61,7 @@ export function SearchView({...props}) {
     return <>
         <Search_N_FilterContextProvider ctxValue={paramsState}
             hookChangeCtxValue={changeParamsState} >
-                <SearchTab {...props} />
+                <SearchTab SearchBtnForRent={SearchBtnForRent} {...props} />
         </Search_N_FilterContextProvider>
     </>
 }
@@ -90,20 +90,6 @@ function SearchBtnForRent({ hookChangeContentState, hookChangeResultState}) {
             }
                 style={{ color: "white", backgroundColor: appColor }} >Search</button>
         </p>
-    </>
-}
-
-export function SearchByLocation() {
-    let { params, changeParams } = useContext(SearchContext)
-    let [paramsState, changeParamsState] = useState(params)
-    return <>
-        <Container>
-            <Input value={paramsState.cityOrTown} onChange={
-                e => {
-                    changeParamsState({ ...paramsState, cityOrTown: e.target.value })
-                }
-            } placeholder="City, town or area" fullWidth />
-        </Container>
     </>
 }
 

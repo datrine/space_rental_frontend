@@ -47,7 +47,7 @@ function ViewOfAdmin({ }) {
     return <>  <Container disableGutters>
         <Grid container>
             <Grid item container sm={2} direction="column" alignItems="flex-start"
-                style={{ backgroundColor: "#ccc",height:"98vh",color:"white" }} >
+                style={{ backgroundColor: "#ccc",height:"98vh"}} >
                 <Button onClick={e => {
                     changeTabFn("index")
                 }} >Index</Button>
@@ -93,7 +93,8 @@ function ViewOfAdmin({ }) {
                         },
                     ]} />
             </Grid>
-            <Grid item container sm={10} >
+            <Grid item container sm={10}
+                style={{ backgroundColor: "#e3e3e3",height:"98vh",color:"white" }} >
                 <Container>
                     {tabView}
                 </Container>
