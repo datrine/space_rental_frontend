@@ -70,11 +70,10 @@ let Comp_Mob_Footer = ({ showMenu, ...propsFromParent }) => {
                 <span><FontAwesomeIcon icon={faCartPlus} className="fa-2x" /></span>
             </Box>
             </Link>
-
-            <Box component="button" className={classes.btnStacked}>
+<Link href="/real_estate">   <Box component="button" className={classes.btnStacked}>
                 <span><FontAwesomeIcon icon={faFunnelDollar} /></span>
                 <span style={{ fontSize: "12px" }}>Realty</span>
-            </Box>
+            </Box></Link>
             {/*<NotifBtn />*/}
         </AppBar>
     </>
